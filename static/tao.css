@@ -1,0 +1,24 @@
+body {
+    background: #2C4762;
+    font: normal 14px Arial, Helvetica, Microsoft YaHei, 微软雅黑;
+}
+#wrapper {
+    width: 800px;
+    margin: 0 auto;
+}
+#footer {
+    position: fixed;
+    height: 50px;
+    bottom:0;
+    left: 0;
+    width: 100%;
+    background: url(/static/images/footer_bg.png);
+    text-align: center;
+    color: white;
+    font-size: bold;
+    text-shadow: black 1px 1px 2px;
+}
+
+#footer div {
+    margin-top: 10px;
+}
