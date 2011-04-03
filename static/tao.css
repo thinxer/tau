@@ -27,7 +27,7 @@ a {
     opacity: 0;
     -webkit-transition: opacity 0.3s linear;
     -o-transition: opacity 0.3s linear;
-    -gecko-transition: opacity 0.3s linear;
+    -moz-transition: opacity 0.3s linear;
 }
 
 #footer:hover {
