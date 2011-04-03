@@ -12,6 +12,7 @@ urls = (
         '/', 'home',
         '/login', 'login',
         '/logout', 'logout',
+        '/about', 'about',
         '/api', 'api',
         )
 
@@ -25,30 +26,33 @@ class home:
     def GET(self):
         logged_in = True
         if logged_in:
-            return render.home()
+            return render.page('Tau', ['test.css'], [('k', 'v')], ['home.js'])
         else:
-            return render.public_home()
+            return render.page('Tau', [], [], [])
 
 class user:
     def GET(self, name):
         if name in conf.reserved_names:
             raise web.notfound()
         else:
-            return render.user_page()
+            return render.page('Username', [], [], [])
 
 class login:
     def GET(self):
-        return render.login()
+        return render.page('Login', [], [], [])
 
 class logout:
     def GET(self):
         session.kill()
         raise web.seeother("/")
 
+class about:
+    def GET(self):
+        return render.page('About Tau', [], [], [])
+
 class api:
     def GET(self):
         pass
-
 
 if __name__ == '__main__':
     app.run()
