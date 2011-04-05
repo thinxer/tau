@@ -1,6 +1,7 @@
 body {
     background: #2C4762;
     font: normal 14px Arial, Helvetica, Microsoft YaHei, 微软雅黑;
+    color: white;
 }
 
 a {
@@ -8,9 +9,42 @@ a {
     text-decoration: none;
 }
 
+.clear {
+    clear: both;
+}
+
 #wrapper {
     width: 800px;
     margin: 0 auto;
+}
+
+#header {
+    margin: 30px 0;
+    padding: 0 0 0 30px;
+}
+
+#title {
+    font-size: 24px;
+    text-shadow: 1px 3px 5px rgba(0,0,0,0.5);
+}
+
+#main {
+    padding: 20px;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    -o-border-radius: 15px;
+    border-radius：15px;
+    background-color: #29425B;
+}
+
+#main .sidebar {
+    float: right;
+    width: 240px;
+}
+
+#main .content {
+    float: left;
+    width: 480px;
 }
 
 #footer {
@@ -28,6 +62,7 @@ a {
     -webkit-transition: opacity 0.3s linear;
     -o-transition: opacity 0.3s linear;
     -moz-transition: opacity 0.3s linear;
+    transition: opacity 0.3s linear;
 }
 
 #footer:hover {

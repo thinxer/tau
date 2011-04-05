@@ -1,6 +1,6 @@
 import pymongo
 
-conn = pymongo.Connection()
-db = conn["tao"]
+db_name = "tau"
 
-reserved_names = set(["www", "admin", "setting", "settings", ])
+reserved_names = set(["www", "admin", "setting", "settings", \
+        "login", "logout", "api"])

@@ -5,14 +5,14 @@ var ui = {
 };
 
 $(function() {
-    tao.getCurrentUser(function(user) {
+    T.getCurrentUser(function(user) {
         // Check whether user has logged in.
         if (user) {
             // Hooray
-            ui.setupHome();
+            // ui.setupHome();
         } else {
             // Display Sign-up Page.
-            ui.setupRegisterPage();
+            // ui.setupRegisterPage();
         }
     });
 });

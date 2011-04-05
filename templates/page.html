@@ -1,41 +1,31 @@
-$def with (title, stylesheets, templates, javascripts)
+$def with ()
 <!DOCTYPE html5>
 <html>
-<meta charset='utf8'>
-<title>$title</title>
+<meta charset='utf8' />
+<link rel="icon" href="/static/images/tau.gif" />
+<title>Tau</title>
 <body>
 <div id="wrapper">
-    <div id="sidebar">
-        wa ha ha
+    <div id="header">
+        <div id="title">Tau</div>
     </div>
-    <div id="body">
-some thing here. Ah ha!
+    <div id="main">
     </div>
 </div>
 <div id="footer">
 <div>
     <p>
     <span> © 滔滔不绝！</span>
-    <span> <a href='/about'>关于我们</a> </span>
+    <span> <a href='#about'>关于我们</a> </span>
     <span> <a href='/new'>新鲜功能</a> </span>
     <span> <a href='/api'>应用扩展</a> </span>
 </div>
 </div>
-
-$# stylesheets
-<link rel='stylesheet' type='text/css' href='/static/tao.css' />
-$for css in stylesheets:
-    <link rel='stylesheet' type='text/css' href='/static/$css' />
-
-$# dynamic templates
-$for k, v in templates:
-    <script id='$k' type='text/x-tau-template'>$v</script>
-
-$# Common javascripts
+<link rel='stylesheet' type='text/css' href='/static/tau.css' />
 <script src='/static/jquery.js' type='text/javascript'></script>
-<script src='/static/tao.js' type='text/javascript'></script>
-$# Page specific javascripts
-$for js in javascripts:
-    <script src='/static/$js' type='text/javascript'></script>
+<script src='/static/jquery.tmpl.js' type='text/javascript'></script>
+<script src='/static/tau.js' type='text/javascript'></script>
+<script src='/static/ui.js' type='text/javascript'></script>
+<script src='/static/controller.js' type='text/javascript'></script>
 </body>
 
