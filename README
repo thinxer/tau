@@ -1,1 +1,14 @@
 Tau is a micro-blogging service.
+
+## installation
+
+Run the following commands:
+
+    git clone git://github.com/thinxer/tau.git
+    cd tau
+    git submodule init
+    git submodule update
+    mv conf_example.py conf.py
+    vim conf.py
+
+You need a working mongoDB installation for it to work.
