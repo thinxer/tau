@@ -2,36 +2,52 @@
  * Depends on jQuery, tau, ui.
  */
 
-// Wait for DOM to become ready.
-$(function() {
+(function(name) {
+    var c = window[name] = {};
 
-    var setHash = function() {
+    c.setHash = function() {
         var args = [].splice.call(arguments, 0);
         location.hash = '#' + args.join('/');
     };
 
-    var getHash = function() {
+    c.getHash = function() {
         if (location.hash)
             return location.hash.substring(1).split('/');
         else
             return '';
     }
 
-    var handlers = {
-        home: function() {
-            U.tmpl2('home', function() {
-                $('#main').html(this);
-            });
-        }
-    };
+    c.handlers = {};
 
-    $(window).bind('hashchange', function(e) {
-        var hash = location.hash;
-        if (hash.length == 0) {
-            setHash('home');
-        } else {
-            var hashes = getHash();
-            handlers[hashes[0]](hashes.slice(1));
-        }
-    }).trigger('hashchange');
-});
+    // TODO allow for more complex path
+    c.path = function(path, fn) {
+        c.handlers[path] = fn;
+    }
+
+    // Wait for DOM to become ready.
+    $(function() {
+
+        // Bind hashchange event
+        $(window).bind('hashchange', function(e) {
+            var hash = location.hash;
+            if (hash.length == 0) {
+                c.setHash('home');
+            } else {
+                var hashes = c.getHash();
+                c.handlers[hashes[0]](hashes.slice(1));
+            }
+            }).trigger('hashchange');
+    });
+
+})('C');
+
+// Handlers
+(function() {
+
+    // Home handler
+    C.path('home', function() {
+        U.render('home').fillTo('#main');
+    });
+
+})();
+
