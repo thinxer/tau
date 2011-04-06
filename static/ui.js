@@ -1,16 +1,16 @@
-/*
+/**
  * Tau ui library.
  * Requires jQuery and jQuery Templates.
  */
 (function(name) {
     var ui = window[name] = {};
 
-    /*
+    /**
      * Reference the jQuery template cache.
      */
     ui.template = jQuery.template;
 
-    /* 
+    /**
      * Loads a template from the server.
      * Returns a Promise.
      */
@@ -20,7 +20,7 @@
         }, 'text');
     };
 
-    /*
+    /**
      * Render the specific template with data.
      * You have to ensure the template has already been loaded.
      *
@@ -30,7 +30,30 @@
         return jQuery.tmpl(name, data);
     };
 
-    /* 
+    // DeferredTemplate is a template with deferred property.
+    var DeferredTemplate = function(d) {
+        // Add promise methods to this object.
+        d.promise(this);
+    };
+
+    // Set up template methods, 'fillTo' an exception
+    var tmplMethods = 'prependTo appendTo insertAfter insertBefore'.split(' ');
+    var i = tmplMethods.length;
+    DeferredTemplate.prototype.fillTo = function(target) {
+        this.done(function(t) {
+            jQuery(target).html(t);
+        });
+    };
+    while (i--) {
+        var method = tmplMethods[i];
+        DeferredTemplate.prototype[method] = function(target) {
+            this.done(function(t) {
+                t[method](target);
+            });
+        };
+    }
+
+    /**
      * Render the specific template with data.
      * It will auto load the template if not loaded.
      *
@@ -61,56 +84,7 @@
             });
         }
 
-        return {
-            appendTo: function(target) {
-                d.done(function(t) {
-                    t.appendTo(target);
-                });
-                return this;
-            },
-            prependTo: function(target) {
-                d.done(function(t) {
-                    t.prependTo(target);
-                });
-                return this;
-            },
-            insertAfter: function(target) {
-                d.done(function(t) {
-                    t.insertAfter(target);
-                });
-                return this;
-            },
-            insertBefore: function(target) {
-                d.done(function(t) {
-                    t.insertBefore(target);
-                });
-                return this;
-            },
-            fillTo: function(target) {
-                d.done(function(t) {
-                    jQuery(target).html(t);
-                });
-                return this;
-            },
-            done: function(fn) {
-                d.done(fn);
-                return this;
-            },
-            then: function(fn) {
-                d.then(fn);
-                return this;
-            },
-            fail: function(fn) {
-                d.fail(fn);
-                return this;
-            },
-            isResolved: function() {
-                return d.isResolved();
-            },
-            isRejected: function() {
-                return d.isRejected();
-            }
-        };
+        return new DeferredTemplate(d);
     };
 
 })('U');
