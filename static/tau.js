@@ -4,7 +4,13 @@
 (function(name) {
     var tau = window[name] = {};
 
-    // set up basic api calls
+    // Set up basic api calls.
+    // Usage:
+    //  T.login({uid: 'foo', password: 'bar'}).success(fn)
+    //  T.steam().success(fn)
+    // while fn = function(data) {}
+    //
+    // For more information, please refer to API SPEC in server code
     var get_methods = 'stream userinfo current_user'.split(' ');
     var post_methods = 'register login logout publish follow unfollow'.split(' ');
     jQuery(get_methods).each(function(i, t) {
@@ -17,10 +23,5 @@
             return jQuery.post('/api/' + t, param, 'json');
         };
     });
-
-    // Check if there is a user logged in.
-    tau.checkLogin = function() {
-        return !!jQuery.cookie('username');
-    };
 
 })('T');
