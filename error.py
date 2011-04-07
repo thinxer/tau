@@ -15,12 +15,15 @@ class __error_func(object):
         self.desc = desc
         self.jsond = json.dumps
 
-    def __call__(self, info=''):
-        return self.jsond({
+    def __call__(self, info='', raw=False):
+        doc = {
             'error': self.errno,
             'desc': self.desc,
             'info': info
-            })
+            }
+        if raw:
+            return doc
+        return self.jsond(doc)
 
 # force set the attr to this module
 import sys as __sys
