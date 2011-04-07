@@ -5,7 +5,7 @@
 #       return error.not_implemented('bar')
 
 # error list
-__errors = 'not_logged_in wrong_action not_implemented'.split(' ')
+__errors = 'not_logged_in wrong_action not_implemented invalid_uid'.split(' ')
 
 # a callable class
 class __error_func(object):

@@ -1,7 +1,7 @@
 var ui = {
-  setupHome: function() {
-    $('#wrapper').html('hi');
-  }, 
+    setupHome: function() {
+        $('#wrapper').html('hi');
+    }, 
 };
 
 $(function() {
@@ -16,5 +16,3 @@ $(function() {
         }
     });
 });
-
-/* vim: set ts=2 sw=2 nocin si: */

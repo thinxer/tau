@@ -1,11 +1,15 @@
 #!/usr/bin/env python
 
-import web
+import exceptions
 import json
-from session import MongoStore
+import re
+import traceback
+import web
+
 import conf
 import db
 import error
+import session
 
 jsond = lambda _: json.dumps(_)
 
@@ -22,7 +26,7 @@ urls = (
 web.config.debug = True
 app = web.application(urls, globals())
 render = web.template.render('templates/')
-session = web.session.Session(app, MongoStore(db.db, 'sessions'))
+session = web.session.Session(app, session.MongoStore(db.db, 'sessions'))
 
 class page:
     def GET(self):
@@ -54,19 +58,72 @@ class api_info:
     def GET(self):
         return render.api_info()
         
-class api:
-    ACTIONS = set('register login logout stream userinfo publish'.split(' '))
-    def GET(self, action):
-        if action not in self.ACTIONS:
-            return error.wrong_action()
+def get_input(spec):
+    '''
+    Helper method to extract input data accroding to the spec.
+    spec example:
+        {
+            'name': re.compile('[a-z]+'),   # regex filter
+            'age': lambda _: int(_) < 10,   # callable filter
+            'sex': None,                    # required
+            'bio': 'nothing here'           # default value (optional value)
+        }
+    '''
+    try:
+        ret = {}
         i = web.input()
-        if action == 'register':
-            return error.not_implemented()
-        elif action == 'login':
-            return error.not_implemented()
-        elif action == 'logout':
-            session.kill()
-            return jsond({ 'success':1 })
+        for key, f in spec.items():
+            if f is None and key not in i:
+                raise self.E('key ' + key + ' is required')
+            else:
+                # default to f
+                value = i.get(key, f)
+                # regex
+                if hasattr(f, 'match'):
+                    if key not in i or not f.match(value):
+                        raise self.E('regex for %s can\'t match %s' % (key, value))
+                # callable
+                elif callable(f):
+                    if key not in i or not f(value):
+                        raise self.E('%s didn\'t pass callable for %s' % (value, key))
+                # no check, f is default value
+                else:
+                    pass
+            ret[key] = value
+        return web.Storage(ret)
+    except Exception, e:
+        # error while checking
+        traceback.print_exc()
+        raise web.badrequest()
+
+class api:
+    GET_ACTIONS = set('stream userinfo'.split(' '))
+    POST_ACTIONS = set('register login logout publish'.split(' '))
+    E = exceptions.Exception
+    FILTERS = {
+            'uid': re.compile(r'[a-zA-Z][a-zA-Z0-9]+'),
+            'email': re.compile(r'(.+)@(.+).(.+)'),
+            }
+    INPUT_SPECS = {
+            'register': {
+                'uid': FILTERS['uid'],
+                'email': FILTERS['email'],
+                'password': None
+                },
+            'login': {
+                'uid': FILTERS['uid'],
+                'password': None
+                }
+            }
+
+    def GET(self, action):
+        # check if we have the action
+        if action not in self.GET_ACTIONS:
+            return error.wrong_action()
+
+        # get the input data if we have the spec
+        if action in self.INPUT_SPECS:
+            d = get_input(self.INPUT_SPECS[action])
 
         u = session.get('user', None)
         if not u:
@@ -75,7 +132,29 @@ class api:
         if action == 'stream':
             return jsond([])
         elif action == 'userinfo':
-            return jsond(u)
+            return jsond({
+                'uid': u.uid,
+                })
+
+        return error.not_implemented()
+
+    def POST(self, action):
+        # check if we have the action
+        if action not in self.POST_ACTIONS:
+            return error.wrong_action()
+
+        # get the input data if we have the spec
+        if action in self.INPUT_SPECS:
+            d = get_input(self.INPUT_SPECS[action])
+
+        # act
+        if action == 'register':
+            return jsond(db.register(d.uid, d.email, d.password))
+        elif action == 'login':
+            return error.not_implemented()
+        elif action == 'logout':
+            session.kill()
+            return jsond({ 'success':1 })
 
         return error.not_implemented()
 
