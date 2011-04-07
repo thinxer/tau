@@ -23,7 +23,7 @@ urls = (
         )
 
 # Turn off debug to use session
-web.config.debug = True
+web.config.debug = False
 app = web.application(urls, globals())
 render = web.template.render('templates/')
 session = web.session.Session(app, session.MongoStore(db.db, 'sessions'))
@@ -97,8 +97,8 @@ def get_input(spec):
         raise web.badrequest()
 
 class api:
-    GET_ACTIONS = set('stream userinfo'.split(' '))
-    POST_ACTIONS = set('register login logout publish'.split(' '))
+    GET_ACTIONS = set('stream current_user userinfo'.split(' '))
+    POST_ACTIONS = set('register login logout publish follow unfollow'.split(' '))
     E = exceptions.Exception
     FILTERS = {
             'uid': re.compile(r'[a-zA-Z][a-zA-Z0-9]+'),
@@ -113,6 +113,18 @@ class api:
             'login': {
                 'uid': FILTERS['uid'],
                 'password': None
+                },
+            'publish': {
+                'content': None
+                },
+            'follow': {
+                'target': FILTERS['uid']
+                },
+            'unfollow': {
+                'target': FILTERS['uid']
+                },
+            'userinfo': {
+                'uid': FILTERS['uid']
                 }
             }
 
@@ -125,16 +137,18 @@ class api:
         if action in self.INPUT_SPECS:
             d = get_input(self.INPUT_SPECS[action])
 
-        u = session.get('user', None)
-        if not u:
+        uid = session.get('uid', None)
+        if not uid:
             return error.not_logged_in()
 
         if action == 'stream':
-            return jsond([])
-        elif action == 'userinfo':
+            return jsond(db.stream(uid))
+        elif action == 'current_user':
             return jsond({
-                'uid': u.uid,
+                'uid': uid,
                 })
+        elif action == 'userinfo':
+            return jsond(db.userinfo(d.uid))
 
         return error.not_implemented()
 
@@ -151,7 +165,26 @@ class api:
         if action == 'register':
             return jsond(db.register(d.uid, d.email, d.password))
         elif action == 'login':
-            return error.not_implemented()
+            u = db.checkLogin(d.uid, d.password)
+            if u:
+                session.uid = u['uid']
+                return jsond({
+                    'uid': u['uid']
+                    })
+            else:
+                return error.wrong_login()
+
+        # check login
+        uid = session.get('uid', None)
+        if not uid:
+            return error.not_logged_in()
+
+        if action == 'follow':
+            return jsond(db.follow(uid, d.target))
+        elif action == 'unfollow':
+            return jsond(db.unfollow(uid, d.target))
+        elif action == 'publish':
+            return jsond(db.publish(uid, d.content))
         elif action == 'logout':
             session.kill()
             return jsond({ 'success':1 })

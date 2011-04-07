@@ -1,6 +1,14 @@
+'''
+The db module.
+WARNING This module is not responsible for permission check.
+'''
 import pymongo
+import datetime
+
 import conf
 import error
+
+utcnow = datetime.datetime.utcnow
 
 conn = pymongo.Connection()
 db = conn[conf.db_name]
@@ -8,24 +16,55 @@ db = conn[conf.db_name]
 users = db.users
 messages = db.messages
 
+# TODO use hash to mask the password
 def register(uid, email, password):
-    if uid in conf.reserved_names or users.find_one({"uid": uid}):
+    if uid in conf.reserved_names or users.find_one({'uid': uid}):
         return error.invalid_uid(raw=True)
-    users.save({ "uid": uid,
-        "email": email,
-        "password": password
+    users.save({ 'uid': uid,
+        'email': email,
+        'password': password,
+        'following': []
         })
+    # TODO check result
     return {'success': 1,
             'uid': uid }
 
+def checkLogin(uid, password):
+    # TODO check result
+    return users.find_one({'uid': uid,
+        'password': password})
+
 def userinfo(uid):
-    pass
+    return users.find_one({'uid': uid})
 
-def create(uid, msg):
-    pass
+def follow(uid, target):
+    '''
+    make uid follow target
+    '''
+    # TODO check result
+    users.update({'uid': uid}, {'$addToSet': {'following': target}})
+    return { 'success':1 }
 
-def delete(uid, msg):
-    pass
+def unfollow(uid, target):
+    # TODO check result
+    users.update({'uid': uid}, {'$pull': {'following': target}})
+    return { 'success':1 }
 
-def messages(uid, offset, limit):
-    pass
+def publish(uid, content):
+    doc = {
+            'owner': uid,
+            'content': content,
+            'timestamp': utcnow()
+            }
+    # TODO check result
+    messages.save(doc)
+    return { 'success':1 }
+
+def stream(uid):
+    # first get following list
+    u = users.find_one({'uid': uid})
+    following = u['following']
+    # then find messages published by his followings
+    c = messages.find({'owner': {'$in': following}})
+    ret = [{'owner':x['owner'], 'content':x['content']} for x in c]
+    return ret

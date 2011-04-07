@@ -5,8 +5,8 @@
     var tau = window[name] = {};
 
     // set up basic api calls
-    var get_methods = 'stream userinfo'.split(' ');
-    var post_methods = 'register login logout public'.split(' ');
+    var get_methods = 'stream userinfo current_user'.split(' ');
+    var post_methods = 'register login logout publish follow unfollow'.split(' ');
     jQuery(get_methods).each(function(i, t) {
         tau[t] = function(param) {
             return jQuery.getJSON('/api/' + t, param);
