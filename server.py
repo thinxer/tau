@@ -5,6 +5,7 @@ import json
 from session import MongoStore
 import conf
 import db
+import error
 
 jsond = lambda _: json.dumps(_)
 
@@ -13,8 +14,8 @@ urls = (
         '/login', 'login',
         '/logout', 'logout',
         '/tmpl', 'tmpl',
-        '/api', 'api_info',
-        '/api/(.*)', 'api',
+        '/api/?', 'api_info',
+        '/api/(.+)', 'api',
         )
 
 # Turn off debug to use session
@@ -49,40 +50,20 @@ class logout:
         session.kill()
         raise web.seeother("/")
 
-class error:
-    @staticmethod
-    def not_logged_in():
-        return jsond({
-            'error': 1,
-            'desc': 'not logged in'
-            })
-
-    @staticmethod
-    def api_wrong_action():
-        return jsond({
-            'error': 1,
-            'desc': 'wrong action'
-            })
-
-    @staticmethod
-    def api_not_implemented():
-        return jsond({
-            'error': 1,
-            'desc': 'API not implemented'
-            })
-
 class api_info:
     def GET(self):
         return render.api_info()
         
 class api:
+    ACTIONS = set('register login logout stream userinfo publish'.split(' '))
     def GET(self, action):
-        if action == 'pre_register':
-            return error.api_not_implemented()
-        elif action == 'register':
-            return error.api_not_implemented()
+        if action not in self.ACTIONS:
+            return error.wrong_action()
+        i = web.input()
+        if action == 'register':
+            return error.not_implemented()
         elif action == 'login':
-            return error.api_not_implemented()
+            return error.not_implemented()
         elif action == 'logout':
             session.kill()
             return jsond({ 'success':1 })
@@ -95,10 +76,8 @@ class api:
             return jsond([])
         elif action == 'userinfo':
             return jsond(u)
-        elif action == 'public':
-            return error.api_not_implemented()
-        else:
-            return error.api_wrong_action()
+
+        return error.not_implemented()
 
 if __name__ == '__main__':
     app.run()
