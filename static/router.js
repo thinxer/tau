@@ -34,7 +34,12 @@
                 c.setHash('default');
             } else {
                 var hashes = c.getHash();
-                c.handlers[hashes[0]](hashes.slice(1));
+                var handler = c.handlers[hashes[0]];
+                if (handler) {
+                    c.handlers[hashes[0]](hashes.slice(1));
+                } else if ('notfound' in c.handlers){
+                    c.handlers['notfound'](hashes);
+                }
             }
             }).trigger('hashchange');
     });

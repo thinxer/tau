@@ -6,11 +6,13 @@
 
     // Default handler
     C.path('default', function() {
-        if (T.checkLogin()) {
-            C.setHash('home');
-        } else {
-            C.setHash('public');
-        }
+        // TODO Find a way to determine whether the user has logged in.
+        C.setHash('home');
+    });
+
+    // notfound handler
+    C.path('notfound', function() {
+        U.render('notfound').fillTo('#main');
     });
 
     // Home handler
