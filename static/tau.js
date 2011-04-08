@@ -20,7 +20,7 @@
     });
     jQuery(post_methods).each(function(i, t) {
         tau[t] = function(param) {
-            return jQuery.post('/api/' + t, param, 'json');
+            return jQuery.post('/api/' + t, param, null, 'json');
         };
     });
 

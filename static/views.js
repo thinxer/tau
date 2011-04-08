@@ -25,4 +25,9 @@
         U.render('public').fillTo('#main');
     });
 
+    // Debug handler
+    C.path('debug', function() {
+        U.render('debug').fillTo('#main');
+    });
+
 })();

@@ -1,0 +1,44 @@
+<div>
+T.<select id='action'></select>({<br/>
+<textarea id='values' cols=80 rows=5>uid:'foo',
+password:'bar'</textarea>
+<br/>
+});
+<br/>
+<button id='submit'>submit</button>
+<br/>
+Result: 
+<div><pre id='result'></pre></div>
+</div>
+<br/>
+<div>
+<form action='/api/upload_photo' method='POST' enctype='multipart/form-data' target='photo_upload'>
+    Upload photo:
+    <input type='file' name='photo' /> <br/>
+    <input type='submit' />
+</form>
+Result:<br/>
+<iframe name='photo_upload' style='border: none; width: 600px; height: 100px;'></iframe>
+</div>
+<script>
+    jQuery(function() {
+        for (k in T) {
+            jQuery('<option/>').attr({
+                'value':k, 
+            }).text(k).appendTo('#action');
+        }
+    });
+    jQuery('#submit').click(function() {
+        var action = jQuery('#action option:selected').val();
+        var values = eval('({' + jQuery('#values').val() + '})');
+        var result = jQuery('#result');
+        result.text('Loading...');
+        T[action](values).success(function(d) {
+            console.log(d);
+            result.text(JSON.stringify(d, null, '    '));
+        }).fail(function(err) {
+            console.log(err);
+            result.text(JSON.stringify(err, null, '    '));
+        });
+    });
+</script>
