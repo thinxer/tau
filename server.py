@@ -9,6 +9,7 @@ import web
 import conf
 import db
 import error
+import photo
 import session
 
 jsond = lambda _: json.dumps(_)
@@ -97,8 +98,9 @@ def get_input(spec):
         raise web.badrequest()
 
 class api:
-    GET_ACTIONS = set('stream current_user userinfo'.split(' '))
-    POST_ACTIONS = set('register login logout publish follow unfollow'.split(' '))
+    GET_ACTIONS = set('stream current_user userinfo'.split())
+    POST_ACTIONS = set('register login logout publish follow unfollow\
+            update_profile upload_photo'.split())
     E = exceptions.Exception
     FILTERS = {
             'uid': re.compile(r'[a-zA-Z][a-zA-Z0-9]+'),
@@ -125,6 +127,13 @@ class api:
                 },
             'userinfo': {
                 'uid': FILTERS['uid']
+                },
+            'update_profile': {
+                'email': FILTERS['email'],
+                'name': '',
+                'location': '',
+                'bio': '',
+                'web': ''
                 }
             }
 
@@ -185,6 +194,17 @@ class api:
             return jsond(db.unfollow(uid, d.target))
         elif action == 'publish':
             return jsond(db.publish(uid, d.content))
+        elif action == 'update_profile':
+            return error.not_implemented()
+        elif action == 'upload_photo':
+            try:
+                d = web.input(photo={})
+                if 'photo' in d:
+                    photo.resize_save(uid, d.photo.file)
+                return jsond({ 'success':1 })
+            except Exception, e:
+                traceback.print_exc()
+                return error.photo_upload_failed()
         elif action == 'logout':
             session.kill()
             return jsond({ 'success':1 })

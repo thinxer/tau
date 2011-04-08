@@ -5,7 +5,8 @@
 #       return error.not_implemented('bar')
 
 # error list
-__errors = 'not_logged_in wrong_action not_implemented invalid_uid wrong_login'.split(' ')
+__errors = 'not_logged_in wrong_action not_implemented invalid_uid wrong_login\
+        photo_upload_failed'.split()
 
 # a callable class
 class __error_func(object):

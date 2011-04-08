@@ -11,4 +11,4 @@ Run the following commands:
     mv conf_example.py conf.py
     vim conf.py
 
-You need a working mongoDB installation for it to work.
+Depends on: python 2.6+, PIL, pymongo.
