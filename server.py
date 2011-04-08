@@ -24,10 +24,22 @@ urls = (
         )
 
 # Turn off debug to use session
-web.config.debug = False
+web.config.debug = conf.debug
 app = web.application(urls, globals())
 render = web.template.render('templates/')
-session = web.session.Session(app, session.MongoStore(db.db, 'sessions'))
+
+def createSession():
+    return web.session.Session(app, session.MongoStore(db.db, 'sessions'))
+
+if web.config.debug:
+    # dirty hack to make session work with reloader
+    if web.config.get('_session'):
+        session = web.config._session
+    else:
+        session = createSession()
+        web.config._session = session
+else:
+    session = createSession()
 
 class page:
     def GET(self):
@@ -157,7 +169,10 @@ class api:
                 'uid': uid,
                 })
         elif action == 'userinfo':
-            return jsond(db.userinfo(d.uid))
+            u = db.userinfo(d.uid)
+            return jsond({
+                'uid': u['uid'],
+                })
 
         return error.not_implemented()
 
