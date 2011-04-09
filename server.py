@@ -150,6 +150,8 @@ class api:
             }
 
     def GET(self, action):
+        web.header('Content-Type', 'application/json')
+
         # check if we have the action
         if action not in self.GET_ACTIONS:
             return error.wrong_action()
@@ -177,6 +179,8 @@ class api:
         return error.not_implemented()
 
     def POST(self, action):
+        web.header('Content-Type', 'application/json')
+
         # check if we have the action
         if action not in self.POST_ACTIONS:
             return error.wrong_action()
