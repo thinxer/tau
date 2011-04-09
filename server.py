@@ -72,6 +72,7 @@ class api_info:
         return render.api_info()
         
 def get_input(spec):
+    E = exceptions.Exception
     '''
     Helper method to extract input data accroding to the spec.
     spec example:
@@ -87,18 +88,18 @@ def get_input(spec):
         i = web.input()
         for key, f in spec.items():
             if f is None and key not in i:
-                raise self.E('key ' + key + ' is required')
+                raise E('key ' + key + ' is required')
             else:
                 # default to f
                 value = i.get(key, f)
                 # regex
                 if hasattr(f, 'match'):
                     if key not in i or not f.match(value):
-                        raise self.E('regex for %s can\'t match %s' % (key, value))
+                        raise E('regex for %s can\'t match %s' % (key, value))
                 # callable
                 elif callable(f):
                     if key not in i or not f(value):
-                        raise self.E('%s didn\'t pass callable for %s' % (value, key))
+                        raise E('%s didn\'t pass callable for %s' % (value, key))
                 # no check, f is default value
                 else:
                     pass
@@ -113,7 +114,6 @@ class api:
     GET_ACTIONS = set('stream current_user userinfo'.split())
     POST_ACTIONS = set('register login logout publish follow unfollow\
             update_profile upload_photo'.split())
-    E = exceptions.Exception
     FILTERS = {
             'uid': re.compile(r'[a-zA-Z][a-zA-Z0-9]+'),
             'email': re.compile(r'(.+)@(.+).(.+)'),
