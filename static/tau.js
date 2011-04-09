@@ -12,7 +12,7 @@
     //
     // For more information, please refer to API SPEC in server code
     var get_methods = 'stream userinfo current_user'.split(' ');
-    var post_methods = 'register login logout publish follow unfollow'.split(' ');
+    var post_methods = 'register login logout publish follow unfollow update_profile'.split(' ');
     jQuery(get_methods).each(function(i, t) {
         tau[t] = function(param) {
             return jQuery.getJSON('/api/' + t, param);

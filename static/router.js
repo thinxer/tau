@@ -22,7 +22,7 @@
     /**
      * c.path(): get current path,
      * c.path('home'): set path to 'home',
-     * c.path('home, fn): set 'home' handler to fn.
+     * c.path('home', fn): set 'home' handler to fn.
      *
      */
     c.path = function(path, fn) {

@@ -167,13 +167,25 @@ class api:
         if action == 'stream':
             return jsond(db.stream(uid))
         elif action == 'current_user':
+            u = db.userinfo(uid)
             return jsond({
-                'uid': uid,
+                'uid': u['uid'],
+                'email': u['email'],
+                'location': u.get('location', ''),
+                'bio': u.get('bio', ''),
+                'web': u.get('web', ''),
+                'following': len(u['following'])
                 })
         elif action == 'userinfo':
             u = db.userinfo(d.uid)
+            if not u:
+                return error.user_not_found()
             return jsond({
                 'uid': u['uid'],
+                'location': u.get('location', ''),
+                'bio': u.get('bio', ''),
+                'web': u.get('web', ''),
+                'following': len(u['following'])
                 })
 
         return error.not_implemented()
@@ -214,7 +226,14 @@ class api:
         elif action == 'publish':
             return jsond(db.publish(uid, d.content))
         elif action == 'update_profile':
-            return error.not_implemented()
+            u = db.update_profile(uid, d)
+            return jsond({
+                'uid': u['uid'],
+                'location': u.get('location', ''),
+                'bio': u.get('bio', ''),
+                'web': u.get('web', ''),
+                'following': len(u['following'])
+                })
         elif action == 'upload_photo':
             try:
                 d = web.input(photo={})

@@ -68,3 +68,10 @@ def stream(uid):
     c = messages.find({'owner': {'$in': following}})
     ret = [{'owner':x['owner'], 'content':x['content']} for x in c]
     return ret
+
+def update_profile(uid, profile):
+    u = users.find_one({'uid': uid})
+    for key in 'email name location bio web'.split():
+        u[key] = profile[key]
+    users.save(u)
+    return u
