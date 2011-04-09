@@ -5,11 +5,11 @@
 #       return error.not_implemented('bar')
 
 # error list
-__errors = 'not_logged_in wrong_action not_implemented invalid_uid wrong_login\
+errors = 'not_logged_in wrong_action not_implemented invalid_uid wrong_login\
         photo_upload_failed'.split()
 
 # a callable class
-class __error_func(object):
+class error_func(object):
     def __init__(self, errno, desc):
         import json
         self.errno = errno
@@ -27,6 +27,11 @@ class __error_func(object):
         return self.jsond(doc)
 
 # force set the attr to this module
-import sys as __sys
-for __i in range(len(__errors)):
-    setattr(__sys.modules[__name__], __errors[__i], __error_func(__i, __errors[__i]))
+import sys
+for i in range(len(errors)):
+    setattr(sys.modules[__name__], errors[i], error_func(-1 - i, errors[i]))
+
+# unexpose unnecessary variables
+del i
+del sys
+del error_func
