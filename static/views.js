@@ -3,11 +3,23 @@
  * Depends on Tau, Ui, Controller.
  */
 (function() {
+    var renderPublic = function() {
+        U.render('public').fillTo('#main');
+    };
 
-    // Default handler
+    var renderHome = function() {
+        U.render('home').fillTo('#main');
+    };
+
+    // default handler
     C.path('default', function() {
-        // TODO Find a way to determine whether the user has logged in.
-        C.setHash('home');
+        T.current_user().success(function(d) {
+            if (d.error) {  // not logged in
+                renderPublic();
+            } else {
+                renderHome();
+            }
+        });
     });
 
     // notfound handler
@@ -15,17 +27,7 @@
         U.render('notfound').fillTo('#main');
     });
 
-    // Home handler
-    C.path('home', function() {
-        U.render('home').fillTo('#main');
-    });
-
-    // Public home handler
-    C.path('public', function() {
-        U.render('public').fillTo('#main');
-    });
-
-    // Debug handler
+    // debug handler
     C.path('debug', function() {
         U.render('debug').fillTo('#main');
     });
