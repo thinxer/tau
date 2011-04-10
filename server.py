@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import exceptions
-import json
 import re
 import traceback
 import web
@@ -12,7 +11,7 @@ import error
 import photo
 import session
 
-jsond = lambda _: json.dumps(_)
+from jsonencoder import jsond
 
 urls = (
         '/', 'page',

@@ -11,10 +11,10 @@ errors = 'not_logged_in wrong_action not_implemented invalid_uid wrong_login\
 # a callable class
 class error_func(object):
     def __init__(self, errno, desc):
-        import json
+        from jsonencoder import jsond
         self.errno = errno
         self.desc = desc
-        self.jsond = json.dumps
+        self.jsond = jsond
 
     def __call__(self, info='', raw=False):
         doc = {
