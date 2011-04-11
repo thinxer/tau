@@ -1,3 +1,4 @@
 *.pyc
 conf.py
 static/photos/
+*.swp

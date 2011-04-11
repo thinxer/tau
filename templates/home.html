@@ -1,3 +1,11 @@
 <div class="sidebar">The sidebar.</div>
-<div class="content">The content.</div>
+<div class="content">
+	<button id="logoutBtn">logout</button>
+</div>
 <div class="clear"></div>
+<script type="text/javascript">
+jQuery('#logoutBtn').click(function(){
+	T.logout();
+	location.reload(true);
+});
+</script>
