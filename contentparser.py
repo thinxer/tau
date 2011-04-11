@@ -23,8 +23,8 @@ def parse(msg):
         'url': x.group(),
         } for x in url_pattern.finditer(msg)]
     return {
-            'mentions': mentions, 
-            'tags': tags, 
+            'mentions': mentions,
+            'tags': tags,
             'urls': urls
             }
 

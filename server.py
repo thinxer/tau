@@ -69,7 +69,7 @@ class logout:
 class api_info:
     def GET(self):
         return render.api_info()
-        
+
 def get_input(spec):
     E = exceptions.Exception
     '''

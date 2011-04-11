@@ -26,7 +26,7 @@ def needs_encode(obj):
     False
     >>> needs_encode({'1': [2]})
     False
-    
+
     Objects that don't round trip need encoding::
 
     >>> needs_encode(tuple())
@@ -67,7 +67,7 @@ class MongoStore(Store):
     def __init__(self, db, collection_name='sessions'):
         self.collection = db[collection_name]
         self.collection.ensure_index(_atime)
-    
+
     def encode(self, sessiondict):
         return dict((k, Binary(Store.encode(self, v)) if needs_encode(v) else v)
             for (k, v) in sessiondict.iteritems())
