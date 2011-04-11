@@ -7,6 +7,7 @@ import datetime
 
 import conf
 import error
+import contentparser
 
 utcnow = datetime.datetime.utcnow
 
@@ -54,7 +55,8 @@ def publish(uid, content):
     doc = {
             'owner': uid,
             'content': content,
-            'timestamp': utcnow()
+            'timestamp': utcnow(),
+            'entities': contentparser.parse(content)
             }
     # TODO check result
     messages.save(doc)
@@ -66,7 +68,7 @@ def stream(uid):
     following = u['following']
     # then find messages published by his followings
     c = messages.find({'owner': {'$in': following}})
-    ret = [{'owner':x['owner'], 'content':x['content']} for x in c]
+    ret = list(c)
     return ret
 
 def update_profile(uid, profile):
