@@ -248,5 +248,11 @@ class api:
 
         return error.not_implemented()
 
+
+# export wsgi application
+application = app.wsgifunc()
+
+# if not run as wsgi, start web.py built-in server
 if __name__ == '__main__':
     app.run()
+
