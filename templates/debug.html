@@ -22,7 +22,7 @@ Result:<br/>
 </div>
 <script>
     jQuery(function() {
-        for (k in T) {
+        for (var k in T) {
             jQuery('<option/>').attr({
                 'value':k, 
             }).text(k).appendTo('#action');
