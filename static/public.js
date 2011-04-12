@@ -1,33 +1,33 @@
 // for page public.html
 
-var ctrl=ctrl||{};
+var K=K||{};	// constant
+var C=C||{};	// controller
 
-ctrl.start=function(){
-	ctrl.setupClick();
+K.PUBLIC={
+	UID_TOO_SHORT:"用户名太短啦，你能长点吗？"
 };
 
-ctrl.setupClick=function(){
-	jQuery('#submit').click(function(){
-		var u=jQuery('#uid').val(),m=jQuery('#email').val(),p=jQuery('#password').val();
-		var d=T['register'](kv2obj('uid',u,'email',m,'password',p));
-		d.success(function(resp,state,o){
-			if(resp['success']==1){
-				T.login(kv2obj('uid',u,'password',p)).success(function(){
-					window.location.reload(true);
-				});
-			}else if(resp['error']<0){
-				console.log('firetruck, error !');
-			}
-			console.log(arguments);
+(function(name){
+	var c=C[name]={};
+	c.start=function(){
+		c.setupClick();
+	};
+	c.setupClick=function(){
+		console.log(jQuery('button#submit'));
+		jQuery('button#submit').click(function(){
+			var u=jQuery('#uid').val(),p=jQuery('#password').val(),m=jQuery('#email').val();
+			T.register({uid:u,email:m,password:p}).success(function(resp,state,o){
+				if(resp['success']==1){
+					T.login({uid:u,password:p}).success(function(){
+						window.location.reload(true);
+					});
+				}else if(resp['error']<0){
+					console.log('firetruck, error !');
+				}
+			}).error(function(){
+				console.log('server too far away to reach');
+			});
 		});
-		d.error(function(){
-		
-		});
-	});
-};
-
-// start the world when DOM ready
-jQuery(function(){
-	ctrl.start();
-});
+	}
+})('PUBLIC');
 

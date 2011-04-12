@@ -4,7 +4,9 @@
  */
 (function() {
     var renderPublic = function() {
-        U.render('public').fillTo('#main');
+        U.render('public').fillTo('#main').done(function(){
+			if(C&&C.PUBLIC)C.PUBLIC.start();
+		});
     };
 
     var renderHome = function() {

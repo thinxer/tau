@@ -2,33 +2,36 @@
 <html>
 <meta charset='utf8' />
 <link rel='shortcut icon' href='/static/images/favicon.ico' />
-<title>Tau</title>
+<title>滔滔不绝</title>
 <body>
-<div id="wrapper">
-    <div id="header">
-        <div id="title">Tau</div>
-    </div>
-    <div id="main">
-        Loading...
-    </div>
-</div>
-<div id="footer">
-<div>
-    <p>
-    <span> © 滔滔不绝！</span>
-    <span> <a href='#about'>关于我们</a> </span>
-    <span> <a href='/new'>新鲜功能</a> </span>
-    <span> <a href='/api'>应用扩展</a> </span>
-</div>
-</div>
-<link rel='stylesheet' type='text/css' href='/static/tau.css' />
-<script src='/static/jquery.js' type='text/javascript'></script>
-<script src='/static/jquery.tmpl.js' type='text/javascript'></script>
-<script src='/static/jquery.cookie.js' type='text/javascript'></script>
-<script src='/static/jquery.history.js' type='text/javascript'></script>
-<script src='/static/util.js' type='text/javascript'></script>
-<script src='/static/tau.js' type='text/javascript'></script>
-<script src='/static/ui.js' type='text/javascript'></script>
-<script src='/static/router.js' type='text/javascript'></script>
-<script src='/static/views.js' type='text/javascript'></script>
+	<button id="debugTrigger" style="position:fixed;left:0;top:0">Rock</button>
+	<div id="statusDiv"></div>
+	<div id="wrapper">
+		<div id="header">
+			<div id="title">Tau</div>
+		</div>
+		<div id="main">
+			Loading...
+		</div>
+	</div>
+	<div id="footer">
+	<div>
+		<p>
+		<span>© 滔滔不绝</span>
+		<span> <a href='#about'>关于我们</a> </span> <span> <a href='/new'>新鲜功能</a> </span>
+		<span> <a href='/api'>应用扩展</a> </span>
+	</div>
+	</div>
+	<link rel='stylesheet' type='text/css' href='/static/tau.css' />
+	<!--commonly used js-->
+	<script src='/static/jquery.js' type='text/javascript'></script>
+	<script src='/static/jquery.tmpl.js' type='text/javascript'></script>
+	<script src='/static/jquery.cookie.js' type='text/javascript'></script>
+	<script src='/static/jquery.history.js' type='text/javascript'></script>
+	<script src='/static/tau.js' type='text/javascript'></script>
+	<script src='/static/ui.js' type='text/javascript'></script>
+	<script src='/static/router.js' type='text/javascript'></script>
+	<script src='/static/views.js' type='text/javascript'></script>
+	<!--js for separate pages-->
+	<script src='/static/public.js' type='text/javascript'></script>
 </body>
