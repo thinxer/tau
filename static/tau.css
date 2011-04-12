@@ -89,7 +89,7 @@ a {
 	left:50%;
 	margin-left:-100px;
 	background-color:#29425B;
-	opacity:0;
+	display:none;
 	transition:opacity 0.2s linear;
 	-webkit-transition: opacity 0.2s linear;
 	-o-transition: opacity 0.2s linear;

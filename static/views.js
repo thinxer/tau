@@ -47,13 +47,14 @@ var V=V||(function(){
 		id:'div#statusDiv',
 		show:function(){
 			if(arguments.length>0)jQuery(this.id).text(''+arguments[0]);
-			jQuery(this.id).show();
+			jQuery(this.id).slideDown('fast');
 		},
 		hide:function(){
 			jQuery(this.id).text('');
-			jQuery(this.id).hide();
+			jQuery(this.id).slideUp('fast');
 		}
 	};
+	return o;
 })();
 
 
