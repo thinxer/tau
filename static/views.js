@@ -2,6 +2,8 @@
  * Views for Tau.
  * Depends on Tau, Ui, Controller.
  */
+
+ // setup path handlers
 (function() {
     var renderPublic = function() {
         U.render('public').fillTo('#main').done(function(){
@@ -10,7 +12,9 @@
     };
 
     var renderHome = function() {
-        U.render('home').fillTo('#main');
+        U.render('home').fillTo('#main').done(function(){
+			if(C&&C.HOME)C.HOME.start();
+		});
     };
 
     // default handler
@@ -35,4 +39,21 @@
     });
 
 })();
+
+// View 
+var V=V||(function(){
+	var o={};
+	o.statusDiv={
+		id:'div#statusDiv',
+		show:function(){
+			if(arguments.length>0)jQuery(this.id).text(''+arguments[0]);
+			jQuery(this.id).show();
+		},
+		hide:function(){
+			jQuery(this.id).text('');
+			jQuery(this.id).hide();
+		}
+	};
+})();
+
 

@@ -13,21 +13,21 @@ K.PUBLIC={
 		c.setupClick();
 	};
 	c.setupClick=function(){
-		console.log(jQuery('button#submit'));
 		jQuery('button#submit').click(function(){
 			var u=jQuery('#uid').val(),p=jQuery('#password').val(),m=jQuery('#email').val();
 			T.register({uid:u,email:m,password:p}).success(function(resp,state,o){
 				if(resp['success']==1){
 					T.login({uid:u,password:p}).success(function(){
-						window.location.reload(true);
+						window.location='/';
 					});
 				}else if(resp['error']<0){
 					console.log('firetruck, error !');
+					console.log(resp);
 				}
 			}).error(function(){
 				console.log('server too far away to reach');
 			});
 		});
-	}
+	};
 })('PUBLIC');
 
