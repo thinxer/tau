@@ -12,7 +12,7 @@
     };
 
     // default handler
-    C.path('default', function() {
+    R.path('default', function() {
         T.current_user().success(function(d) {
             if (d.error) {  // not logged in
                 renderPublic();
@@ -23,12 +23,12 @@
     });
 
     // notfound handler
-    C.path('notfound', function() {
+    R.path('notfound', function() {
         U.render('notfound').fillTo('#main');
     });
 
     // debug handler
-    C.path('debug', function() {
+    R.path('debug', function() {
         U.render('debug').fillTo('#main');
     });
 

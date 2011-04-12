@@ -64,4 +64,4 @@
         jQuery.history.init(pathchange_handler, { unescape:'/' })
     });
 
-})('C');
+})('R');
