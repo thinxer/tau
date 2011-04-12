@@ -1,4 +1,5 @@
 db_name = "tau"
+secret = "PUT YOUR SERVER SECRET HERE"
 
 reserved_names = set(["www", "admin", "setting", "settings", \
         "login", "logout", "api"])
