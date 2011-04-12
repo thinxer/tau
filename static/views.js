@@ -13,8 +13,8 @@
 
     var renderHome = function() {
         U.render('home').fillTo('#main').done(function(){
-			if(C&&C.HOME)C.HOME.start();
-		});
+            if(C&&C.HOME)C.HOME.start();
+        });
     };
 
     // default handler
@@ -40,7 +40,7 @@
 
 })();
 
-// View 
+// View
 var V=V||(function(){
 	var o={};
 	o.statusDiv={
@@ -57,4 +57,4 @@ var V=V||(function(){
 	return o;
 })();
 
-
+// vim: set ts=4 sw=4 tw=0 :
