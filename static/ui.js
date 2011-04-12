@@ -36,14 +36,31 @@
         d.promise(this);
     };
 
-    // Set up template methods, 'fillTo' an exception
-    var tmplMethods = 'prependTo appendTo insertAfter insertBefore'.split(' ');
-    var i = tmplMethods.length;
+    // Set up template methods.
+
+    /**
+     * Replace target's content with rendered template.
+     */
     DeferredTemplate.prototype.fillTo = function(target) {
         this.done(function(t) {
             jQuery(target).html(t);
         });
     };
+
+    /**
+     * Function fn will be called with rendered template.
+     */
+    DeferredTemplate.prototype.tmpl = function(fn) {
+        this.done(function(t) {
+            fn(t);
+        });
+    };
+
+    /**
+     * Other methods corresponding to jQuery template.
+     */
+    var tmplMethods = 'prependTo appendTo insertAfter insertBefore'.split(' ');
+    var i = tmplMethods.length;
     while (i--) {
         var method = tmplMethods[i];
         DeferredTemplate.prototype[method] = function(target) {
