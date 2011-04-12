@@ -42,7 +42,7 @@
      * Replace target's content with rendered template.
      */
     DeferredTemplate.prototype.fillTo = function(target) {
-        this.done(function(t) {
+        return this.done(function(t) {
             jQuery(target).html(t);
         });
     };
@@ -51,7 +51,7 @@
      * Function fn will be called with rendered template.
      */
     DeferredTemplate.prototype.tmpl = function(fn) {
-        this.done(function(t) {
+        return this.done(function(t) {
             fn(t);
         });
     };
@@ -64,7 +64,7 @@
     while (i--) {
         var method = tmplMethods[i];
         DeferredTemplate.prototype[method] = function(target) {
-            this.done(function(t) {
+            return this.done(function(t) {
                 t[method](target);
             });
         };
