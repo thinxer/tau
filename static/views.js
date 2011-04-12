@@ -33,11 +33,6 @@
         U.render('notfound').fillTo('#main');
     });
 
-    // debug handler
-    R.path('debug', function() {
-        U.render('debug').fillTo('#main');
-    });
-
 })();
 
 // View
