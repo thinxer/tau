@@ -17,16 +17,20 @@
         });
     };
 
+	var goDefault=function() {
+		T.current_user().success(function(d) {
+			if (d.error) {  // not logged in
+				renderPublic();
+			} else {
+				renderHome();
+			}
+		});
+	};
+
     // default handler
-    R.path('default', function() {
-        T.current_user().success(function(d) {
-            if (d.error) {  // not logged in
-                renderPublic();
-            } else {
-                renderHome();
-            }
-        });
-    });
+	R.path('default',goDefault);
+	R.path('home',goDefault);
+	R.path('public',goDefault);
 
     // notfound handler
     R.path('notfound', function() {

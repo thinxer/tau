@@ -11,7 +11,7 @@ var C=C||{};
 	c.setupClick=function(){
 		jQuery('button#logoutBtn').click(function(){
 			T.logout().then(function(){
-				window.location="/";
+				window.location="/#public";
 			});
 		});
 	};
