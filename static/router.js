@@ -60,6 +60,11 @@
         c.lastPath = path;
     }
 
+    /**
+     * execute the handler again.
+     */
+    c.reload = pathchange_handler;
+
     jQuery(function() {
         jQuery.history.init(pathchange_handler, { unescape:'/' })
     });
