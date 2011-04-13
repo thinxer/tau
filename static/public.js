@@ -12,6 +12,7 @@ K.PUBLIC={
 };
 
 (function(name){
+    R.path('public',C.PAGE.goDefault);
 	var c=C[name]={};
 	c.start=function(){
 		c.setupClick();
@@ -59,15 +60,15 @@ K.PUBLIC={
 		return true;
 	};
 	c.showError=function(s){
-		if(V&&V.statusDiv){
-			V.statusDiv.show(s);
+		if(U&&U.PAGE.statusDiv){
+			U.PAGE.statusDiv.show(s);
 		}else{
-			console.log(V);
+			console.log(U);
 		}
 	},
 	c.login=function(u,p){
 		T.login({uid:u,password:p}).success(function(r,s,o){
-			if(window.location.hash!="#home")window.location='/#home';
+			if(window.location.hash!="#home")R.path('home');
 			else window.location.reload(true);
 		}).error(function(){
 			c.showError(K.PUBLIC.SERVER_ERR);
