@@ -29,6 +29,10 @@ a {
 }
 
 #main {
+    position:absolute;
+    left:50%;
+    width:760px;
+    margin-left:-400px;
     padding: 20px;
     -webkit-border-radius: 15px;
     -moz-border-radius: 15px;
@@ -94,6 +98,30 @@ a {
     -webkit-transition: opacity 0.2s linear;
     -o-transition: opacity 0.2s linear;
     -moz-transition: opacity 0.2s linear;
+}
+
+.input_wrapper{
+   width:176px;
+   position:absolute;
+}
+
+.reglabel{
+    position:absolute;
+    margin:6px 0 0 11px;
+    height:50px;
+    background-color:transparent;
+    opacity:.4;
+    padding:1px 10px 1px 10px;
+    color:#869cb2;
+    font: bold 20px Arial, Helvetica, Microsoft YaHei, 微软雅黑;
+}
+
+.reginput{
+    height:28px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -o-border-radius: 5px;
+    border-radius: 5px;
 }
 
 /* vim: set et ts=4 sw=4 tw=0 :*/
