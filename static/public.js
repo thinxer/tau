@@ -69,7 +69,7 @@ K.PUBLIC={
 	c.login=function(u,p){
 		T.login({uid:u,password:p}).success(function(r,s,o){
 			if(window.location.hash!="#home")R.path('home');
-			else window.location.reload(true);
+			else R.reload();
 		}).error(function(){
 			c.showError(K.PUBLIC.SERVER_ERR);
 		});

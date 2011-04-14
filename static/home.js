@@ -14,7 +14,7 @@ var K=K||{},C=C||{},U=U||{};
 		jQuery('button#logoutBtn').click(function(){
 			T.logout().then(function(){
 				if(window.location.hash!="#public")R.path('public');
-				else window.location.reload(true);
+				else R.reload();
 			});
 		});
 	};
