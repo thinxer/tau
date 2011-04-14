@@ -132,7 +132,18 @@ a {
     cursor:pointer;
     outline:0!important;
     border-width:0;
-    font: bold 20px Arial, Helvetica, Microsoft YaHei, 微软雅黑;
+    font: 18px Arial, Helvetica, Microsoft YaHei, 微软雅黑;
+}
+
+.regbtn{
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -o-border-radius: 5px;
+    border-radius: 5px;
+    width:111px;
+    height:38px;
+    background:#8BAD68 url(/static/images/reg_btn.gif) no-repeat right center;
+    cursor:pointer;
 }
 
 /* vim: set et ts=4 sw=4 tw=0 :*/

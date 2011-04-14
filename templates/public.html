@@ -1,16 +1,22 @@
 <div style="height:100px;width:200px;">
-	<div class="input_wrapper">
-		<label class="reglabel" for="uid">注册ID</label>
-		<input class="reginput" type="text" id="uid" />
+	<div style="positioin:absolute;">
+		<div class="input_wrapper">
+			<label class="reglabel" for="uid">注册ID</label>
+			<input class="reginput" type="text" id="uid" />
+		</div>
+		<div class="input_wrapper" style="left:200px;">
+			<label class="reglabel" for="password">密码</label>
+			<input class="reginput" type="password" id="password" />
+		</div>
+		<div id="emailDiv" class="input_wrapper" style="opacity:0;left:380px;">
+			<label class="reglabel" for="email">邮箱</label>
+			<input class="reginput" type="text" id="email" />
+		</div>
+		<button class="regbtn" mark="login" style="position:absolute;left:400px;" id="regbtn">
+			<span style="position:absolute;left:23px;top:9px;color:rgba(0 0 0 .63);font-size:17px;text-shadow:0 1px 1px rgba(255 255 255 .37);">登录</span>
+		</button>
+		<a href="javascript:;" style="position:absolute;top:74px;left:100px;" id="toggle">没有帐号？注册一个吧</a>
+		<a href="" style="position:absolute;top:74px;left:293px;" id="forgetPass">忘记密码？</a>
 	</div>
-	<div class="input_wrapper" style="left:200px;">
-		<label class="reglabel" for="password">密码</label>
-		<input class="reginput" type="password" id="password" />
-	</div>
-	<div class="input_wrapper" style="left:400px;">
-		<label class="reglabel" for="email">邮箱</label>
-		<input class="reginput" type="text" id="email" />
-	</div>
-	<button style="position:absolute;top:90px;" id="submit">注册</button>
-	<button style="position:absolute;top:90px;left:200px;" id="login">登录</button>
 </div>
+
