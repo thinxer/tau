@@ -9,6 +9,7 @@ var K=K||{},C=C||{},U=U||{};
 
 	c.start=function(){
 		c.setupClick();
+		c.updateTimeline();
 	};
 	c.setupClick=function(){
 		jQuery('button#logoutBtn').click(function(){
@@ -26,5 +27,16 @@ var K=K||{},C=C||{},U=U||{};
 			});
 		});
 	};
+	c.updateTimeline=function(){
+		var r=T.stream({}).success(function(r,s,o){
+			var t='';
+			for(var i in r){
+				t+='<li class="post rr10"><div>'+r[i].content+'</div></li>';
+			}
+			console.log(t);
+			$('ol#posts').append(t);
+		});
+	};
+
 })('HOME');
 
