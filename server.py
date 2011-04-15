@@ -110,7 +110,7 @@ def get_input(spec):
         raise web.badrequest()
 
 class api:
-    GET_ACTIONS = set('stream current_user userinfo'.split())
+    GET_ACTIONS = set('stream current_user userinfo get_message'.split())
     POST_ACTIONS = set('register login logout publish follow unfollow\
             update_profile upload_photo'.split())
     FILTERS = {
@@ -145,7 +145,10 @@ class api:
                 'location': '',
                 'bio': '',
                 'web': ''
-                }
+                },
+            'get_message': {
+                'id': ''
+                },
             }
 
     def GET(self, action):
@@ -186,6 +189,12 @@ class api:
                 'web': u.get('web', ''),
                 'following': len(u['following'])
                 })
+        elif action == 'get_message':
+            m = db.get_message(d.id)
+            if m:
+                return jsond(m)
+            else:
+                return error.message_not_found()
 
         return error.not_implemented()
 

@@ -11,7 +11,7 @@
     // while fn = function(data) {}
     //
     // For more information, please refer to API SPEC in server code
-    var get_methods = 'stream userinfo current_user'.split(' ');
+    var get_methods = 'stream userinfo current_user get_message'.split(' ');
     var post_methods = 'register login logout publish follow unfollow update_profile'.split(' ');
     jQuery(get_methods).each(function(i, t) {
         tau[t] = function(param) {

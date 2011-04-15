@@ -50,7 +50,10 @@ def checkLogin(uid, password):
         'password': passwd_hash(password)})
 
 def get_user(uuid):
-    return users.find_one(ObjectId(uuid))
+    try:
+        return users.find_one(ObjectId(uuid))
+    except:
+        return None
 
 def find_user(uid):
     return users.find_one({'uid': uid})
@@ -86,6 +89,12 @@ def publish(uuid, content):
     # TODO check result
     messages.save(doc)
     return { 'success':1 }
+
+def get_message(uuid):
+    try:
+        return messages.find_one(ObjectId(uuid))
+    except Exception, e:
+        return None
 
 def stream(uuid):
     # first get following list

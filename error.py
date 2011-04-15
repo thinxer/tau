@@ -6,7 +6,7 @@
 
 # error list
 errors = 'not_logged_in wrong_action not_implemented invalid_uid wrong_login\
-        photo_upload_failed user_not_found'.split()
+        photo_upload_failed user_not_found message_not_found'.split()
 
 # a callable class
 class error_func(object):
