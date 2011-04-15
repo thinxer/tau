@@ -101,7 +101,14 @@ def stream(uuid):
     u = get_user(uuid)
     following = u['following']
     # then find messages published by his followings
-    c = messages.find({'owner': {'$in': following}})
+    c = messages.find({'$or': [
+        {
+            'owner': {'$in': following + [u['_id']]}
+        },
+        {
+            'entities.mentions.mention': '@' + u['uid']
+        }
+        ]}).sort('timestamp', pymongo.DESCENDING)
     ret = list(c)
     return ret
 
