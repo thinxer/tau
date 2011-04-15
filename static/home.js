@@ -17,6 +17,14 @@ var K=K||{},C=C||{},U=U||{};
 				else R.reload();
 			});
 		});
+		jQuery('a#pubBtn').click(function(){
+			var o=$('textarea#publisher');
+			T.publish({content:o.val()}).success(function(){
+				o.text('');
+				U.PAGE.statusDiv.show('发布成功！');
+			}).error(function(){
+			});
+		});
 	};
 })('HOME');
 
