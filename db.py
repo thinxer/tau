@@ -5,6 +5,7 @@ WARNING This module is not responsible for permission check.
 import pymongo
 import datetime
 import hashlib
+from bson.objectid import ObjectId
 
 import conf
 import error
@@ -35,8 +36,8 @@ def register(uid, email, password):
     return {'success': 1,
             'uid': uid }
 
-def unregister(uid, password):
-    u = users.find_one({'uid': uid, 'password': passwd_hash(password)})
+def unregister(uuid, password):
+    u = users.find_one({'_id': uuid, 'password': passwd_hash(password)})
     if u:
         users.remove(u)
         return {'success': 1}
@@ -48,25 +49,36 @@ def checkLogin(uid, password):
     return users.find_one({'uid': uid,
         'password': passwd_hash(password)})
 
-def userinfo(uid):
+def get_user(uuid):
+    return users.find_one(ObjectId(uuid))
+
+def find_user(uid):
     return users.find_one({'uid': uid})
 
-def follow(uid, target):
+def follow(uuid, target):
     '''
     make uid follow target
     '''
-    # TODO check result
-    users.update({'uid': uid}, {'$addToSet': {'following': target}})
-    return { 'success':1 }
+    u = find_user(target)
+    if u:
+        # TODO check result
+        users.update({'_id': ObjectId(uuid)}, {'$addToSet': {'following': u['_id']}})
+        return { 'success':1 }
+    else:
+        return error.user_not_found()
 
-def unfollow(uid, target):
+def unfollow(uuid, target):
     # TODO check result
-    users.update({'uid': uid}, {'$pull': {'following': target}})
-    return { 'success':1 }
+    u = find_user(target)
+    if u:
+        users.update({'_id': ObjectId(uuid)}, {'$pull': {'following': u['_id']}})
+        return { 'success':1 }
+    else:
+        return error.user_not_found()
 
-def publish(uid, content):
+def publish(uuid, content):
     doc = {
-            'owner': uid,
+            'owner': ObjectId(uuid),
             'content': content,
             'timestamp': utcnow(),
             'entities': contentparser.parse(content)
@@ -75,18 +87,19 @@ def publish(uid, content):
     messages.save(doc)
     return { 'success':1 }
 
-def stream(uid):
+def stream(uuid):
     # first get following list
-    u = users.find_one({'uid': uid})
+    u = get_user(uuid)
     following = u['following']
     # then find messages published by his followings
     c = messages.find({'owner': {'$in': following}})
     ret = list(c)
     return ret
 
-def update_profile(uid, profile):
-    u = users.find_one({'uid': uid})
+def update_profile(uuid, profile):
+    u = users.find_one(ObjectId(uuid))
     for key in 'email name location bio web'.split():
-        u[key] = profile[key]
+        if profile.has_key(key):
+            u[key] = profile[key]
     users.save(u)
     return u

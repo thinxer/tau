@@ -159,14 +159,14 @@ class api:
         if action in self.INPUT_SPECS:
             d = get_input(self.INPUT_SPECS[action])
 
-        uid = session.get('uid', None)
-        if not uid:
+        uuid = session.get('uuid', None)
+        if not uuid:
             return error.not_logged_in()
 
         if action == 'stream':
-            return jsond(db.stream(uid))
+            return jsond(db.stream(uuid))
         elif action == 'current_user':
-            u = db.userinfo(uid)
+            u = db.get_user(uuid)
             return jsond({
                 'uid': u['uid'],
                 'email': u['email'],
@@ -176,7 +176,7 @@ class api:
                 'following': len(u['following'])
                 })
         elif action == 'userinfo':
-            u = db.userinfo(d.uid)
+            u = db.find_user(d.uid)
             if not u:
                 return error.user_not_found()
             return jsond({
@@ -206,7 +206,7 @@ class api:
         elif action == 'login':
             u = db.checkLogin(d.uid, d.password)
             if u:
-                session.uid = u['uid']
+                session.uuid = str(u['_id'])
                 return jsond({
                     'uid': u['uid']
                     })
@@ -214,18 +214,18 @@ class api:
                 return error.wrong_login()
 
         # check login
-        uid = session.get('uid', None)
-        if not uid:
+        uuid = session.get('uuid', None)
+        if not uuid:
             return error.not_logged_in()
 
         if action == 'follow':
-            return jsond(db.follow(uid, d.target))
+            return jsond(db.follow(uuid, d.target))
         elif action == 'unfollow':
-            return jsond(db.unfollow(uid, d.target))
+            return jsond(db.unfollow(uuid, d.target))
         elif action == 'publish':
-            return jsond(db.publish(uid, d.content))
+            return jsond(db.publish(uuid, d.content))
         elif action == 'update_profile':
-            u = db.update_profile(uid, d)
+            u = db.update_profile(uuid, d)
             return jsond({
                 'uid': u['uid'],
                 'location': u.get('location', ''),
@@ -237,6 +237,7 @@ class api:
             try:
                 d = web.input(photo={})
                 if 'photo' in d:
+                    # XXX uid
                     photo.resize_save(uid, d.photo.file)
                 return jsond({ 'success':1 })
             except Exception, e:
