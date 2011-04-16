@@ -81,7 +81,7 @@ def get_input(s):
     return web.input()
 
 class api:
-    GET_ACTIONS = set('stream current_user userinfo get_message'.split())
+    GET_ACTIONS = set('stream current_user userinfo get_message validate'.split())
     POST_ACTIONS = set('register login logout publish follow unfollow\
             update_profile upload_photo'.split())
     FILTERS = {
@@ -116,6 +116,9 @@ class api:
             'get_message': {
                 'id': True
                 },
+            'validate': {
+                'action': True,
+                }
             }
     EXTRACT_SPECS = {
             'userinfo': {
@@ -172,6 +175,17 @@ class api:
                 return jsond(m)
             else:
                 return error.message_not_found()
+
+        elif action == 'validate':
+            act = d.action
+            if act in self.VALIDATE_SPECS:
+                errors = spec.validate(self.VALIDATE_SPECS[act], web.input())
+                if errors:
+                    return jsond(errors)
+                else:
+                    return jsond({ 'success':1 })
+            else:
+                return error.wrong_action()
 
         return error.not_implemented()
 
