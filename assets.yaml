@@ -1,0 +1,27 @@
+directory: ./static
+url: /static
+updater: timestamp
+expire: false
+cache: false
+
+bundles:
+    js_all:
+        filters: jsmin
+        output: all.js
+        contents:
+            - jquery.js
+            - jquery.cookie.js
+            - jquery.history.js
+            - jquery.tmpl.js
+            - tau.js
+            - router.js
+            - ui.js
+            - page.js
+            - public.js
+            - home.js
+            - views.debug.js
+    css_all:
+        output: all.css
+        contents:
+            - tau.css
+

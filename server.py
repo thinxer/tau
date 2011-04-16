@@ -23,7 +23,6 @@ urls = (
         '/api/(.+)', 'api',
         )
 
-# Turn off debug to use session
 web.config.debug = conf.debug
 app = web.application(urls, globals())
 render = web.template.render('templates/')
@@ -41,13 +40,17 @@ if web.config.debug:
 else:
     session = createSession()
 
+import webassets.loaders
+
+loader = webassets.loaders.YAMLLoader('assets.yaml')
+assets_env = loader.load_environment()
+assets_env.debug = web.config.debug
+jsfiles = assets_env['js_all'].urls()
+cssfiles = assets_env['css_all'].urls()
+
 class page:
     def GET(self):
-        logged_in = True
-        if logged_in:
-            return render.page()
-        else:
-            return render.public_index()
+        return render.page(jsfiles, cssfiles, conf.debug)
 
 class tmpl:
     def GET(self):

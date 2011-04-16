@@ -11,4 +11,6 @@ Run the following commands:
     mv conf_example.py conf.py
     vim conf.py
 
-Depends on: python 2.6+, PIL, pymongo.
+Depends on: python 2.6+, PIL, pymongo, webassets, pyyaml.
+
+    pip install pil pymongo webassets pyyaml

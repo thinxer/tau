@@ -2,3 +2,4 @@
 conf.py
 static/photos/
 *.swp
+static/all.*
