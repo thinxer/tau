@@ -30,7 +30,7 @@ def validate(spec, doc):
     try:
         for key, f in spec.items():
             if key not in doc:
-                if f is not False or (isinstance(f, tuple) and f[1]):
+                if not (isinstance(f, tuple) and f[1] is False or f is False):
                     raise ValidateError(key, None, 'required')
             else:
                 if isinstance(f, tuple):

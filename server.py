@@ -111,7 +111,7 @@ class api:
                 'uid': FILTERS['uid']
                 },
             'update_profile': {
-                'email': FILTERS['email']
+                'email': (FILTERS['email'], False)
                 },
             'get_message': {
                 'id': True
