@@ -1,0 +1,44 @@
+$def with(version="")
+<style>
+    .basic_info td.desc {
+        text-align: right;
+    }
+    .basic_info input.error {
+        background-color: yellow;
+    }
+</style>
+<div id='settings'>
+    <h1>账号设置</h1>
+    <div class='basic_info'>
+        <h2>基本资料</h2>
+        <table>
+            <tbody>
+                <tr>
+                    <td class='desc'>账号名</td>
+                    <td class='value'>$${uid}</td>
+                </tr>
+                <tr>
+                    <td class='desc'>显示名</td>
+                    <td class='value'><input type='text' name='name' value='$${name}' /></td>
+                </tr>
+                <tr>
+                    <td class='desc'>所在地</td>
+                    <td class='value'><input type='text' name='location' value='$${location}' /></td>
+                </tr>
+                <tr>
+                    <td class='desc'>简介</td>
+                    <td class='value'><input type='text' name='bio' value='$${bio}' /></td>
+                </tr>
+                <tr>
+                    <td class='desc'>网页</td>
+                    <td class='value'><input type='url' name='web' value='$${web}' /></td>
+                </tr>
+                <tr>
+                    <td class='desc'>邮箱</td>
+                    <td class='value'><input type='email' name='email' value='$${email}' /></td>
+                </tr>
+            </tbody>
+        </table>
+        <button class='submit'>保存资料</button>
+    </div>
+</div>
