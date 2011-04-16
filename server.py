@@ -48,22 +48,26 @@ assets_env.debug = web.config.debug
 jsfiles = assets_env['js_all'].urls()
 cssfiles = assets_env['css_all'].urls()
 
+def set_no_cache():
+    web.header('Cache-Control', 'no-cache, no-store, max-age=0, must-revalidate')
+
+def set_max_cache():
+    web.header('Cache-Control', 'max-age=315360000')
+
 class page:
     def GET(self):
+        set_no_cache()
         return render.page(jsfiles, cssfiles, conf.debug)
 
 class tmpl:
     def GET(self):
+        set_no_cache()
         # TODO find a better way for this.
         name = web.input().get('name', None)
         if name:
             return getattr(render, name)()
         else:
             raise web.notfound()
-
-class login:
-    def GET(self):
-        return render.login()
 
 class logout:
     def GET(self):
@@ -147,6 +151,7 @@ class api:
 
     def GET(self, action):
         web.header('Content-Type', 'application/json')
+        set_no_cache()
 
         # check if we have the action
         if action not in self.GET_ACTIONS:
@@ -194,6 +199,7 @@ class api:
 
     def POST(self, action):
         web.header('Content-Type', 'application/json')
+        set_no_cache()
 
         # check if we have the action
         if action not in self.POST_ACTIONS:
