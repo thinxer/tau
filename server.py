@@ -48,6 +48,10 @@ assets_env.debug = web.config.debug
 jsfiles = assets_env['js_all'].urls()
 cssfiles = assets_env['css_all'].urls()
 
+if not conf.debug:
+    jsfiles = [x+'?'+conf.version for x in jsfiles]
+    cssfiles = [x+'?'+conf.version for x in cssfiles]
+
 def set_no_cache():
     web.header('Cache-Control', 'no-cache, no-store, max-age=0, must-revalidate')
 
