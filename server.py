@@ -10,6 +10,7 @@ import db
 import error
 import photo
 import session
+import spec
 
 from jsonencoder import jsond
 
@@ -70,44 +71,14 @@ class api_info:
     def GET(self):
         return render.api_info()
 
-def get_input(spec):
-    E = exceptions.Exception
+def get_input(s):
     '''
-    Helper method to extract input data accroding to the spec.
-    spec example:
-        {
-            'name': re.compile('[a-z]+'),   # regex filter
-            'age': lambda _: int(_) < 10,   # callable filter
-            'sex': None,                    # required
-            'bio': 'nothing here'           # default value (optional value)
-        }
+    Helper method to validate input data accroding to the spec.
     '''
-    try:
-        ret = {}
-        i = web.input()
-        for key, f in spec.items():
-            if f is None and key not in i:
-                raise E('key ' + key + ' is required')
-            else:
-                # default to f
-                value = i.get(key, f)
-                # regex
-                if hasattr(f, 'match'):
-                    if key not in i or not f.match(value):
-                        raise E('regex for %s can\'t match %s' % (key, value))
-                # callable
-                elif callable(f):
-                    if key not in i or not f(value):
-                        raise E('%s didn\'t pass callable for %s' % (value, key))
-                # no check, f is default value
-                else:
-                    pass
-            ret[key] = value
-        return web.Storage(ret)
-    except Exception, e:
-        # error while checking
-        traceback.print_exc()
+    errors = spec.validate(s, web.input())
+    if errors:
         raise web.badrequest()
+    return web.input()
 
 class api:
     GET_ACTIONS = set('stream current_user userinfo get_message'.split())
@@ -117,18 +88,18 @@ class api:
             'uid': re.compile(r'[a-zA-Z][a-zA-Z0-9]+'),
             'email': re.compile(r'(.+)@(.+).(.+)'),
             }
-    INPUT_SPECS = {
+    VALIDATE_SPECS = {
             'register': {
                 'uid': FILTERS['uid'],
                 'email': FILTERS['email'],
-                'password': None
+                'password': True
                 },
             'login': {
                 'uid': FILTERS['uid'],
-                'password': None
+                'password': True
                 },
             'publish': {
-                'content': None
+                'content': True
                 },
             'follow': {
                 'target': FILTERS['uid']
@@ -140,15 +111,32 @@ class api:
                 'uid': FILTERS['uid']
                 },
             'update_profile': {
-                'email': FILTERS['email'],
-                'name': '',
-                'location': '',
-                'bio': '',
-                'web': ''
+                'email': FILTERS['email']
                 },
             'get_message': {
-                'id': ''
+                'id': True
                 },
+            }
+    EXTRACT_SPECS = {
+            'userinfo': {
+                'name': (str, ''),
+                'uid': str,
+                'bio': (str, ''),
+                'location': (str, ''),
+                'web': (str, ''),
+                'following': (len, []),
+                'follower': (len, []),
+                },
+            'current_user': {
+                'name': (str, ''),
+                'email': str,
+                'uid': str,
+                'bio': (str, ''),
+                'location': (str, ''),
+                'web': (str, ''),
+                'following': (len, []),
+                'follower': (len, []),
+                }
             }
 
     def GET(self, action):
@@ -159,8 +147,8 @@ class api:
             return error.wrong_action()
 
         # get the input data if we have the spec
-        if action in self.INPUT_SPECS:
-            d = get_input(self.INPUT_SPECS[action])
+        if action in self.VALIDATE_SPECS:
+            d = get_input(self.VALIDATE_SPECS[action])
 
         uuid = session.get('uuid', None)
         if not uuid:
@@ -170,25 +158,14 @@ class api:
             return jsond(db.stream(uuid))
         elif action == 'current_user':
             u = db.get_user(uuid)
-            return jsond({
-                'uid': u['uid'],
-                'email': u['email'],
-                'location': u.get('location', ''),
-                'bio': u.get('bio', ''),
-                'web': u.get('web', ''),
-                'following': len(u['following'])
-                })
+            return jsond(spec.extract(self.EXTRACT_SPECS['current_user'], u))
+
         elif action == 'userinfo':
             u = db.find_user(d.uid)
             if not u:
                 return error.user_not_found()
-            return jsond({
-                'uid': u['uid'],
-                'location': u.get('location', ''),
-                'bio': u.get('bio', ''),
-                'web': u.get('web', ''),
-                'following': len(u['following'])
-                })
+            return jsond(spec.extract(self.EXTRACT_SPECS['userinfo'], u))
+
         elif action == 'get_message':
             m = db.get_message(d.id)
             if m:
@@ -206,8 +183,8 @@ class api:
             return error.wrong_action()
 
         # get the input data if we have the spec
-        if action in self.INPUT_SPECS:
-            d = get_input(self.INPUT_SPECS[action])
+        if action in self.VALIDATE_SPECS:
+            d = get_input(self.VALIDATE_SPECS[action])
 
         # act
         if action == 'register':
@@ -235,19 +212,14 @@ class api:
             return jsond(db.publish(uuid, d.content))
         elif action == 'update_profile':
             u = db.update_profile(uuid, d)
-            return jsond({
-                'uid': u['uid'],
-                'location': u.get('location', ''),
-                'bio': u.get('bio', ''),
-                'web': u.get('web', ''),
-                'following': len(u['following'])
-                })
+            return jsond(spec.extract(self.EXTRACT_SPECS['current_user'], u))
+
         elif action == 'upload_photo':
             try:
                 d = web.input(photo={})
                 if 'photo' in d:
-                    # XXX uid
-                    photo.resize_save(uid, d.photo.file)
+                    u = db.get_user(uuid)
+                    photo.resize_save(u['uid'], d.photo.file)
                 return jsond({ 'success':1 })
             except Exception, e:
                 traceback.print_exc()
