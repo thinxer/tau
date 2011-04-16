@@ -83,12 +83,7 @@
      * Usage:
      *      U.render('main').appendTo('#wrapper');
      */
-    ui.render = function(name, data, fn) {
-        if (typeof fn === 'undefined') {
-            fn = data;
-            data = null;
-        }
-
+    ui.render = function(name, data) {
         var d = jQuery.Deferred();
 
         if (ui.template[name]) {
