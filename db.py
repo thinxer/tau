@@ -13,9 +13,9 @@ import contentparser
 
 utcnow = datetime.datetime.utcnow
 
-# XXX consider add user id to hash
-def passwd_hash(password):
-    return hashlib.md5(conf.secret + '|' + password).hexdigest()
+def passwd_hash(uuid, password):
+    ''' compute hashed password '''
+    return hashlib.md5(conf.secret + '|' + password + '|' + uuid).hexdigest()
 
 conn = pymongo.Connection()
 db = conn[conf.db_name]
@@ -23,21 +23,24 @@ db = conn[conf.db_name]
 users = db.users
 messages = db.messages
 
-# TODO use hash to mask the password
 def register(uid, email, password):
     if uid in conf.reserved_names or users.find_one({'uid': uid}):
         return error.invalid_uid(raw=True)
-    users.save({ 'uid': uid,
-        'email': email,
-        'password': passwd_hash(password),
-        'following': []
-        })
+    # 2 steps save, as we need the ObjectId to compute the password
+    uuid = users.save({})
     # TODO check result
+    users.update({'_id': uuid}, {
+        'uid': uid,
+        'email': email,
+        'password': passwd_hash(str(uuid), password),
+        'following': [],
+        'follower': []
+        })
     return {'success': 1,
             'uid': uid }
 
 def unregister(uuid, password):
-    u = users.find_one({'_id': uuid, 'password': passwd_hash(password)})
+    u = users.find_one({'_id': uuid, 'password': passwd_hash(uuid, password)})
     if u:
         users.remove(u)
         return {'success': 1}
@@ -46,22 +49,25 @@ def unregister(uuid, password):
 
 def checkLogin(uid, password):
     # TODO check result
-    return users.find_one({'uid': uid,
-        'password': passwd_hash(password)})
+    u = find_user(uid)
+    if u and u['password'] == passwd_hash(str(u['_id']), password):
+        return u
+    else:
+        return None
 
 def get_user(uuid):
+    ''' get user object by uuid '''
     try:
         return users.find_one(ObjectId(uuid))
     except:
         return None
 
 def find_user(uid):
+    ''' find a user by uid '''
     return users.find_one({'uid': uid})
 
 def follow(uuid, target):
-    '''
-    make uid follow target
-    '''
+    ''' make uid follow target '''
     u = find_user(target)
     if u:
         # TODO check result
