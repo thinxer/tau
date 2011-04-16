@@ -69,7 +69,7 @@ class tmpl:
         # TODO find a better way for this.
         name = web.input().get('name', None)
         if name:
-            return getattr(render, name)()
+            return getattr(render, name)(version = conf.version)
         else:
             raise web.notfound()
 
