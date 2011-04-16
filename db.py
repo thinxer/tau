@@ -74,7 +74,7 @@ def follow(uuid, target):
         users.update({'_id': ObjectId(uuid)}, {'$addToSet': {'following': u['_id']}})
         return { 'success':1 }
     else:
-        return error.user_not_found()
+        return error.user_not_found(raw=True)
 
 def unfollow(uuid, target):
     # TODO check result
