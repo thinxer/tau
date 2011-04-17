@@ -152,7 +152,10 @@ class api:
                 'following': (len, []),
                 'follower': (len, []),
                 'photo': (str, conf.default_photo_uri)
-                }
+                },
+            'stream_item': [
+                'name', 'uid', 'content', 'timestamp', 'entities'
+                ]
             }
 
     def GET(self, action):
@@ -172,7 +175,10 @@ class api:
             return error.not_logged_in()
 
         if action == 'stream':
-            return jsond(db.stream(uuid))
+            return jsond(map(
+                lambda _: spec.extract(self.EXTRACT_SPECS['stream_item'], _),
+                db.stream(uuid)
+                ))
         elif action == 'current_user':
             u = db.get_user(uuid)
             return jsond(spec.extract(self.EXTRACT_SPECS['current_user'], u))

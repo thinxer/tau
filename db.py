@@ -86,8 +86,11 @@ def unfollow(uuid, target):
         return error.user_not_found()
 
 def publish(uuid, content):
+    u = get_user(uuid)
     doc = {
             'owner': ObjectId(uuid),
+            'name': u['name'],
+            'uid': u['uid'],
             'content': content,
             'timestamp': utcnow(),
             'entities': contentparser.parse(content)
