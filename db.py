@@ -105,20 +105,47 @@ def get_message(uuid):
     except Exception, e:
         return None
 
-def stream(uuid):
+def stream(uuid, olderThan = None, newerThan = None):
+    # TODO make clear newerThan logic.
+
     # first get following list
     u = get_user(uuid)
     following = u['following']
-    # then find messages published by his followings
-    c = messages.find({'$or': [
-        {
+    following_query = {
             'owner': {'$in': following + [u['_id']]}
-        },
-        {
+            }
+    mention_query = {
             'entities.mentions.mention': '@' + u['uid']
-        }
-        ]}).sort('timestamp', pymongo.DESCENDING)
-    ret = list(c)
+            }
+    query = {
+            '$or': [following_query, mention_query]
+            }
+    if olderThan or newerThan:
+        query['timestamp'] = {}
+    if olderThan:
+        query['timestamp']['$lt'] = olderThan
+    if newerThan:
+        query['timestamp']['$gt'] = newerThan
+    # then find messages published by his followings
+    c = messages.find(query) \
+            .sort('timestamp', pymongo.DESCENDING) \
+            .batch_size(conf.stream_item_max)
+    ret = []
+    # The logic here is to make sure we won't break in a time.
+    # e.g. When multiple messages are at the same time, we make sure
+    # to retrieve them together
+    # XXX not tested
+    last_datetime = None
+    count = 0
+    for item in c:
+        if count < conf.stream_item_max:
+            ret.append(item)
+            count += 1
+        else:
+            # last_datetime won't be None unless stream_item_max is 0
+            if item['timestamp'] != last_datetime:
+                break
+        last_datetime = item['timestamp']
     return ret
 
 def update_profile(uuid, profile):

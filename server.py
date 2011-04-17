@@ -11,6 +11,7 @@ import error
 import photo
 import session
 import spec
+import util
 
 from jsonencoder import jsond
 
@@ -98,6 +99,7 @@ class api:
     FILTERS = {
             'uid': re.compile(r'[a-zA-Z][a-zA-Z0-9]+'),
             'email': re.compile(r'(.+)@(.+).(.+)'),
+            'datetime': lambda _: _ and int(_) or None
             }
     VALIDATE_SPECS = {
             'register': {
@@ -129,6 +131,10 @@ class api:
                 },
             'validate': {
                 'action': True,
+                },
+            'stream': {
+                'olderThan': (FILTERS['datetime'], False),
+                'newerThan': (FILTERS['datetime'], False)
                 }
             }
     EXTRACT_SPECS = {
@@ -155,7 +161,11 @@ class api:
                 },
             'stream_item': [
                 'name', 'uid', 'content', 'timestamp', 'entities'
-                ]
+                ],
+            'stream': {
+                'olderThan': (lambda _: _ and util.parseTimestamp(int(_)) or None, None),
+                'newerThan': (lambda _: _ and util.parseTimestamp(int(_)) or None, None)
+                }
             }
 
     def GET(self, action):
@@ -175,9 +185,10 @@ class api:
             return error.not_logged_in()
 
         if action == 'stream':
+            param = spec.extract(self.EXTRACT_SPECS['stream'], d)
             return jsond(map(
                 lambda _: spec.extract(self.EXTRACT_SPECS['stream_item'], _),
-                db.stream(uuid)
+                db.stream(uuid, **param)
                 ))
         elif action == 'current_user':
             u = db.get_user(uuid)
