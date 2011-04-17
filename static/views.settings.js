@@ -2,7 +2,9 @@
 
 var settingsHandler = function(path, level) {
 
-    var basicInfoSubmit = function() {
+    var basicInfoSubmit = function(e) {
+        e.preventDefault();
+
         var basic_info = jQuery('#settings .basic_info');
 
         // Clear error indicators.
@@ -10,7 +12,7 @@ var settingsHandler = function(path, level) {
 
         // Collect user inputs.
         var d = {};
-        basic_info.find('input').each(function(i, t) {
+        basic_info.find('input,textarea').each(function(i, t) {
             d[t.name] = t.value;
         });
 
@@ -25,7 +27,7 @@ var settingsHandler = function(path, level) {
                 });
             } else {
                 // Validation failed. Point to wrong field.
-                basic_info.find('input[name="' + res.key + '"]').addClass('error').focus();
+                basic_info.find('[name="' + res.key + '"]').addClass('error').focus();
             }
         });
     };
@@ -34,7 +36,7 @@ var settingsHandler = function(path, level) {
     T.current_user().success(function(userinfo) {
         U.render('settings', userinfo).fillTo('#main').done(function() {
             // Set up basic info submit button.
-            jQuery('#settings .basic_info button.submit').click(basicInfoSubmit);
+            jQuery('#settings .basic_info form').submit(basicInfoSubmit);
 
             // Set up photo upload form.
             var iframe = jQuery('<iframe name="_photo_upload"/>');

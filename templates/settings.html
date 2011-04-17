@@ -1,26 +1,95 @@
 $def with(version="")
 <style>
-    .basic_info td.desc {
+    #settings .section {
+        width: 80%;
+        margin: auto;
+        padding: 10px 0;
+        clear: both;
+    }
+    #settings h1, #settings h2 {
+        font-weight: normal;
+    }
+
+    #settings .basic_info td.desc {
         text-align: right;
     }
-    .basic_info input.error {
+    #settings .basic_info input.error {
         background-color: yellow;
+    }
+    #settings .basic_info table {
+        width: 100%;
+        margin: 0 auto;
+        border-top: solid 1px rgba(255,255,255,0.4);
+        border-bottom: none;
+        border-left: none;
+        border-right: none;
+    }
+    #settings .basic_info td {
+        border-bottom: solid 1px rgba(255,255,255,0.4);
+        padding: 10px;
+    }
+    #settings .basic_info tr td.desc {
+        padding: 10px 20px;
+        background-color: rgba(255,255,255,0.2);
+        width: 100px;
+    }
+    #settings .basic_info tr td.value {
+        padding-left: 20px;
+        background-color: rgba(255,255,255,0.1);
+    }
+    #settings .basic_info input {
+        height: 24px;
+        padding: 2px 4px;
+        width: 200px !important;
+    }
+    #settings .basic_info textarea {
+        padding: 2px 4px;
+        width: 400px;
+    }
+    #settings .basic_info .form_footer {
+        padding: 10px;
+        background-color: rgba(255,255,255,0.1);
+        text-align: right;
+    }
+    #settings .basic_info input[type=submit] {
+        width: 80px;
+        height: 30px;
+    }
+
+    #settings .photo_info .photo_box {
+        width: 60px;
+        height: 60px;
+        padding: 5px;
+        background: rgba(255,255,255,0.1);
+        border: rgba(0,0,0,0.5);
+        float: left;
+    }
+    #settings .photo_info form {
+        margin-left: 80px;;
+    }
+    #settings .photo_info input {
+        display: block;
+    }
+    #settings .photo_info input[type=submit] {
+        width: 80px;
+        height: 30px;
     }
 </style>
 <div id='settings'>
     <h1>账号设置</h1>
-    <div class='photo_info'>
+    <div class='section photo_info'>
         <div class="photo_box">
             <img src='$${photo}' width=60px height=60px />
-            <form class='photo_upload_form' action='/api/upload_photo' enctype='multipart/form-data' method='POST'>
-                <input type='file' name='photo' />
-                <input type='submit' value='上传头像' />
-            </form>
         </div>
+        <form class='photo_upload_form' action='/api/upload_photo' enctype='multipart/form-data' method='POST'>
+            <input type='file' name='photo' />
+            <input type='submit' value='上传头像' />
+        </form>
     </div>
-    <div class='basic_info'>
+    <div class='section basic_info'>
         <h2>基本资料</h2>
-        <table>
+        <form action='/api/update_profile' method='POST'>
+        <table cellspacing=0 cellpadding=0 >
             <tbody>
                 <tr>
                     <td class='desc'>账号名</td>
@@ -36,7 +105,7 @@ $def with(version="")
                 </tr>
                 <tr>
                     <td class='desc'>简介</td>
-                    <td class='value'><input type='text' name='bio' value='$${bio}' /></td>
+                    <td class='value'><textarea name='bio' rows=3>$${bio}</textarea></td>
                 </tr>
                 <tr>
                     <td class='desc'>网页</td>
@@ -48,6 +117,9 @@ $def with(version="")
                 </tr>
             </tbody>
         </table>
-        <button class='submit'>保存资料</button>
+        <div class='form_footer'>
+            <input type='submit' class='submit' name='submit' value='保存资料' />
+        </div>
+        </input>
     </div>
 </div>
