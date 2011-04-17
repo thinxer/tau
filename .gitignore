@@ -1,5 +1,6 @@
 *.pyc
 conf.py
-static/photos/
+static/photos/*
+!static/photos/_.png
 *.swp
 static/all.*
