@@ -9,6 +9,15 @@ $def with(version="")
 </style>
 <div id='settings'>
     <h1>账号设置</h1>
+    <div class='photo_info'>
+        <div class="photo_box">
+            <img src='$${photo}' width=60px height=60px />
+            <form class='photo_upload_form' action='/api/upload_photo' enctype='multipart/form-data' method='POST'>
+                <input type='file' name='photo' />
+                <input type='submit' value='上传头像' />
+            </form>
+        </div>
+    </div>
     <div class='basic_info'>
         <h2>基本资料</h2>
         <table>

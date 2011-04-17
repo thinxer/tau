@@ -2,9 +2,9 @@ import Image
 
 import conf
 
-PHOTO_SIZE = 48
-
 def resize_save(uid, file):
-    im = Image.open(file).resize((PHOTO_SIZE, PHOTO_SIZE), Image.ANTIALIAS)
-    filename = conf.media_file_path + '/' + uid + '.jpg'
-    im.save(filename, 'JPEG')
+    im = Image.open(file).resize(
+            (conf.photo_size, conf.photo_size),
+            Image.ANTIALIAS)
+    filename = conf.photo_file_path + '/' + uid + conf.photo_ext
+    im.save(filename, conf.photo_type)

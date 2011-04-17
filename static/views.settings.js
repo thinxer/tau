@@ -33,8 +33,28 @@ var settingsHandler = function(path, level) {
     // Load user info and render the template.
     T.current_user().success(function(userinfo) {
         U.render('settings', userinfo).fillTo('#main').done(function() {
-            // Set up submit button.
+            // Set up basic info submit button.
             jQuery('#settings .basic_info button.submit').click(basicInfoSubmit);
+
+            // Set up photo upload form.
+            var iframe = jQuery('<iframe name="_photo_upload"/>');
+            iframe.css({'display': 'none'})
+            var form = jQuery('#settings .photo_upload_form');
+            form.after(iframe).attr('target', '_photo_upload');
+            iframe.load(function() {
+                var json_text = jQuery(iframe[0].contentWindow.document.body).text();
+                var data = eval('(' + json_text + ')');
+                if (data.success) {
+                    T.current_user().success(function(d) {
+                        jQuery('#settings .photo_box img').attr('src', d.photo);
+                    });
+                    // TODO friendly prompt
+                    alert('success!');
+                } else {
+                    // TODO friendly prompt
+                    alert('upload failed');
+                }
+            });
         });
     });
 };

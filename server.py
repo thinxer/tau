@@ -150,6 +150,7 @@ class api:
                 'web': (str, ''),
                 'following': (len, []),
                 'follower': (len, []),
+                'photo': (str, conf.default_photo_uri)
                 }
             }
 
@@ -202,7 +203,11 @@ class api:
         return error.not_implemented()
 
     def POST(self, action):
-        web.header('Content-Type', 'application/json')
+        if action == 'upload_photo':
+            # this is to prevent IE from downloading the JSON.
+            web.header('Content-Type', 'text/plain')
+        else:
+            web.header('Content-Type', 'application/json')
         set_no_cache()
 
         # check if we have the action
@@ -247,7 +252,9 @@ class api:
                 if 'photo' in d:
                     u = db.get_user(uuid)
                     photo.resize_save(u['uid'], d.photo.file)
-                return jsond({ 'success':1 })
+                    if db.update_photo(uuid, True).has_key('success'):
+                        return jsond({ 'success':1 })
+                return error.photo_upload_failed()
             except Exception, e:
                 traceback.print_exc()
                 return error.photo_upload_failed()

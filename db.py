@@ -125,3 +125,13 @@ def update_profile(uuid, profile):
             u[key] = profile[key]
     users.save(u)
     return u
+
+def update_photo(uuid, has_photo):
+    u = users.find_one(ObjectId(uuid))
+    u['photo_version'] = u.get('photo_version', 0) + 1
+    if has_photo:
+        u['photo'] = conf.photo_uri_prefix + u['uid'] + conf.photo_ext + '?' + str(u['photo_version'])
+    else:
+        u['photo'] = conf.default_photo_uri;
+    users.save(u)
+    return { 'success':1 }
