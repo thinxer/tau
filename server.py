@@ -140,6 +140,7 @@ class api:
                 'web': (str, ''),
                 'following': (len, []),
                 'follower': (len, []),
+                'photo': (str, conf.default_photo_uri)
                 },
             'current_user': {
                 'name': (str, ''),
