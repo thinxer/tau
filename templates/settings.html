@@ -13,37 +13,37 @@ $def with(version='')
     <div class='section basic_info'>
         <h2>基本资料</h2>
         <form action='/api/update_profile' method='POST'>
-        <table cellspacing=0 cellpadding=0 >
-            <tbody>
-                <tr>
-                    <td class='desc'>账号名</td>
-                    <td class='value'>$${uid}</td>
-                </tr>
-                <tr>
-                    <td class='desc'>显示名</td>
-                    <td class='value'><input type='text' name='name' value='$${name}' /></td>
-                </tr>
-                <tr>
-                    <td class='desc'>所在地</td>
-                    <td class='value'><input type='text' name='location' value='$${location}' /></td>
-                </tr>
-                <tr>
-                    <td class='desc'>简介</td>
-                    <td class='value'><textarea name='bio' rows=3>$${bio}</textarea></td>
-                </tr>
-                <tr>
-                    <td class='desc'>网页</td>
-                    <td class='value'><input type='url' name='web' value='$${web}' /></td>
-                </tr>
-                <tr>
-                    <td class='desc'>邮箱</td>
-                    <td class='value'><input type='email' name='email' value='$${email}' /></td>
-                </tr>
-            </tbody>
-        </table>
-        <div class='form_footer'>
-            <input type='submit' class='submit' name='submit' value='保存资料' />
-        </div>
-        </input>
+            <table cellspacing=0 cellpadding=0 >
+                <tbody>
+                    <tr>
+                        <td class='desc'>账号名</td>
+                        <td class='value'>$${uid}</td>
+                    </tr>
+                    <tr>
+                        <td class='desc'>显示名</td>
+                        <td class='value'><input type='text' name='name' value='$${name}' /></td>
+                    </tr>
+                    <tr>
+                        <td class='desc'>所在地</td>
+                        <td class='value'><input type='text' name='location' value='$${location}' /></td>
+                    </tr>
+                    <tr>
+                        <td class='desc'>简介</td>
+                        <td class='value'><textarea name='bio' rows=3>$${bio}</textarea></td>
+                    </tr>
+                    <tr>
+                        <td class='desc'>网页</td>
+                        <td class='value'><input type='url' name='web' value='$${web}' /></td>
+                    </tr>
+                    <tr>
+                        <td class='desc'>邮箱</td>
+                        <td class='value'><input type='email' name='email' value='$${email}' /></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class='form_footer'>
+                <input type='submit' class='submit' name='submit' value='保存资料' />
+            </div>
+        </form>
     </div>
 </div>
