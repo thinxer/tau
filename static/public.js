@@ -81,10 +81,10 @@
 	c.setPlaceHolder=function(){
 		var o=jQuery('.reginput');
 		o.focus(function(){
-			jQuery(this).siblings().css('opacity',0);
+			jQuery(this).siblings().css('display','none');
 		});
 		o.blur(function(){
-			if(jQuery(this).val().length==0) jQuery(this).siblings().css('opacity',1);
+			if(jQuery(this).val().length==0) jQuery(this).siblings().css('display','block');
 		});
 	};
 	c.toggleTip=function(s){
