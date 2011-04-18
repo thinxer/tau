@@ -17,6 +17,7 @@
 	var c=C[name]={};
 	c.start=function(){
 		c.setupClick();
+		c.setPlaceHolder();
 	};
 	c.setupClick=function(){
 		var o=jQuery('button#regbtn');
@@ -47,15 +48,20 @@
 			}
 		});
 		$('a#toggle').click(function(){
+			if(c.flag)return;
+			c.flag=true;
 			if(o.attr('mark')=='login'){
 				o.attr('mark','reg');
 				o.children().text('注册');
 				c.toggleTip('已有帐号，直接登录');
 				$('a#forgetPass').animate({opacity:0},200);
+				$('div#inputWrapper').animate({left:'-=76'},600);
 				$('button#regbtn').animate({
 					left:'+=167'
 				},600,function(){
-					$('div#emailDiv').animate({opacity:1},200);
+					$('div#emailDiv').animate({opacity:1},200,function(){
+						c.flag=false;
+					});
 				});
 			}else{
 				o.attr('mark','login');
@@ -63,10 +69,22 @@
 				c.toggleTip('没有帐号？注册一个吧');
 				$('a#forgetPass').animate({opacity:1},800);
 				$('div#emailDiv').animate({opacity:0},200);
+				$('div#inputWrapper').animate({left:'+=76'},600);
 				$('button#regbtn').animate({
 					left:'-=167'
+				},600,function(){
+					c.flag=false;
 				});
 			}
+		});
+	};
+	c.setPlaceHolder=function(){
+		var o=jQuery('.reginput');
+		o.focus(function(){
+			jQuery(this).siblings().css('opacity',0);
+		});
+		o.blur(function(){
+			if(jQuery(this).val().length==0) jQuery(this).siblings().css('opacity',1);
 		});
 	};
 	c.toggleTip=function(s){
