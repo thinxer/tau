@@ -1,8 +1,7 @@
 // for home.html
 
-var K=K||{},C=C||{},U=U||{};
-
 (function(name){
+    var K=window.K=window.K||{},C=window.C=window.C||{};
     R.path('home',C.PAGE.goDefault);
 	var c=C[name]={};
     var u=U[name]={};

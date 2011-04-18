@@ -1,9 +1,9 @@
 /**
  *  For page.html
  */
-var U=U||{},C=C||{};
 
 (function(name){
+    var U=window.U=window.U||{},C=window.C=window.C||{};
     var u=U[name]={};
     var c=C[name]={};
 
@@ -32,7 +32,8 @@ var U=U||{},C=C||{};
             jQuery(this.id).slideUp('fast');
         }
     }
+
+    R.path('notfound',function(){U.render('notfound').fillTo('#main');})
+    R.path('default',C.PAGE.goDefault);
 })("PAGE");
 
-R.path('notfound',function(){U.render('notfound').fillTo('#main');})
-R.path('default',C.PAGE.goDefault);

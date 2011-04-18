@@ -1,17 +1,18 @@
 // for page public.html
 
-var K=K||{};	// constant
-var C=C||{};	// controller
-
-K.PUBLIC={
-	UID_TOO_SHORT:"用户名太短啦，你能长点吗？",
-	PASS_TOO_SHORT:"密码太短了，长点OK？",
-	NOT_EMAIL:"你输入的邮箱地址是个邮箱？不像吧?",
-	SERVER_ERR:"这个，我们服务器的核能电池没电了，等我们充好电再来光临吧～",
-	INVALID_UID:"您的用户ID可能已经被使用了，试试换一个其他的吧"
-};
 
 (function(name){
+    var K=window.K=window.K||{};	// constant
+    var C=window.C=window.C||{};	// controller
+
+    K.PUBLIC={
+        UID_TOO_SHORT:"用户名太短啦，你能长点吗？",
+        PASS_TOO_SHORT:"密码太短了，长点OK？",
+        NOT_EMAIL:"你输入的邮箱地址是个邮箱？不像吧?",
+        SERVER_ERR:"这个，我们服务器的核能电池没电了，等我们充好电再来光临吧～",
+        INVALID_UID:"您的用户ID可能已经被使用了，试试换一个其他的吧"
+    };
+
     R.path('public',C.PAGE.goDefault);
 	var c=C[name]={};
 	c.start=function(){
