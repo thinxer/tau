@@ -17,23 +17,23 @@
 #settings .basic_info table {
     width: 100%;
     margin: 0 auto;
-    border-top: solid 1px rgba(255,255,255,0.4);
+    border-top: solid 1px #8a98a5;
     border-bottom: none;
     border-left: none;
     border-right: none;
 }
 #settings .basic_info td {
-    border-bottom: solid 1px rgba(255,255,255,0.4);
+    border-bottom: solid 1px #8a98a5;
     padding: 10px;
 }
 #settings .basic_info tr td.desc {
     padding: 10px 20px;
-    background-color: rgba(255,255,255,0.2);
+    background-color: #53677b;
     width: 100px;
 }
 #settings .basic_info tr td.value {
     padding-left: 20px;
-    background-color: rgba(255,255,255,0.1);
+    background-color: #3d546a;
 }
 #settings .basic_info input {
     height: 24px;
@@ -46,7 +46,7 @@
 }
 #settings .basic_info .form_footer {
     padding: 10px;
-    background-color: rgba(255,255,255,0.1);
+    background-color: #3d546a;
     text-align: right;
 }
 #settings .basic_info input[type=submit] {
