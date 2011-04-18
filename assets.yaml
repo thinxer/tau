@@ -24,5 +24,6 @@ bundles:
     css_all:
         output: all.css
         contents:
-            - tau.css
+            - stylesheets/main.css
+            - stylesheets/settings.css
 

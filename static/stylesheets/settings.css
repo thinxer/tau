@@ -1,0 +1,78 @@
+#settings .section {
+    width: 80%;
+    margin: auto;
+    padding: 10px 0;
+    clear: both;
+}
+#settings h1, #settings h2 {
+    font-weight: normal;
+}
+
+#settings .basic_info td.desc {
+    text-align: right;
+}
+#settings .basic_info input.error {
+    background-color: yellow;
+}
+#settings .basic_info table {
+    width: 100%;
+    margin: 0 auto;
+    border-top: solid 1px rgba(255,255,255,0.4);
+    border-bottom: none;
+    border-left: none;
+    border-right: none;
+}
+#settings .basic_info td {
+    border-bottom: solid 1px rgba(255,255,255,0.4);
+    padding: 10px;
+}
+#settings .basic_info tr td.desc {
+    padding: 10px 20px;
+    background-color: rgba(255,255,255,0.2);
+    width: 100px;
+}
+#settings .basic_info tr td.value {
+    padding-left: 20px;
+    background-color: rgba(255,255,255,0.1);
+}
+#settings .basic_info input {
+    height: 24px;
+    padding: 2px 4px;
+    width: 200px !important;
+}
+#settings .basic_info textarea {
+    padding: 2px 4px;
+    width: 400px;
+}
+#settings .basic_info .form_footer {
+    padding: 10px;
+    background-color: rgba(255,255,255,0.1);
+    text-align: right;
+}
+#settings .basic_info input[type=submit] {
+    width: 80px;
+    height: 30px;
+}
+
+#settings .photo_info .photo_box {
+    width: 60px;
+    height: 60px;
+    padding: 5px;
+    background: rgba(255,255,255,0.1);
+    border: rgba(0,0,0,0.5);
+    float: left;
+}
+#settings .photo_info .photo_box img {
+    width: 60px;
+    height: 60px;
+}
+#settings .photo_info form {
+    margin-left: 80px;;
+}
+#settings .photo_info input {
+    display: block;
+}
+#settings .photo_info input[type=submit] {
+    width: 80px;
+    height: 30px;
+}
