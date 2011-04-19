@@ -26,7 +26,7 @@ urls = (
 
 web.config.debug = conf.debug
 app = web.application(urls, globals())
-render = web.template.render('templates/')
+render = web.template.render('template/')
 
 def createSession():
     return web.session.Session(app, session.MongoStore(db.db, 'sessions'))

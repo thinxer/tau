@@ -5,10 +5,10 @@ version = '1'
 reserved_names = set(["www", "admin", "setting", "settings", \
         "login", "logout", "api"])
 
-photo_uri_prefix = '/static/photos/'
-default_photo_uri = '/static/photos/_.png'
+photo_uri_prefix = '/static/photo/'
+default_photo_uri = '/static/photo/_.png'
 import os.path
-photo_file_path = os.path.join(os.path.dirname(__file__), "static/photos")
+photo_file_path = os.path.join(os.path.dirname(__file__), "static/photo")
 photo_size = 60
 photo_type = 'JPEG'
 photo_ext = '.jpg'
