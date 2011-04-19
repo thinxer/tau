@@ -2,12 +2,12 @@ $def with(version='')
 <div id='settings'>
     <h1>账号设置</h1>
     <div class='section photo_info'>
-        <div class='photo_box'>
-            <img src='$${photo}' />
-        </div>
         <form class='photo_upload_form' action='/api/upload_photo' enctype='multipart/form-data' method='POST'>
-            <input type='file' name='photo' />
-            <input type='submit' value='上传头像' />
+            <div class='photo_box'>
+                <img src='$${photo}' />
+                <input type='file' name='photo' value=''/>
+                <div class='hint'>更新头像</div>
+            </div>
         </form>
     </div>
     <div class='section basic_info'>
@@ -42,7 +42,7 @@ $def with(version='')
                 </tbody>
             </table>
             <div class='form_footer'>
-                <input type='submit' class='submit' name='submit' value='保存资料' />
+                <button type='submit' class='submit' name='submit' >保存资料</button>
             </div>
         </form>
     </div>

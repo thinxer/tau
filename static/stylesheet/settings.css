@@ -36,43 +36,60 @@
     background-color: #3d546a;
 }
 #settings .basic_info input {
-    height: 24px;
+    height: 20px;
     padding: 2px 4px;
-    width: 200px !important;
+    width: 200px;
+    font-size: 16px;
+    background: white;
+    border: solid 1px white;
 }
 #settings .basic_info textarea {
     padding: 2px 4px;
     width: 400px;
+    font-size: 16px;
 }
 #settings .basic_info .form_footer {
     padding: 10px;
     background-color: #3d546a;
     text-align: right;
 }
-#settings .basic_info input[type=submit] {
+#settings .basic_info button.submit {
     width: 80px;
     height: 30px;
 }
 
 #settings .photo_info .photo_box {
     width: 60px;
-    height: 60px;
     padding: 5px;
-    background: rgba(255,255,255,0.1);
-    border: rgba(0,0,0,0.5);
-    float: left;
+    margin-top: 10px;
+    overflow: hidden;
+    direction: ltr;
+    position: relative;
+    background-color: #3d546a;
 }
 #settings .photo_info .photo_box img {
     width: 60px;
     height: 60px;
 }
-#settings .photo_info form {
-    margin-left: 80px;;
+#settings .photo_info .photo_box:hover {
+    background-color: #53677b;
 }
-#settings .photo_info input {
+#settings .photo_info .hint {
+    width: 60px;
+    padding-top: 4px;
+    text-align: center;
+    font-size: 12px;
+}
+#settings .photo_info input[type=file] {
     display: block;
-}
-#settings .photo_info input[type=submit] {
-    width: 80px;
-    height: 30px;
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    z-index: 1;
+    font-size: 118px;
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+    opacity: 0;
+    filter: alpha(opacity=0);
 }

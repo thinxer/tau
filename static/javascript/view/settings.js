@@ -45,17 +45,22 @@ var settingsHandler = function(path, level) {
             form.after(iframe).attr('target', '_photo_upload');
             iframe.load(function() {
                 var json_text = jQuery(iframe[0].contentWindow.document.body).text();
-                var data = eval('(' + json_text + ')');
-                if (data.success) {
-                    T.current_user().success(function(d) {
-                        jQuery('#settings .photo_box img').attr('src', d.photo);
-                    });
-                    // TODO friendly prompt
-                    alert('success!');
-                } else {
-                    // TODO friendly prompt
-                    alert('upload failed');
+                if (json_text) {
+                    var data = eval('(' + json_text + ')');
+                    if (data.success) {
+                        T.current_user().success(function(d) {
+                            jQuery('#settings .photo_box img').attr('src', d.photo);
+                        });
+                        // TODO friendly prompt
+                        alert('success!');
+                    } else {
+                        // TODO friendly prompt
+                        alert('upload failed');
+                    }
                 }
+            });
+            form.find('[type=file]').change(function() {
+                form.submit();
             });
         });
     });

@@ -61,7 +61,7 @@ a {
     bottom:0;
     left: 0;
     width: 100%;
-    background: url(/static/images/footer_bg.png);
+    background: url(/static/image/footer_bg.png);
     text-align: center;
     color: white;
     font-size: bold;
@@ -145,7 +145,7 @@ a {
     border-radius: 5px;
     width:111px;
     height:38px;
-    background:#8BAD68 url(/static/images/reg_btn.gif) no-repeat right center;
+    background:#8BAD68 url(/static/image/reg_btn.gif) no-repeat right center;
     cursor:pointer;
 }
 
