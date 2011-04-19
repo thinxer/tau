@@ -22,6 +22,7 @@ bundles:
             - views.settings.js
             - views.debug.js
     css_all:
+        filters: cssmin
         output: all.css
         contents:
             - stylesheets/main.css
