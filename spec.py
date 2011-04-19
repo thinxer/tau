@@ -89,3 +89,5 @@ def extract(spec, doc, toDoc = None, keepNone = True):
             if keepNone or doc.has_key(key):
                 ret[key] = doc.get(key)
     return ret
+
+untaint = lambda _:_
