@@ -117,8 +117,8 @@ a {
 }
 
 .reglabel{
-    position:absolute;
     margin:5px 0 0 11px;
+	display:block;
     background-color:transparent;
     opacity:.5;
     padding:1px 10px 1px 10px;
