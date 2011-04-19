@@ -21,7 +21,7 @@
 	};
 	c.setupClick=function(){
 		var o=jQuery('button#regbtn');
-		o.click(function(){
+		jQuery('form#inputWrapper').submit(function(){
 			var u=jQuery('#uid').val(),p=jQuery('#password').val(),m=jQuery('#email').val();
 			if(o.attr('mark')=="reg"){
 				if(!c.checkRegister(u,p,m))return;
@@ -46,6 +46,7 @@
 				c.showError("");
 				c.login(u,p);
 			}
+			return false;
 		});
 		$('a#toggle').click(function(){
 			if(c.flag)return;
@@ -54,12 +55,12 @@
 				o.attr('mark','reg');
 				o.children().text('注册');
 				c.toggleTip('已有帐号，直接登录');
-				$('a#forgetPass').animate({opacity:0},200);
-				$('div#inputWrapper').animate({left:'-=76'},600);
-				$('button#regbtn').animate({
+				jQuery('a#forgetPass').animate({opacity:0},200);
+				jQuery('form#inputWrapper').animate({left:'-=76'},600);
+				jQuery('button#regbtn').animate({
 					left:'+=167'
 				},600,function(){
-					$('div#emailDiv').animate({opacity:1},200,function(){
+					jQuery('div#emailDiv').animate({opacity:1},200,function(){
 						c.flag=false;
 					});
 				});
@@ -67,10 +68,10 @@
 				o.attr('mark','login');
 				o.children().text('登录');
 				c.toggleTip('没有帐号？注册一个吧');
-				$('a#forgetPass').animate({opacity:1},800);
-				$('div#emailDiv').animate({opacity:0},200);
-				$('div#inputWrapper').animate({left:'+=76'},600);
-				$('button#regbtn').animate({
+				jQuery('a#forgetPass').animate({opacity:1},800);
+				jQuery('div#emailDiv').animate({opacity:0},200);
+				jQuery('form#inputWrapper').animate({left:'+=76'},600);
+				jQuery('button#regbtn').animate({
 					left:'-=167'
 				},600,function(){
 					c.flag=false;
