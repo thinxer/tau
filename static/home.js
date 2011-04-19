@@ -29,8 +29,8 @@
 	c.updateTimeline=function(){
 		var r=T.stream({}).success(function(r,s,o){
 			var t='';
-			for(var i in r){
-				t+='<li class="post rr10"><div>'+r[i].content+'</div></li>';
+			for(var i in r.items){
+				t+='<li class="post rr10"><div>'+r.items[i].content+'</div></li>';
 			}
 			console.log(t);
 			$('ol#posts').append(t);

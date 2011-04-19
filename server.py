@@ -161,12 +161,21 @@ class api:
                 },
             'stream_item': {
                 'id': str,
-                'user': lambda _: spec.extract(api.EXTRACT_SPECS['userinfo'], _),
-                'content': str,
+                'uid': spec.untaint,
+                'content': spec.untaint,
                 'timestamp': spec.untaint,
                 'entities': spec.untaint
                 },
-            'stream': {
+            'stream_response': {
+                'has_more': spec.untaint,
+                'items': lambda items: [
+                    spec.extract(api.EXTRACT_SPECS['stream_item'], item)
+                    for item in items],
+                'users': lambda uid_dict: dict([
+                    (k, spec.extract(api.EXTRACT_SPECS['userinfo'],v))
+                    for k, v in uid_dict.iteritems()])
+                },
+            'stream_request': {
                 'olderThan': (lambda _: _ and util.parseTimestamp(int(_)) or None, None),
                 'newerThan': (lambda _: _ and util.parseTimestamp(int(_)) or None, None)
                 }
@@ -189,11 +198,9 @@ class api:
             return error.not_logged_in()
 
         if action == 'stream':
-            param = spec.extract(self.EXTRACT_SPECS['stream'], d)
-            return jsond(map(
-                lambda _: spec.extract(self.EXTRACT_SPECS['stream_item'], _),
-                db.stream(uuid, **param)
-                ))
+            param = spec.extract(self.EXTRACT_SPECS['stream_request'], d)
+            return jsond(spec.extract(self.EXTRACT_SPECS['stream_response'],
+                db.stream(uuid, **param)))
         elif action == 'current_user':
             u = db.get_user(uuid)
             return jsond(spec.extract(self.EXTRACT_SPECS['current_user'], u))

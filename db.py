@@ -128,7 +128,10 @@ def stream(uuid, olderThan = None, newerThan = None):
     c = messages.find(query) \
             .sort('timestamp', pymongo.DESCENDING) \
             .batch_size(conf.stream_item_max)
+
     ret = []
+    user_set = set()
+
     # The logic here is to make sure we won't break in a time.
     # e.g. When multiple messages are at the same time, we make sure
     # to retrieve them together
@@ -136,18 +139,31 @@ def stream(uuid, olderThan = None, newerThan = None):
     last_datetime = None
     count = 0
     for item in c:
-        if count < conf.stream_item_max:
-            if item.has_key('owner'):
-                item['user'] = get_user(item['owner'])
-            item['id'] = str(item['_id'])
+        if count < conf.stream_item_max or item['timestamp'] == last_datetime:
+            user_set.add(str(item['owner']))
             ret.append(item)
             count += 1
-        else:
-            # last_datetime won't be None unless stream_item_max is 0
-            if item['timestamp'] != last_datetime:
-                break
         last_datetime = item['timestamp']
-    return ret
+
+    uuid_dict = {}
+    uid_dict = {}
+    for uuid in user_set:
+        u = get_user(uuid)
+        print 'xxx', uuid, u
+        if u:
+            uuid_dict[uuid] = u
+            uid_dict[u['uid']] = u
+
+    for item in ret:
+        item['id'] = str(item['_id'])
+        u = uuid_dict.get(str(item['owner']))
+        item['uid'] = u and u['uid'] or '!invalid'
+
+    return {
+            'items': ret,
+            'users': uid_dict,
+            'has_more': c.alive
+            }
 
 def update_profile(uuid, profile):
     u = users.find_one(ObjectId(uuid))
