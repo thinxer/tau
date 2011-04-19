@@ -89,8 +89,6 @@ def publish(uuid, content):
     u = get_user(uuid)
     doc = {
             'owner': ObjectId(uuid),
-            'name': u['name'],
-            'uid': u['uid'],
             'content': content,
             'timestamp': utcnow(),
             'entities': contentparser.parse(content)
@@ -139,6 +137,9 @@ def stream(uuid, olderThan = None, newerThan = None):
     count = 0
     for item in c:
         if count < conf.stream_item_max:
+            if item.has_key('owner'):
+                item['user'] = get_user(item['owner'])
+            item['id'] = str(item['_id'])
             ret.append(item)
             count += 1
         else:

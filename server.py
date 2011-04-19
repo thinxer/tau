@@ -159,9 +159,13 @@ class api:
                 'follower': (len, []),
                 'photo': (str, conf.default_photo_uri)
                 },
-            'stream_item': [
-                'name', 'uid', 'content', 'timestamp', 'entities'
-                ],
+            'stream_item': {
+                'id': str,
+                'user': lambda _: spec.extract(api.EXTRACT_SPECS['userinfo'], _),
+                'content': str,
+                'timestamp': spec.untaint,
+                'entities': spec.untaint
+                },
             'stream': {
                 'olderThan': (lambda _: _ and util.parseTimestamp(int(_)) or None, None),
                 'newerThan': (lambda _: _ and util.parseTimestamp(int(_)) or None, None)
