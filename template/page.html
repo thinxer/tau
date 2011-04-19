@@ -1,13 +1,12 @@
-$def with(jsfiles, cssfiles, debug)
+$def with(version, jsfiles, cssfiles, debug)
 <!DOCTYPE html>
 <html>
 <meta charset='utf8' />
-<link rel='shortcut icon' href='/static/image/favicon.ico' />
+<link rel='shortcut icon' href='/static/image/favicon.ico?$(version)' />
 $for file in cssfiles:
     <link rel='stylesheet' type='text/css' href='$file' />
 <title>滔滔不绝</title>
 <body>
-    <button id="debugTrigger" style="display:none;position:fixed;left:0;top:0">Rock</button>
     <div id="statusDiv"></div>
     <div id="wrapper">
         <div id="header">
@@ -21,7 +20,8 @@ $for file in cssfiles:
         <div>
             <p>
             <span>© 滔滔不绝</span>
-            <span> <a href='#about'>关于我们</a> </span> <span> <a href='/new'>新鲜功能</a> </span>
+            <span> <a href='#about'>关于我们</a> </span>
+            <span> <a href='/new'>新鲜功能</a> </span>
             <span> <a href='/api'>应用扩展</a> </span>
         </div>
     </div>

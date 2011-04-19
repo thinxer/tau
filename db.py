@@ -149,7 +149,6 @@ def stream(uuid, olderThan = None, newerThan = None):
     uid_dict = {}
     for uuid in user_set:
         u = get_user(uuid)
-        print 'xxx', uuid, u
         if u:
             uuid_dict[uuid] = u
             uid_dict[u['uid']] = u

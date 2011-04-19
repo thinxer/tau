@@ -62,7 +62,7 @@ def set_max_cache():
 class page:
     def GET(self):
         set_no_cache()
-        return render.page(jsfiles, cssfiles, conf.debug)
+        return render.page(conf.version, jsfiles, cssfiles, conf.debug)
 
 class tmpl:
     def GET(self):
