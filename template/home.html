@@ -1,13 +1,36 @@
 $def with(version="")
-<div class="sidebar">The sidebar.</div>
+<!--<div class="sidebar">The sidebar.</div>-->
 <div class="content">
-	<button id="logoutBtn">logout</button>
-	<div class="rr4" style="position:absolute;border:solid 1px;background:#DEEAF3;padding:5px;">
-		<textarea tabindex="1" cols="" rows="" id="publisher" style="background:transparent;font-family:Tahoma,微软雅黑;border:solid 0px;word-wrap:break-word;font-size:14px;line-height:18px;overflow-x:hidden;width:476px;height:72px;border:none;"></textarea>
-		<a style="position:absolute;top:90px;left:368px;" id="pubBtn">
-			<img src="/static/image/pub.png?$(version)" style="width:100px;height:30px;"></img>
-		</a>
+	<div id="nav" style="position:absolute;top:-70px;right:24px;">
+		<a id="logout" class="toplink" style="margin-left:10px;float:right;">退出</a>
+		<a href="#settings" id="setting" class="toplink" style="float:right;">帐号设置</a>
 	</div>
-	<ol id="posts" style="position:absolute;top:230px;left:0;list-style-type:none;margin:0 0 0 86px;color:#444444;">
+	<ol id="posts" style="position:relative;list-style-type:none;padding:0;margin:-20px 0 0 86px;color:#444444;">
+		<li class="post rr10">
+			<div class="rr4" style="position:absolute;border:solid 0px;background:#DEEAF3;padding:5px;">
+				<textarea tabindex="1" cols="" rows="" id="publisher" style="background:transparent;font-family:Tahoma,微软雅黑;border:solid 0px;word-wrap:break-word;font-size:14px;line-height:18px;overflow-x:hidden;width:476px;height:72px;border:none;"></textarea>
+				<a style="position:absolute;top:90px;left:368px;display:none;" id="pubBtn">
+					<img src="/static/image/pub.png?$(version)" style="width:100px;height:30px;"></img>
+				</a>
+			</div>
+			<div style="position:absolute;left:0px;top:0px;">
+				<span class="larrow"></span>
+				<a href="" class="avatar rr6" style="background:url(/static/photo/_.png)"></a>
+			</div>
+		</li>
+		<!--
+		<li class="post rr10">
+			<div style="position:absolute;left:0px;top:0px;">
+				<span class="larrow"></span>
+				<a href="" class="avatar rr6" style="background:url(/static/photo/_.png)"></a>
+			</div>
+			<div>
+				<a href="#" style="color:green;">(uid)</a>: 
+			</div>
+			<div>
+				(content)
+			</div>
+		</li>
+		-->
 	</ol>
 </div>

@@ -160,6 +160,13 @@ textarea{
     border-radius: 4px;
 }
 
+.rr6{
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    -o-border-radius: 6px;
+    border-radius: 6px;
+}
+
 .rr10{
     -webkit-border-radius: 10px;
     -moz-border-radius: 10px;
@@ -172,6 +179,33 @@ textarea{
     background-color:#FFFFFF;
     padding:15px 20px 15px 20px;
     width:500px;
+    min-height:100px;
+    position:relative;
 }
 
+.larrow{
+    position:absolute;
+    width:8px;
+    height:16px;
+    left:-8px;
+    top:20px;
+    background:url('/static/image/larrow.png') no-repeat transparent;
+}
+
+.avatar{
+    position:absolute;
+    width:64px;
+    height:64px;
+    left:-85px;
+    top:0px;
+}
+
+.toplink{
+    padding:2px 5px;
+    cursor:pointer;
+}
+
+a.toplink:hover{
+    color:#aaaaaa;
+}
 /* vim: set et ts=4 sw=4 tw=0 :*/
