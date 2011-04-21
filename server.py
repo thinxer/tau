@@ -139,25 +139,25 @@ class api:
             }
     EXTRACT_SPECS = {
             'userinfo': {
-                'name': (str, ''),
+                'name': (spec.untaint, ''),
                 'uid': str,
-                'bio': (str, ''),
-                'location': (str, ''),
-                'web': (str, ''),
+                'bio': (spec.untaint, ''),
+                'location': (spec.untaint, ''),
+                'web': (spec.untaint, ''),
                 'following': (len, []),
                 'follower': (len, []),
-                'photo': (str, conf.default_photo_uri)
+                'photo': (spec.untaint, conf.default_photo_uri)
                 },
             'current_user': {
-                'name': (str, ''),
-                'email': str,
+                'name': (spec.untaint, ''),
+                'email': spec.untaint,
                 'uid': str,
-                'bio': (str, ''),
-                'location': (str, ''),
-                'web': (str, ''),
+                'bio': (spec.untaint, ''),
+                'location': (spec.untaint, ''),
+                'web': (spec.untaint, ''),
                 'following': (len, []),
                 'follower': (len, []),
-                'photo': (str, conf.default_photo_uri)
+                'photo': (spec.untaint, conf.default_photo_uri)
                 },
             'stream_item': {
                 'id': str,
