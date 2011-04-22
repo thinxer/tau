@@ -4,10 +4,14 @@
 	var K=window.K=window.K||{},C=window.C=window.C||{};
 	var c=C[name]={},u=U[name]={};
 
-	c.start=function(){
+	c.start=function(curuser){
+		c.setupCuruser(curuser);
 		c.setupClick();
-		c.updateCurUser();
 		c.updateStream(0);
+	};
+	c.setupCuruser=function(d){
+		console.log(d);
+		$('li#postBox>div>a.avatar>img').attr('src',d.photo);
 	};
 	c.setupClick=function(){
 		jQuery('#logout').click(function(){
@@ -35,9 +39,6 @@
 				publish();
 			}
 		});
-	};
-	c.getStream=function(){
-
 	};
 	c.callStreamAPI=function(callback,when){		// when > 0 means newer, when =0 means all, when < 0 means older
 		var p={};
@@ -72,13 +73,6 @@
 			if(when>0) o.insertAfter('li#postBox');
 			else o.appendTo('ol#posts');
 		},when);
-	};
-	c.updateCurUser=function(){
-		T.current_user({}).success(function(r){
-			
-		}).error(function(){
-		
-		});
 	};
 
 	R.path('home',C.PAGE.goDefault);

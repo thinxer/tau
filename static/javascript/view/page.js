@@ -11,11 +11,11 @@
         T.current_user().success(function(d){
             if (d.error) {  // not logged in
                 U.render('public').fillTo('#main').done(function(){
-                    if(C&&C.PUBLIC)C.PUBLIC.start();
+                    if(C&&C.PUBLIC)C.PUBLIC.start(d);
                 });
             } else {
                 U.render('home').fillTo('#main').done(function(){
-                    if(C&&C.HOME)C.HOME.start();
+                    if(C&&C.HOME)C.HOME.start(d);
                 });
             }
         });
