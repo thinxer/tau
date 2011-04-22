@@ -63,11 +63,14 @@
     var i = tmplMethods.length;
     while (i--) {
         var method = tmplMethods[i];
-        DeferredTemplate.prototype[method] = function(target) {
-            return this.done(function(t) {
-                t[method](target);
-            });
-        };
+        // Need to make closure to enclose the 'method'.
+        DeferredTemplate.prototype[method] = (function(method) {
+            return function(target) {
+                return this.done(function(t) {
+                    t[method](target);
+                });
+            };
+        })(method);
     }
 
     /**
