@@ -139,10 +139,11 @@ def stream(uuid, olderThan = None, newerThan = None):
     last_datetime = None
     count = 0
     for item in c:
-        if count < conf.stream_item_max or item['timestamp'] == last_datetime:
-            user_set.add(str(item['owner']))
-            ret.append(item)
-            count += 1
+        if count > conf.stream_item_max and item['timestamp'] != last_datetime:
+            break
+        user_set.add(str(item['owner']))
+        ret.append(item)
+        count += 1
         last_datetime = item['timestamp']
 
     uuid_dict = {}
