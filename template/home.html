@@ -6,7 +6,7 @@ $def with(version="")
 		<a href="#settings" id="setting" class="toplink" style="float:right;">帐号设置</a>
 	</div>
 	<ol id="posts" style="position:relative;list-style-type:none;padding:0;margin:-20px 0 0 86px;color:#444444;">
-		<li class="post rr10">
+		<li class="post rr10" id="postBox">
 			<div class="rr4" style="position:absolute;border:solid 0px;background:#DEEAF3;padding:5px;">
 				<textarea tabindex="1" cols="" rows="" id="publisher" style="background:transparent;font-family:Tahoma,微软雅黑;border:solid 0px;word-wrap:break-word;font-size:14px;line-height:18px;overflow-x:hidden;width:476px;height:72px;border:none;"></textarea>
 				<a style="position:absolute;top:90px;left:368px;display:none;" id="pubBtn">
@@ -18,19 +18,19 @@ $def with(version="")
 				<a href="" class="avatar rr6" style="background:url(/static/photo/_.png)"></a>
 			</div>
 		</li>
-		<!--
-		<li class="post rr10">
-			<div style="position:absolute;left:0px;top:0px;">
-				<span class="larrow"></span>
-				<a href="" class="avatar rr6" style="background:url(/static/photo/_.png)"></a>
-			</div>
+		<li class="post rr10"> 
+			<div style="position:absolute;left:0px;top:0px;"> 
+				<span class="larrow"></span> 
+				<a href="" class="avatar" >
+					<img class="rr6" src="" style="width:64px;height:64px;"/>
+				</a> 
+			</div> 
 			<div>
-				<a href="#" style="color:green;">(uid)</a>: 
+				<a href="#" style="color:green;">{uid}</a>: 
+			</div> 
+			<div> {content} </div>
+			<div style="position:absolute;bottom:4px;"> 一天前
 			</div>
-			<div>
-				(content)
-			</div>
-		</li>
-		-->
+		</li> 
 	</ol>
 </div>

@@ -3,11 +3,11 @@
 (function(name){
     var K=window.K=window.K||{},C=window.C=window.C||{};
     R.path('home',C.PAGE.goDefault);
+
 	var c=C[name]={};
     var u=U[name]={};
-	var markup=' <li class="post rr10"> <div style="position:absolute;left:0px;top:0px;"> <span class="larrow"></span> <a href="" class="avatar rr6" style="background:url(/static/photo/_.png)"></a> </div> <div> <a href="#" style="color:green;">${uid}</a>: </div> <div> ${content} </div> </li> ';
+	var markup=' <li class="post rr10"> <div style="position:absolute;left:0px;top:0px;"> <span class="larrow"></span> <a href="" class="avatar" ><img class="rr6" src="${user.photo}" style="width:64px;height:64px;"/></a> </div> <div> <a href="#" style="color:green;">${uid}</a>: </div> <div> ${content} </div> <div style="position:absolute;bottom:4px;"> ${$item.getDate(timestamp)} </div> </li> ';
 	jQuery.template('post',markup);
-
 
 	c.start=function(){
 		c.setupClick();
@@ -43,7 +43,22 @@
 	c.updateTimeline=function(){
 		var r=T.stream({}).success(function(r,s,o){
 			console.log(r.items);
-			jQuery.tmpl('post',r.items).appendTo('ol#posts');
+			jQuery(r.items).each(function(i,e){
+				e['user']=r.users[e.uid];
+			});
+			jQuery.tmpl('post',r.items,{
+				getDate:function(m){
+					var d=new Date(m),now=jQuery.now(),delta=now-d;
+					if(delta<3600000){
+						return Math.round(delta/60000)+'分钟前';
+					}else if(delta<86400000){
+						return Math.round(delta/3600000)+'小时前';
+					}else if(delta<259200000){		//three days
+						return Math.round(delta/86400000)+'天前';
+					}
+					return new Date(m).toLocaleDateString();
+				}
+			}).appendTo('ol#posts');
 		});
 	};
 	c.updateCurUser=function(){
