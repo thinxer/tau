@@ -28,7 +28,7 @@
 			}
 			T.publish({content:v}).success(function(){
 				o.val('');
-				U.PAGE.statusDiv.show('发布成功！');
+				U.PAGE.statusDiv.showHide('发布成功！');
 				c.updateStream(1);
 			}).error(function(){
 			});

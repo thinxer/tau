@@ -23,14 +23,20 @@
 
     u.statusDiv={
         id:'div#statusDiv',
-        show:function(){
-            if(arguments.length>0)jQuery(this.id).text(''+arguments[0]);
-            jQuery(this.id).slideDown('fast');
+        show:function(s,callback){
+            if(s)jQuery(u.statusDiv.id).text(s);
+            jQuery(u.statusDiv.id).slideDown('fast',callback);
         },
         hide:function(){
-            jQuery(this.id).text('');
-            jQuery(this.id).slideUp('fast');
-        }
+            jQuery(u.statusDiv.id).slideUp('fast',function(){
+				jQuery(u.statusDiv.id).text('');
+			});
+        },
+		showHide:function(s,intv){
+			this.show(s,function(){
+				setTimeout(u.statusDiv.hide,intv||2000);
+			});
+		}
     }
 
     R.path('notfound',function(){U.render('notfound').fillTo('#main');})
