@@ -1,17 +1,13 @@
 // for home.html
 
 (function(name){
-    var K=window.K=window.K||{},C=window.C=window.C||{};
-
-	var c=C[name]={};
-    var u=U[name]={};
-//	var markup=' <li class="post rr10"> <div style="position:absolute;left:0px;top:0px;"> <span class="larrow"></span> <a href="" class="avatar" ><img class="rr6" src="${user.photo}" style="width:64px;height:64px;"/></a> </div> <div> <a href="#" style="color:green;">${uid}</a>: </div> <div> ${content} </div> <div style="position:absolute;bottom:4px;"> ${$item.getDate(timestamp)} </div> </li> ';
-//	jQuery.template('post',markup);
+	var K=window.K=window.K||{},C=window.C=window.C||{};
+	var c=C[name]={},u=U[name]={};
 
 	c.start=function(){
 		c.setupClick();
 		c.updateCurUser();
-		c.updateTimeline();
+		c.updateStream(0);
 	};
 	c.setupClick=function(){
 		jQuery('#logout').click(function(){
@@ -29,6 +25,7 @@
 			T.publish({content:v}).success(function(){
 				o.val('');
 				U.PAGE.statusDiv.show('发布成功！');
+				c.updateStream(1);
 			}).error(function(){
 			});
 		};
@@ -42,26 +39,23 @@
 	c.getStream=function(){
 
 	};
-	c.updateStream=function(callback,when){
-		var p;
-		if(when){
-			// todo
-			// add newThan and olderThan
+	c.callStreamAPI=function(callback,when){		// when > 0 means newer, when =0 means all, when < 0 means older
+		var p={};
+		if(when>0){
+			p.newerThan=+$('#postBox + li > div[timestamp]').attr('timestamp');
+		}else if(when<0){
+			p.olderThan=+$('ol#posts>li:last-child>div[timestamp]').attr('timestamp');
 		}
-		T.stream({}).success(function(r){
-			jQuery(r.items).each(function(){
+		T.stream(p).success(function(r){
+			jQuery(r.items).each(function(i,e){
 				e['user']=r.users[e.uid];
 			});
 			callback(r.items,r.has_more);
 		});
 	};
-	c.updateTimeline=function(){
-		var r=T.stream({}).success(function(r,s,o){
-			console.log(r.items);
-			jQuery(r.items).each(function(i,e){
-				e['user']=r.users[e.uid];
-			});
-			U.render('stream_item',r.items,{
+	c.updateStream=function(when){		// when > 0 means newer, when =0 means all, when < 0 means older
+		c.callStreamAPI(function(d,hasmore){
+			var o=U.render('stream_item',d,{
 				getDate:function(m){
 					var d=new Date(m),now=jQuery.now(),delta=now-d;
 					if(delta<3600000){
@@ -73,8 +67,11 @@
 					}
 					return new Date(m).toLocaleDateString();
 				}
-			}).appendTo('ol#posts');
-		});
+			});
+			if(!when) $('ol#posts>:not(li#postBox)').remove();
+			if(when>0) o.insertAfter('li#postBox');
+			else o.appendTo('ol#posts');
+		},when);
 	};
 	c.updateCurUser=function(){
 		T.current_user({}).success(function(r){

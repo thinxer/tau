@@ -87,7 +87,6 @@
      *      U.render('main').appendTo('#wrapper');
      */
     ui.render = function(name, data, option) {
-		console.log(option);
         var d = jQuery.Deferred();
 
         if (ui.template[name]) {
