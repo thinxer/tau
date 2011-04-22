@@ -10,8 +10,8 @@
 		c.updateStream(0);
 	};
 	c.setupCuruser=function(d){
-		console.log(d);
-		$('li#postBox>div>a.avatar>img').attr('src',d.photo);
+	//	console.log(d);
+	//	$('li#postBox>div>a.avatar>img').attr('src',d.photo);
 	};
 	c.setupClick=function(){
 		jQuery('#logout').click(function(){
@@ -21,7 +21,7 @@
 			});
 		});
 		var publish=function(){
-			var o=$('textarea#publisher'),v=o.val();
+			var o=$('textarea#publisher'),v=o.val().trim();
 			if(!v.length){
 				// show error ?
 				return;

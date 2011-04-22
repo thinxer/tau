@@ -16,9 +16,15 @@ $def with(version="")
 			<div style="position:absolute;left:0px;top:0px;">
 				<span class="larrow"></span>
 				<a href="" class="avatar" >
-					<img class="rr6" src="/static/photo/_.png" style="width:64px;height:64px;"/>
+					<img class="rr6" src="$${photo}" style="width:64px;height:64px;"/>
 				</a> 
 			</div>
 		</li>
 	</ol>
+	<div style="position:absolute;top:20px;right:20px;width:214px;line-height:20px;">
+		<div>$${name}</div>
+		<div> 关注: <b>$${following}</b></div>
+		<div> 粉丝: <b>$${follower}</b> </div>
+		<div>个性签名: $${bio} </div>
+	</div>
 </div>

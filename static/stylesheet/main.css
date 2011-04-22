@@ -35,8 +35,8 @@ a {
 #main {
     position:absolute;
     left:50%;
-    width:760px;
-    margin-left:-400px;
+    width:860px;
+    margin-left:-450px;
     padding: 20px;
     -webkit-border-radius: 15px;
     -moz-border-radius: 15px;
@@ -178,7 +178,7 @@ textarea{
     margin:20px 0 0 0;
     background-color:#FFFFFF;
     padding:15px 20px 15px 20px;
-    width:460px;
+    width:500px;
     min-height:80px;
     position:relative;
 }

@@ -14,7 +14,7 @@
                     if(C&&C.PUBLIC)C.PUBLIC.start(d);
                 });
             } else {
-                U.render('home').fillTo('#main').done(function(){
+                U.render('home',d).fillTo('#main').done(function(){
                     if(C&&C.HOME)C.HOME.start(d);
                 });
             }

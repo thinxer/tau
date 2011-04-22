@@ -1,28 +1,30 @@
 $def with(version="")
 <div style="height:450px;width:200px;">
-	<div style="position:absolute;width:250px;height:250px;left:268px;top:45px;">
-		<img src="/static/image/tau_logo.png?$(version)"/>
-	</div>
-	<form style="background:transparent;position:absolute;width:660px;height:114px;left:146px;top:346px;" id="inputWrapper">
-		<div class="input_wrapper">
-			<input class="reginput" type="text" id="uid" />
-			<label class="reglabel" for="uid">注册ID</label>
+	<div style="position:absolute;left:50px;">
+		<div style="position:absolute;width:250px;height:250px;left:262px;top:45px;">
+			<img src="/static/image/tau_logo.png?$(version)"/>
 		</div>
-		<div class="input_wrapper" style="left:184px;">
-			<input class="reginput" type="password" id="password" />
-			<label class="reglabel" for="password">密码</label>
+		<form style="background:transparent;position:absolute;width:660px;height:114px;left:146px;top:346px;" id="inputWrapper">
+			<div class="input_wrapper">
+				<input class="reginput" type="text" id="uid" />
+				<label class="reglabel" for="uid">注册ID</label>
+			</div>
+			<div class="input_wrapper" style="left:184px;">
+				<input class="reginput" type="password" id="password" />
+				<label class="reglabel" for="password">密码</label>
+			</div>
+			<div id="emailDiv" class="input_wrapper" style="opacity:0;left:370px;">
+				<input class="reginput" type="text" id="email" />
+				<label class="reglabel" for="email">邮箱</label>
+			</div>
+			<button type="submit" class="regbtn" mark="login" style="position:absolute;left:380px;" id="regbtn">
+				<span style="margin-left:-21px;color:rgba(0 0 0 .63);font-size:17px;text-shadow:0 1px 1px rgba(255 255 255 .37);">登录</span>
+			</button>
+		</form>
+		<div style="position:absolute;width:660px;height:114px;left:146px;top:420px;">
+			<a href="javascript:;" style="position:absolute;left:100px;" id="toggle">没有帐号？注册一个吧</a>
+			<a href="" style="position:absolute;left:293px;" id="forgetPass">忘记密码？</a>
 		</div>
-		<div id="emailDiv" class="input_wrapper" style="opacity:0;left:370px;">
-			<input class="reginput" type="text" id="email" />
-			<label class="reglabel" for="email">邮箱</label>
-		</div>
-		<button type="submit" class="regbtn" mark="login" style="position:absolute;left:380px;" id="regbtn">
-			<span style="margin-left:-21px;color:rgba(0 0 0 .63);font-size:17px;text-shadow:0 1px 1px rgba(255 255 255 .37);">登录</span>
-		</button>
-	</form>
-	<div style="position:absolute;width:660px;height:114px;left:146px;top:420px;">
-		<a href="javascript:;" style="position:absolute;left:100px;" id="toggle">没有帐号？注册一个吧</a>
-		<a href="" style="position:absolute;left:293px;" id="forgetPass">忘记密码？</a>
 	</div>
 </div>
 
