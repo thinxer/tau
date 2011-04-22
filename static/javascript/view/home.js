@@ -28,14 +28,14 @@
 				return;
 			}
 			T.publish({content:v}).success(function(){
-				o.text('');
+				o.val('');
 				U.PAGE.statusDiv.show('发布成功！');
 			}).error(function(){
 			});
 		};
 		jQuery('a#pubBtn').click(publish);
 		jQuery('#publisher').keypress(function(e){
-			if(e.which==10){
+			if(e.which==10||e.which==13){
 				publish();
 			}
 		});
