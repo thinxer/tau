@@ -5,13 +5,20 @@
 	var c=C[name]={},u=U[name]={};
 
 	c.start=function(curuser){
-		c.setupCuruser(curuser);
 		c.setupClick();
 		c.updateStream(0);
+		$(document).scroll(function(){
+			console.log('top: '+$(document).scrollTop()+' height:'+$(document).height());
+			if($(window).scrollTop() > $(document).height()-$(window).height()-20){
+				if($('ol#posts>li:last-child').attr('hasmore')){
+					c.updateStream(-1);
+					console.log(-1);
+				}
+			}
+		});
 	};
-	c.setupCuruser=function(d){
-	//	console.log(d);
-	//	$('li#postBox>div>a.avatar>img').attr('src',d.photo);
+	c.end=function(){
+		$(document).unbind('scroll');
 	};
 	c.setupClick=function(){
 		jQuery('#logout').click(function(){
@@ -69,6 +76,11 @@
 					return new Date(m).toLocaleDateString();
 				}
 			});
+			if(hasmore){
+				o.done(function(t){
+					t.last().attr('hasmore','true');
+				});
+			}
 			if(!when) $('ol#posts>:not(li#postBox)').remove();
 			if(when>0) o.insertAfter('li#postBox');
 			else o.appendTo('ol#posts');
