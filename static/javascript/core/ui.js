@@ -26,8 +26,8 @@
      *
      * Returns a jQuery object.
      */
-    ui.tmpl = function(name, data) {
-        return jQuery.tmpl(name, data);
+    ui.tmpl = function(name, data, option) {
+        return jQuery.tmpl(name, data, option);
     };
 
     // DeferredTemplate is a template with deferred property.
@@ -83,14 +83,15 @@
      * Usage:
      *      U.render('main').appendTo('#wrapper');
      */
-    ui.render = function(name, data) {
+    ui.render = function(name, data, option) {
+		console.log(option);
         var d = jQuery.Deferred();
 
         if (ui.template[name]) {
-            d.resolve(ui.tmpl(name, data));
+            d.resolve(ui.tmpl(name, data, option));
         } else {
             ui.load(name).success(function() {
-                d.resolve(ui.tmpl(name, data));
+                d.resolve(ui.tmpl(name, data, option));
             }).error(function() {
                 d.reject(arguments);
             });

@@ -2,12 +2,11 @@
 
 (function(name){
     var K=window.K=window.K||{},C=window.C=window.C||{};
-    R.path('home',C.PAGE.goDefault);
 
 	var c=C[name]={};
     var u=U[name]={};
-	var markup=' <li class="post rr10"> <div style="position:absolute;left:0px;top:0px;"> <span class="larrow"></span> <a href="" class="avatar" ><img class="rr6" src="${user.photo}" style="width:64px;height:64px;"/></a> </div> <div> <a href="#" style="color:green;">${uid}</a>: </div> <div> ${content} </div> <div style="position:absolute;bottom:4px;"> ${$item.getDate(timestamp)} </div> </li> ';
-	jQuery.template('post',markup);
+//	var markup=' <li class="post rr10"> <div style="position:absolute;left:0px;top:0px;"> <span class="larrow"></span> <a href="" class="avatar" ><img class="rr6" src="${user.photo}" style="width:64px;height:64px;"/></a> </div> <div> <a href="#" style="color:green;">${uid}</a>: </div> <div> ${content} </div> <div style="position:absolute;bottom:4px;"> ${$item.getDate(timestamp)} </div> </li> ';
+//	jQuery.template('post',markup);
 
 	c.start=function(){
 		c.setupClick();
@@ -35,9 +34,25 @@
 		};
 		jQuery('a#pubBtn').click(publish);
 		jQuery('#publisher').keypress(function(e){
-			if(e.which==10||e.which==13){
+			if(e.ctrlKey && (e.keyCode==13 || e.keyCode==10)){
 				publish();
 			}
+		});
+	};
+	c.getStream=function(){
+
+	};
+	c.updateStream=function(callback,when){
+		var p;
+		if(when){
+			// todo
+			// add newThan and olderThan
+		}
+		T.stream({}).success(function(r){
+			jQuery(r.items).each(function(){
+				e['user']=r.users[e.uid];
+			});
+			callback(r.items,r.has_more);
 		});
 	};
 	c.updateTimeline=function(){
@@ -46,7 +61,7 @@
 			jQuery(r.items).each(function(i,e){
 				e['user']=r.users[e.uid];
 			});
-			jQuery.tmpl('post',r.items,{
+			U.render('stream_item',r.items,{
 				getDate:function(m){
 					var d=new Date(m),now=jQuery.now(),delta=now-d;
 					if(delta<3600000){
@@ -68,6 +83,8 @@
 		
 		});
 	};
+
+	R.path('home',C.PAGE.goDefault);
 
 })('HOME');
 
