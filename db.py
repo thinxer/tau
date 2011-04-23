@@ -72,6 +72,7 @@ def follow(uuid, target):
     if u:
         # TODO check result
         users.update({'_id': ObjectId(uuid)}, {'$addToSet': {'following': u['_id']}})
+        users.update({'_id': u['_id']}, {'$addToSet': {'follower': ObjectId(uuid)}})
         return { 'success':1 }
     else:
         return error.user_not_found(raw=True)
@@ -81,9 +82,10 @@ def unfollow(uuid, target):
     u = find_user(target)
     if u:
         users.update({'_id': ObjectId(uuid)}, {'$pull': {'following': u['_id']}})
+        users.update({'_id': u['_id']}, {'$pull': {'follower': ObjectId(uuid)}})
         return { 'success':1 }
     else:
-        return error.user_not_found()
+        return error.user_not_found(raw=True)
 
 def publish(uuid, content):
     u = get_user(uuid)
@@ -132,10 +134,9 @@ def stream(uuid, olderThan = None, newerThan = None):
     ret = []
     user_set = set()
 
-    # The logic here is to make sure we won't break in a time.
+    # The logic here is to make sure we won't break in 'a' time.
     # e.g. When multiple messages are at the same time, we make sure
-    # to retrieve them together
-    # XXX not tested
+    # to retrieve them together.
     last_datetime = None
     count = 0
     for item in c:
@@ -182,3 +183,25 @@ def update_photo(uuid, has_photo):
         u['photo'] = conf.default_photo_uri;
     users.save(u)
     return { 'success':1 }
+
+# TODO enable paging
+def get_following(uid):
+    u = find_user(uid)
+    if not u:
+        return error.user_not_found(raw=True)
+    ret = {
+            'has_more': false,
+            'items': [get_user(uuid) for uuid in u['following']]
+            }
+    return ret
+
+# TODO enable paging
+def get_follower(uid):
+    u = find_user(uid)
+    if not u:
+        return error.user_not_found(raw=True)
+    ret = {
+            'has_more': false,
+            'items': [get_user(uuid) for uuid in u['follower']]
+            }
+    return ret

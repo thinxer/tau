@@ -93,7 +93,7 @@ def get_input(s):
     return web.input()
 
 class api:
-    GET_ACTIONS = set('stream current_user userinfo get_message validate'.split())
+    GET_ACTIONS = set('stream current_user userinfo get_message validate get_following get_follower'.split())
     POST_ACTIONS = set('register login logout publish follow unfollow\
             update_profile upload_photo'.split())
     FILTERS = {
@@ -115,10 +115,10 @@ class api:
                 'content': True
                 },
             'follow': {
-                'target': FILTERS['uid']
+                'uid': FILTERS['uid']
                 },
             'unfollow': {
-                'target': FILTERS['uid']
+                'uid': FILTERS['uid']
                 },
             'userinfo': {
                 'uid': FILTERS['uid']
@@ -135,6 +135,12 @@ class api:
             'stream': {
                 'olderThan': (FILTERS['datetime'], False),
                 'newerThan': (FILTERS['datetime'], False)
+                },
+            'get_following': {
+                'uid': FILTERS['uid']
+                },
+            'get_follower': {
+                'uid': FILTERS['uid']
                 }
             }
     EXTRACT_SPECS = {
@@ -211,6 +217,18 @@ class api:
                 return error.user_not_found()
             return jsond(spec.extract(self.EXTRACT_SPECS['userinfo'], u))
 
+        elif action == 'get_following':
+            ret = db.get_following(d.uid)
+            new_items = [spec.extract(self.EXTRACT_SPECS['userinfo'], u) for u in ret['items']]
+            ret['items'] = new_items
+            return jsond(ret)
+
+        elif action == 'get_follower':
+            ret = db.get_follower(d.uid)
+            new_items = [spec.extract(self.EXTRACT_SPECS['userinfo'], u) for u in ret['items']]
+            ret['items'] = new_items
+            return jsond(ret)
+
         elif action == 'get_message':
             m = db.get_message(d.id)
             if m:
@@ -266,9 +284,9 @@ class api:
             return error.not_logged_in()
 
         if action == 'follow':
-            return jsond(db.follow(uuid, d.target))
+            return jsond(db.follow(uuid, d.uid))
         elif action == 'unfollow':
-            return jsond(db.unfollow(uuid, d.target))
+            return jsond(db.unfollow(uuid, d.uid))
         elif action == 'publish':
             return jsond(db.publish(uuid, d.content))
         elif action == 'update_profile':
