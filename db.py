@@ -100,10 +100,17 @@ def publish(uuid, content):
     return { 'success':1 }
 
 def get_message(uuid):
-    try:
-        return messages.find_one(ObjectId(uuid))
-    except Exception, e:
-        return None
+    m = messages.find_one(ObjectId(uuid))
+    if m:
+        u = get_user(m['owner'])
+        if u:
+            m['uid'] = u['uid']
+            m['id'] = str(m['_id'])
+            return {
+                    'item': m,
+                    'user': u
+                    }
+    return None
 
 def stream(uuid, olderThan = None, newerThan = None):
     # TODO make clear newerThan logic.

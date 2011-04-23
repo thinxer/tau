@@ -230,9 +230,12 @@ class api:
             return jsond(ret)
 
         elif action == 'get_message':
-            m = db.get_message(d.id)
-            if m:
-                return jsond(m)
+            ret = db.get_message(d.id)
+            if ret:
+                return jsond({
+                    'item': spec.extract(self.EXTRACT_SPECS['stream_item'], ret['item']),
+                    'user': spec.extract(self.EXTRACT_SPECS['userinfo'], ret['user'])
+                    })
             else:
                 return error.message_not_found()
 
