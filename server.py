@@ -140,7 +140,8 @@ class api:
                 },
             'stream': {
                 'olderThan': (FILTERS['datetime'], False),
-                'newerThan': (FILTERS['datetime'], False)
+                'newerThan': (FILTERS['datetime'], False),
+                'uid': (FILTERS['uid'], False)
                 },
             'get_following': {
                 'uid': FILTERS['uid']
@@ -189,7 +190,8 @@ class api:
                 },
             'stream_request': {
                 'olderThan': (lambda _: _ and util.parseTimestamp(int(_)) or None, None),
-                'newerThan': (lambda _: _ and util.parseTimestamp(int(_)) or None, None)
+                'newerThan': (lambda _: _ and util.parseTimestamp(int(_)) or None, None),
+                'uid': (spec.untaint, None)
                 }
             }
 
@@ -213,6 +215,7 @@ class api:
             param = spec.extract(self.EXTRACT_SPECS['stream_request'], d)
             return jsond(spec.extract(self.EXTRACT_SPECS['stream_response'],
                 db.stream(uuid, **param)))
+
         elif action == 'current_user':
             u = db.get_user(uuid)
             return jsond(spec.extract(self.EXTRACT_SPECS['current_user'], u))

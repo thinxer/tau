@@ -112,28 +112,45 @@ def get_message(uuid):
                     }
     return None
 
-def stream(uuid, olderThan = None, newerThan = None):
+def stream(uuid, olderThan = None, newerThan = None, uid = None):
     # TODO make clear newerThan logic.
 
-    # first get following list
+    # setup basic query
     u = get_user(uuid)
-    following = u['following']
-    following_query = {
-            'owner': {'$in': following + [u['_id']]}
-            }
-    mention_query = {
-            'entities.mentions.mention': '@' + u['uid']
-            }
-    query = {
-            '$or': [following_query, mention_query]
-            }
+    if uid:
+        # get uid's public tweets
+        target = find_user(uid)
+        if target:
+            query = { 'owner':target['_id'] }
+        else:
+            # it's more convient to return nothing than an error
+            return {
+                    'has_more': False,
+                    'items': [],
+                    'users': []
+                    }
+    else:
+        # get current user's main timeline
+        following = u['following']
+        following_query = {
+                'owner': {'$in': following + [u['_id']]}
+                }
+        mention_query = {
+                'entities.mentions.mention': '@' + u['uid']
+                }
+        query = {
+                '$or': [following_query, mention_query]
+                }
+
+    # setup time constraints
     if olderThan or newerThan:
         query['timestamp'] = {}
     if olderThan:
         query['timestamp']['$lt'] = olderThan
     if newerThan:
         query['timestamp']['$gt'] = newerThan
-    # then find messages published by his followings
+
+    # then execute the query
     c = messages.find(query) \
             .sort('timestamp', pymongo.DESCENDING) \
             .batch_size(conf.stream_item_max)
