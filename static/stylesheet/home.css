@@ -1,40 +1,64 @@
-.content .postbox {
+#home {
+    padding-top: 20px;
+}
+
+#home>.siderbar {
+    float: right;
+    width: 240px;
+}
+
+#home>.content {
+    float: left;
+    width: 480px;
+}
+
+#home>.content .postbox {
     width: 100%;
 }
 
-.content .postbox .photo {
+#home>.content .postbox .photo {
     float: left;
 }
 
-.content .postbox textarea {
+#home>.content .postbox textarea {
     width: 400px;
     height: 60px;
-    border: none;
-    margin: 0;
 }
 
-.content .postbox .pub_btn {
+#home>.content .postbox .pub_btn {
     cursor: pointer;
     display: block;
 }
 
-.content .timeline {
+#home>.content .timeline {
     list-style-type: none;
     padding: 0px;
 }
 
-.content .timeline>.item {
+#home>.content .timeline>.item {
     margin-top: 10px;
 }
 
-.content .timeline>.item .photo {
+#home>.content .timeline>.item .photo {
     float: left;
     padding-right: 10px;
     width: 40px;
     height: 40px;
 }
 
-.content .timeline>.item .name,
-.content .timeline>.item .content {
-    display: inline;
+#home>.content .timeline>.item .container {
+    margin-left: 50px;
+    word-wrap: break-word;
+}
+
+#home>.content .timeline>.item .uid {
+    font-weight: bold;
+}
+#home>.content .timeline>.item .name {
+    font-size: 12px;
+    color: #444;
+}
+#home>.content .timeline>.item .timestamp {
+    margin-top: 4px;
+    font-size: 12px;
 }

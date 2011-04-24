@@ -1,20 +1,28 @@
 $def with(version="")
-<div class="userinfo">
-    <a href="" class="photo">
-        <img src="$${photo}"/>
-    </a>
-    <div>$${name}</div>
-    <div>关注: <b>$${following}</b> </div>
-    <div>粉丝: <b>$${follower}</b> </div>
-    <div>个性签名: $${bio} </div>
-</div>
-<div class="content">
-    <div class="postbox">
-        <textarea tabindex="1" cols="" rows="" id="publisher" ></textarea>
-        <button class="pub_btn"> 分享 </button>
-        <div class="clear"></div>
+<div id="home" class="general_box light">
+    <div class="siderbar">
+        <div class="userinfo">
+            <a href="" class="photo">
+                <img src="$${photo}"/>
+            </a>
+            <div class="uid">$${uid}</div>
+            <div class="name">$${name}</div>
+            <div>关注: <b>$${following}</b> </div>
+            <div>粉丝: <b>$${follower}</b> </div>
+            <div>个性签名: $${bio} </div>
+        </div>
+        <div class="user_recommendation">
+            <ol></ol>
+        </div>
     </div>
-	<ol class="timeline">
-	</ol>
+    <div class="content">
+        <div class="postbox">
+            <textarea tabindex="1" cols="" rows="" id="publisher" ></textarea>
+            <button class="pub_btn"> 分享 </button>
+            <div class="clear"></div>
+        </div>
+        <ol class="timeline">
+        </ol>
+    </div>
+    <div class="clear"></div>
 </div>
-<div class="clear"></div>

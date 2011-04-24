@@ -3,10 +3,13 @@ $def with(version="")
     <a href="#u/$${uid}" class="photo">
         <img src="$${user.photo}" />
     </a>
-    <div class="name"> <a href="#u/$${uid}">$${uid}</a>: </div>
-    <div class="content">$${content}</div>
-    <div class="timestamp" data-timestamp="$${timestamp}">
-        $${$$item.getDate(timestamp)}
+    <div class="container">
+        <a class="uid" href="#u/$${uid}">$${uid}</a>
+        <span class="name">$${user.name}</span>
+        <div class="content">$${content}</div>
+        <div class="timestamp" data-timestamp="$${timestamp}">
+            $${$$item.getDate(timestamp)}
+        </div>
     </div>
     <div class="clear"></div>
 </li>
