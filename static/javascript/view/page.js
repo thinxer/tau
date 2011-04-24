@@ -7,20 +7,6 @@
     var u=U[name]={};
     var c=C[name]={};
 
-    c.goDefault=function(){
-        T.current_user().success(function(d){
-            if (d.error) {  // not logged in
-                U.render('public').fillTo('#main').done(function(){
-                    if(C&&C.PUBLIC)C.PUBLIC.start(d);
-                });
-            } else {
-                U.render('home',d).fillTo('#main').done(function(){
-                    if(C&&C.HOME)C.HOME.start(d);
-                });
-            }
-        });
-    };
-
     u.statusDiv={
         id:'div#statusDiv',
         show:function(s,callback){
@@ -56,7 +42,13 @@
     });
 
     R.path('notfound',function(){U.render('notfound').fillTo('#main');})
-    R.path('default',C.PAGE.goDefault);
+    R.path('default', function() {
+        if (T.checkLogin()) {
+            R.path('home');
+        } else {
+            R.path('public');
+        }
+    });
     R.path('logout', function() {
         T.logout().then(function() {
             R.path('');

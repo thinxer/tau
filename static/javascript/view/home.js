@@ -82,7 +82,15 @@
 		},when);
 	};
 
-	R.path('home',C.PAGE.goDefault);
+    R.path('home', function() {
+        if (!T.checkLogin()) {
+            R.path('public');
+        } else {
+            T.current_user().success(function(d) {
+                U.render('home', d).fillTo('#main').done(c.start);
+            });
+        }
+    });
 
 })('HOME');
 

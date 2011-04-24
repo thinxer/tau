@@ -1,45 +1,103 @@
-.input_wrapper {
-    width:155px;
-    height:35px;
-    position:absolute;
-    border:solid 1px;
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
-    -o-border-radius: 4px;
-    border-radius: 4px;
-    background:#DEEAF3;
+#public {
+    font-family: Arial, Helvetica, Microsoft YaHei, 微软雅黑;
 }
 
-.reglabel{
-    margin:5px 0 0 11px;
-    display:block;
-    background-color:transparent;
-    opacity:.5;
-    padding:1px 10px 1px 10px;
-    color:#869cb2;
-    font: bold 20px Arial, Helvetica, Microsoft YaHei, 微软雅黑;
+#public .logo {
+    width: 256px;
+    height: 256px;
+    margin: 30px auto;
 }
 
-.reginput {
-    position:absolute;
-    width:138px;
-    padding:6px 0 0 11px;
-    background-color:transparent;
-    height:28px;
-    cursor:pointer;
-    outline:0!important;
-    border-width:0;
+#public .extra {
+    text-align: center;
+    padding: 10px;
+}
+
+#public .extra a {
+    margin-right: 20px;
+}
+
+#public form.login+div.extra>.show_register {
+    display: inline;
+}
+#public form.login+div.extra>.show_login {
+    display: none;
+}
+
+#public form.register+div.extra>.show_register {
+    display: none;
+}
+#public form.register+div.extra>.show_login {
+    display: inline;
+}
+
+#public form {
+    margin: 0 auto;
+}
+
+#public form.login {
+    width: 480px;
+}
+
+#public form.register {
+    width: 630px;
+}
+
+#public form>div.input_wrapper {
+    display: inline-block;
+    position: relative;
+    width: 150px;
+    height: 35px;
+}
+
+#public form.login>div.email {
+    display: none;
+}
+
+#public form>div.submit {
+    float: right;
+}
+
+#public form input {
+    background-color: #DEEAF3;
+    width: 122px;
+    height: 28px;
+    border: none;
+    border-radius: 5px;
+    position: absolute;
+    left: 0px;
+    z-index: 1;
+    padding: 3px 6px;
     font: 18px Arial, Helvetica, Microsoft YaHei, 微软雅黑;
 }
 
-.regbtn {
+#public form label {
+    position: absolute;
+    left: 10px;
+    top: 5px;
+    color: #869CB2;
+    cursor: text;
+    z-index: 2;
+    font: 18px Arial, Helvetica, Microsoft YaHei, 微软雅黑;
+}
+
+#public form button[type=submit] {
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     -o-border-radius: 5px;
     border-radius: 5px;
-    width:111px;
-    height:38px;
-    background:#8BAD68 url(/static/image/reg_btn.gif) no-repeat right center;
-    cursor:pointer;
+    border: none;
+    padding-left: 20px;
+    text-align: left;
+    width: 90px;
+    height: 35px;
+    background: #8BAD68 url(/static/image/reg_btn.gif) no-repeat right center;
+    cursor: pointer;
+    font-family: Arial, Helvetica, Microsoft YaHei, 微软雅黑;
+    font-size: 18px;
 }
 
+#public form button[type=submit]:active {
+    /* TODO add more effects to indicate a press */
+    padding-left: 21px;
+}
