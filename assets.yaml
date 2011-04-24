@@ -26,5 +26,7 @@ bundles:
         output: all.css
         contents:
             - stylesheet/main.css
+            - stylesheet/public.css
+            - stylesheet/home.css
             - stylesheet/settings.css
 

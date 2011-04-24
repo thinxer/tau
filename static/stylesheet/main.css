@@ -1,11 +1,11 @@
-*{
-    outline:0!important;
-}
-
 body {
     background: #2C4762;
     font: normal 14px Arial, Helvetica, Microsoft YaHei, 微软雅黑;
     color: white;
+}
+
+img {
+    border: none;
 }
 
 a {
@@ -29,37 +29,44 @@ a {
     filter: alpha(opacity=0);
 }
 
-#header .title {
+#header>.title {
     font-size: 24px;
     text-shadow: 1px 3px 5px rgba(0,0,0,0.5);
     float: left;
 }
 
-#header .nav {
+#header>.nav {
     float: right;
 }
 
 #main {
-    position:absolute;
-    left:50%;
-    width:860px;
-    margin-left:-450px;
-    padding: 20px;
     -webkit-border-radius: 15px;
     -moz-border-radius: 15px;
     -o-border-radius: 15px;
-    border-radius: 15px;
+}
+
+#main>.general_box {
+    border-radius: 5px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+#main>.general_box.light {
+    background-color: white;
+}
+
+#main>.general_box.light,
+#main>.general_box.light a {
+    color: #2C4762;
+}
+
+#main>.general_box.dark {
     background-color: #29425B;
 }
 
-#main .sidebar {
-    float: right;
-    width: 240px;
-}
-
-#main .content {
-    float: left;
-    width: 480px;
+#main>.general_box.dark,
+#main>.general_box.dark a {
+    color: white;
 }
 
 #footer {
@@ -92,7 +99,7 @@ a {
     margin-left: 50px;
 }
 
-#statusDiv{
+#statusDiv {
     -webkit-border-radius:0 0 8px 8px;
     -moz-border-radius:0 0 8px 8px;
     -o-border-radius:0 0 8px 8px;
@@ -111,108 +118,23 @@ a {
     -moz-transition: opacity 0.2s linear;
 }
 
-.input_wrapper{
-    width:155px;
-    height:35px;
-    position:absolute;
-    border:solid 1px;
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
-    -o-border-radius: 4px;
-    border-radius: 4px;
-    background:#DEEAF3;
-}
-
-.reglabel{
-    margin:5px 0 0 11px;
-	display:block;
-    background-color:transparent;
-    opacity:.5;
-    padding:1px 10px 1px 10px;
-    color:#869cb2;
-    font: bold 20px Arial, Helvetica, Microsoft YaHei, 微软雅黑;
-}
-
-.reginput{
-    position:absolute;
-    width:138px;
-    padding:6px 0 0 11px;
-    background-color:transparent;
-    height:28px;
-    cursor:pointer;
-    outline:0!important;
-    border-width:0;
-    font: 18px Arial, Helvetica, Microsoft YaHei, 微软雅黑;
-}
-
-.regbtn{
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    -o-border-radius: 5px;
-    border-radius: 5px;
-    width:111px;
-    height:38px;
-    background:#8BAD68 url(/static/image/reg_btn.gif) no-repeat right center;
-    cursor:pointer;
-}
-
-textarea{
+textarea {
     resize:none;
 }
 
-.rr4{
+.photo {
+    height: 60px;
+    width: 60px;
+    display: block;
+}
+
+.photo img {
+    width: 100%;
+    height: 100%;
     -webkit-border-radius: 4px;
     -moz-border-radius: 4px;
     -o-border-radius: 4px;
     border-radius: 4px;
 }
 
-.rr6{
-    -webkit-border-radius: 6px;
-    -moz-border-radius: 6px;
-    -o-border-radius: 6px;
-    border-radius: 6px;
-}
-
-.rr10{
-    -webkit-border-radius: 10px;
-    -moz-border-radius: 10px;
-    -o-border-radius: 10px;
-    border-radius: 10px;
-}
-
-.post{
-    margin:20px 0 0 0;
-    background-color:#FFFFFF;
-    padding:15px 20px 15px 20px;
-    width:500px;
-    min-height:80px;
-    position:relative;
-}
-
-.larrow{
-    position:absolute;
-    width:8px;
-    height:16px;
-    left:-8px;
-    top:20px;
-    background:url('/static/image/larrow.png') no-repeat transparent;
-}
-
-.avatar{
-    position:absolute;
-    width:64px;
-    height:64px;
-    left:-85px;
-    top:0px;
-}
-
-.toplink{
-    padding:2px 5px;
-    cursor:pointer;
-}
-
-a.toplink:hover{
-    color:#aaaaaa;
-}
 /* vim: set et ts=4 sw=4 tw=0 :*/

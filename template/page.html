@@ -1,7 +1,7 @@
 $def with(version, jsfiles, cssfiles, debug)
 <!DOCTYPE html>
 <html>
-<meta charset='utf8' />
+<meta charset='utf-8' />
 <link rel='shortcut icon' href='/static/image/favicon.ico?$(version)' />
 $for file in cssfiles:
     <link rel='stylesheet' type='text/css' href='$file' />
@@ -12,9 +12,8 @@ $if not debug and version:
     <div id="statusDiv"></div>
     <div id="wrapper">
         <div id="header">
-            <div class="title">Tau</div>
+            <div class="title"><a href='#home'>Tau</a></div>
             <div class="nav">
-                <a href='#home'>首页</a>
                 <a href='#settings'>帐户设置</a>
                 <a href='#logout'>退出</a>
             </div>
