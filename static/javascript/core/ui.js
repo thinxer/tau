@@ -15,7 +15,11 @@
      * Returns a Promise.
      */
     ui.load = function(tmpl_name) {
-        return $.get('/tmpl', {name: tmpl_name}, function(d) {
+        var param = {};
+        param.name = tmpl_name;
+        if (window.VERSION) param.v = VERSION;
+
+        return $.get('/tmpl', param, function(d) {
             jQuery.template(tmpl_name, d);
         }, 'text');
     };

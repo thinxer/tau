@@ -6,6 +6,8 @@ $def with(version, jsfiles, cssfiles, debug)
 $for file in cssfiles:
     <link rel='stylesheet' type='text/css' href='$file' />
 <title>滔滔不绝</title>
+$if not debug and version:
+    <script type='text/javascript'>VERSION='$(version)'</script>
 <body>
     <div id="statusDiv"></div>
     <div id="wrapper">

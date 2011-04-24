@@ -59,15 +59,20 @@ def set_no_cache():
 def set_max_cache():
     web.header('Cache-Control', 'max-age=315360000')
 
+def set_cache_control():
+    if (not conf.debug) and web.input().get('v'):
+        set_max_cache()
+    else:
+        set_no_cache()
+
 class page:
     def GET(self):
-        set_no_cache()
+        set_cache_control()
         return render.page(conf.version, jsfiles, cssfiles, conf.debug)
 
 class tmpl:
     def GET(self):
-        set_no_cache()
-        # TODO find a better way for this.
+        set_cache_control()
         name = web.input().get('name', None)
         if name:
             return getattr(render, name)(version = conf.version)
