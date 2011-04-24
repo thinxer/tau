@@ -52,15 +52,6 @@
     };
 
     /**
-     * Function fn will be called with rendered template.
-     */
-    DeferredTemplate.prototype.tmpl = function(fn) {
-        return this.done(function(t) {
-            fn(t);
-        });
-    };
-
-    /**
      * Other methods corresponding to jQuery template.
      */
     var tmplMethods = 'prependTo appendTo insertAfter insertBefore'.split(' ');
