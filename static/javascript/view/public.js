@@ -16,7 +16,6 @@
     R.path('public',C.PAGE.goDefault);
 	var c=C[name]={};
 	c.start=function(){
-		$('#main').css('width','760px');
 		U.PAGE.header.hide();
 		c.setupClick();
 		c.setPlaceHolder();
