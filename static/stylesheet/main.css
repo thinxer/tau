@@ -18,7 +18,7 @@ a {
 }
 
 #wrapper {
-    width: 800px;
+    width: 1000px;
     margin: 0 auto;
 }
 
@@ -40,10 +40,9 @@ a {
 }
 
 #main {
-    position:absolute;
-    left:50%;
-    width:860px;
-    margin-left:-450px;
+    position:relative;
+    margin:0 auto;
+    width:760px;
     padding: 20px;
     -webkit-border-radius: 15px;
     -moz-border-radius: 15px;
@@ -58,7 +57,6 @@ a {
 }
 
 #main .content {
-    float: left;
     width: 480px;
 }
 

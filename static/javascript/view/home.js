@@ -5,6 +5,7 @@
 	var c=C[name]={},u=U[name]={};
 
 	c.start=function(curuser){
+		$('#main').css('width','860px');
 		U.PAGE.header.show();
 		c.setupClick();
 		c.updateStream(0);
