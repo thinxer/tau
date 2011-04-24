@@ -29,15 +29,24 @@
         },
         hide:function(){
             jQuery(u.statusDiv.id).slideUp('fast',function(){
-				jQuery(u.statusDiv.id).text('');
-			});
+                jQuery(u.statusDiv.id).text('');
+            });
         },
-		showHide:function(s,intv){
-			this.show(s,function(){
-				setTimeout(u.statusDiv.hide,intv||2000);
-			});
-		}
+        showHide:function(s,intv){
+            this.show(s,function(){
+                setTimeout(u.statusDiv.hide,intv||2000);
+            });
+        }
     }
+
+    u.header = {
+        show: function() {
+            jQuery('#header').animate({opacity: 1});
+        },
+        hide: function() {
+            jQuery('#header').animate({opacity: 0});
+        }
+    };
 
     R.path('notfound',function(){U.render('notfound').fillTo('#main');})
     R.path('default',C.PAGE.goDefault);

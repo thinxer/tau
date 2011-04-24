@@ -1,6 +1,7 @@
 (function() {
 
 var settingsHandler = function(path, level) {
+    U.PAGE.header.show();
 
     var basicInfoSubmit = function(e) {
         e.preventDefault();

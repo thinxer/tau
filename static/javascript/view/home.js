@@ -5,6 +5,7 @@
 	var c=C[name]={},u=U[name]={};
 
 	c.start=function(curuser){
+		U.PAGE.header.show();
 		c.setupClick();
 		c.updateStream(0);
 		$(document).scroll(function(){
