@@ -1,0 +1,40 @@
+.content .postbox {
+    width: 100%;
+}
+
+.content .postbox .photo {
+    float: left;
+}
+
+.content .postbox textarea {
+    width: 400px;
+    height: 60px;
+    border: none;
+    margin: 0;
+}
+
+.content .postbox .pub_btn {
+    cursor: pointer;
+    display: block;
+}
+
+.content .timeline {
+    list-style-type: none;
+    padding: 0px;
+}
+
+.content .timeline>.item {
+    margin-top: 10px;
+}
+
+.content .timeline>.item .photo {
+    float: left;
+    padding-right: 10px;
+    width: 40px;
+    height: 40px;
+}
+
+.content .timeline>.item .name,
+.content .timeline>.item .content {
+    display: inline;
+}

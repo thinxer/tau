@@ -10,9 +10,8 @@
 		c.updateStream(0);
 		$(document).scroll(function(){
 			if($(window).scrollTop() > $(document).height()-$(window).height()-20){
-				if($('ol#posts>li:last-child').attr('hasmore')){
+				if($('ol.timeline>li').last().attr('data-hasmore')){
 					c.updateStream(-1);
-					console.log(-1);
 				}
 			}
 		});
@@ -34,19 +33,20 @@
 			}).error(function(){
 			});
 		};
-		jQuery('a#pubBtn').click(publish);
+		jQuery('.pub_btn').click(publish);
 		jQuery('#publisher').keypress(function(e){
 			if(e.ctrlKey && (e.keyCode==13 || e.keyCode==10)){
 				publish();
 			}
 		});
 	};
-	c.callStreamAPI=function(callback,when){		// when > 0 means newer, when =0 means all, when < 0 means older
+    // when > 0 means newer, when =0 means all, when < 0 means older
+	c.callStreamAPI=function(callback,when){
 		var p={};
 		if(when>0){
-			p.newerThan=+$('#postBox + li > div[timestamp]').attr('timestamp');
+			p.newerThan=+$('ol.timeline>li .timestamp').first().attr('data-timestamp');
 		}else if(when<0){
-			p.olderThan=+$('ol#posts>li:last-child>div[timestamp]').attr('timestamp');
+			p.olderThan=+$('ol.timeline>li .timestamp').last().attr('data-timestamp');
 		}
 		T.stream(p).success(function(r){
 			jQuery(r.items).each(function(i,e){
@@ -55,7 +55,8 @@
 			callback(r.items,r.has_more);
 		});
 	};
-	c.updateStream=function(when){		// when > 0 means newer, when =0 means all, when < 0 means older
+    // when > 0 means newer, when =0 means all, when < 0 means older
+	c.updateStream=function(when){
 		c.callStreamAPI(function(d,hasmore){
 			var o=U.render('stream_item',d,{
 				getDate:function(m){
@@ -72,12 +73,12 @@
 			});
 			if(hasmore){
 				o.done(function(t){
-					t.last().attr('hasmore','true');
+					t.last().attr('data-hasmore','true');
 				});
 			}
-			if(!when) $('ol#posts>:not(li#postBox)').remove();
-			if(when>0) o.insertAfter('li#postBox');
-			else o.appendTo('ol#posts');
+			if(!when) $('ol.timeline').html('');
+			if(when>0) o.prependTo('ol.timeline');
+			else o.appendTo('ol.timeline');
 		},when);
 	};
 
