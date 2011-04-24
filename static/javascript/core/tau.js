@@ -24,6 +24,24 @@
         };
     });
 
+    tau.checkLogin = function() {
+        return jQuery.cookie('uid');
+    };
+
+    var orig_login = tau.login;
+    tau.login = function(param) {
+        return orig_login(param).success(function(d) {
+            jQuery.cookie('uid', d.uid);
+        });
+    };
+
+    var orig_logout = tau.logout;
+    tau.logout = function(param) {
+        return orig_logout(param).success(function() {
+            jQuery.cookie('uid', null);
+        });
+    };
+
 })('T');
 
 // vim: set et ts=4 sw=4 tw=0 :
