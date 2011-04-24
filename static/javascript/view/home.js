@@ -8,7 +8,6 @@
 		c.setupClick();
 		c.updateStream(0);
 		$(document).scroll(function(){
-			console.log('top: '+$(document).scrollTop()+' height:'+$(document).height());
 			if($(window).scrollTop() > $(document).height()-$(window).height()-20){
 				if($('ol#posts>li:last-child').attr('hasmore')){
 					c.updateStream(-1);
@@ -21,12 +20,6 @@
 		$(document).unbind('scroll');
 	};
 	c.setupClick=function(){
-		jQuery('#logout').click(function(){
-			T.logout().then(function(){
-				if(window.location.hash!="#public")R.path('public');
-				else R.reload();
-			});
-		});
 		var publish=function(){
 			var o=$('textarea#publisher'),v=o.val().trim();
 			if(!v.length){

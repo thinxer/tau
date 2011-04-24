@@ -41,5 +41,10 @@
 
     R.path('notfound',function(){U.render('notfound').fillTo('#main');})
     R.path('default',C.PAGE.goDefault);
+    R.path('logout', function() {
+        T.logout().then(function() {
+            R.path('');
+        });
+    });
 })("PAGE");
 
