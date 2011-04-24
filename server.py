@@ -98,7 +98,8 @@ def get_input(s):
     return web.input()
 
 class api:
-    GET_ACTIONS = set('stream current_user userinfo get_message validate get_following get_follower'.split())
+    GET_ACTIONS = set('stream current_user userinfo get_message validate\
+            get_following get_follower recommend_user'.split())
     POST_ACTIONS = set('register login logout publish follow unfollow\
             update_profile upload_photo'.split())
     FILTERS = {
@@ -254,6 +255,12 @@ class api:
                     return jsond({ 'success':1 })
             else:
                 return error.wrong_action()
+
+        elif action == 'recommend_user':
+            return jsond({
+                'users': [spec.extract(self.EXTRACT_SPECS['userinfo'], u)
+                    for u in db.recommend_user(uuid)]
+                })
 
         return error.not_implemented()
 

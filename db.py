@@ -212,3 +212,13 @@ def get_follower(uid):
             'items': [get_user(uuid) for uuid in u['follower']]
             }
     return ret
+
+def recommend_user(uuid):
+    ''' naive user recommendation. '''
+    u = get_user(uuid)
+    if u:
+        return list(users.find({'_id': {'$nin': u['following']}})
+                .limit(conf.stream_item_max))
+    else:
+        return error.user_not_found(raw=True)
+
