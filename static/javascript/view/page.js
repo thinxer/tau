@@ -48,6 +48,13 @@
         }
     };
 
+    // Prevent hash anchors from scrolling the page.
+    jQuery('a[href^=\\#]').click(function(e) {
+        e.preventDefault();
+        // Set path through our router.
+        R.path(jQuery(this).attr('href').substring(1));
+    });
+
     R.path('notfound',function(){U.render('notfound').fillTo('#main');})
     R.path('default',C.PAGE.goDefault);
     R.path('logout', function() {
