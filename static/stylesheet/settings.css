@@ -1,3 +1,8 @@
+#main #settings {
+    padding-top: 5px;
+    padding-bottom: 20px;
+}
+
 #settings .section {
     width: 80%;
     margin: auto;
