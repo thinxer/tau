@@ -191,7 +191,8 @@ class api:
             'stream_request': {
                 'olderThan': (lambda _: _ and util.parseTimestamp(int(_)) or None, None),
                 'newerThan': (lambda _: _ and util.parseTimestamp(int(_)) or None, None),
-                'uid': (spec.untaint, None)
+                'uid': (spec.untaint, None),
+                'type': (str, 'normal')
                 }
             }
 
@@ -213,8 +214,11 @@ class api:
 
         if action == 'stream':
             param = spec.extract(self.EXTRACT_SPECS['stream_request'], d)
-            return jsond(spec.extract(self.EXTRACT_SPECS['stream_response'],
-                db.stream(uuid, **param)))
+            ret = db.stream(uuid, **param)
+            if 'error' in ret:
+                return jsond(ret)
+            else:
+                return jsond(spec.extract(self.EXTRACT_SPECS['stream_response'], ret))
 
         elif action == 'current_user':
             u = db.get_user(uuid)

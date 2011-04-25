@@ -112,8 +112,16 @@ def get_message(uuid):
                     }
     return None
 
-def stream(uuid, olderThan = None, newerThan = None, uid = None):
-    # TODO make clear newerThan logic.
+def stream(uuid, olderThan = None, newerThan = None, uid = None, type = 'normal'):
+    '''
+    olderThan, newerThan: time since epoch (in milliseconds).
+    uid: if exist, return uid's public messages.
+    type (if uid is None):
+        normal: the home timeline for uuid.
+        mentions: messages mentioning uuid.
+    type (if uid is not None):
+        undefined.
+    '''
 
     # setup basic query
     u = get_user(uuid)
@@ -123,14 +131,8 @@ def stream(uuid, olderThan = None, newerThan = None, uid = None):
         if target:
             query = { 'owner':target['_id'] }
         else:
-            # it's more convient to return nothing than an error
-            return {
-                    'has_more': False,
-                    'items': [],
-                    'users': []
-                    }
+            return error.user_not_found(raw=True)
     else:
-        # get current user's main timeline
         following = u['following']
         following_query = {
                 'owner': {'$in': following + [u['_id']]}
@@ -138,9 +140,18 @@ def stream(uuid, olderThan = None, newerThan = None, uid = None):
         mention_query = {
                 'entities.mentions.mention': '@' + u['uid']
                 }
-        query = {
-                '$or': [following_query, mention_query]
-                }
+        if type == 'normal':
+            # get current user's main timeline
+            query = {
+                    '$or': [following_query, mention_query]
+                    }
+        elif type == 'mentions':
+            # only mentions
+            query = {
+                    'entities.mentions.mention': '@' + u['uid']
+                    }
+        else:
+            return error.stream_type_not_supported(raw=True)
 
     # setup time constraints
     if olderThan or newerThan:
