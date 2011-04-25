@@ -100,19 +100,17 @@
                     $(nextRecSelector).css('display', 'none');
                 }
             };
-            var goPrev = function(){
+            showBtn();
+            renderRecommendation(d);
+            $(prevRecSelector).click(function(){
                 it = it > 3 ? it - 3 : 0;
                 showBtn();
                 renderRecommendation(r.slice(it, it+3));
-            };
-            showBtn();
-            renderRecommendation(d);
-            $(prevRecSelector).click(goPrev);
+            });
             $(nextRecSelector).click(function(){
                 it += 3;
-                d = r.slice(it, it+3);
                 showBtn();
-                renderRecommendation(d);
+                renderRecommendation(r.slice(it, it+3));
             });
             $('ol.recommendation_list a').live('click', function(){
                 var curli = $(this).parents('ol.recommendation_list>li');
