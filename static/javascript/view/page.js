@@ -27,10 +27,12 @@
 
     u.header = {
         show: function() {
-            jQuery('#header').animate({opacity: 1});
+            jQuery('#header').animate({opacity: 1})
+                .find('a').removeAttr('tabindex');
         },
         hide: function() {
-            jQuery('#header').animate({opacity: 0});
+            jQuery('#header').animate({opacity: 0})
+                .find('a').attr('tabindex', -1);
         }
     };
 

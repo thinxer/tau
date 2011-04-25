@@ -31,6 +31,11 @@
     display: inline;
 }
 
+#public div.extra .forget_pass {
+    /* Currently we don't have a mechanism to do this. */
+    display: none;
+}
+
 #public form {
     margin: 0 auto;
     -webkit-transition: width .5s;

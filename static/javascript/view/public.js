@@ -93,12 +93,14 @@
             form.removeClass('login');
             form.addClass('register');
             form.find('button[type=submit]').text('注册');
+            form.find('#email').attr('disabled', false);
             e.preventDefault();
         });
         extra.find('a.show_login').click(function(e) {
             form.removeClass('register');
             form.addClass('login');
             form.find('button[type=submit]').text('登陆');
+            form.find('#email').attr('disabled', true);
             e.preventDefault();
         });
     };
