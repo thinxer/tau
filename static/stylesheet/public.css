@@ -33,6 +33,7 @@
 
 #public form {
     margin: 0 auto;
+    -webkit-transition: width .5s;
 }
 
 #public form.login {
@@ -50,8 +51,21 @@
     height: 35px;
 }
 
+#public form>div.email {
+    -webkit-transition: opacity .5s .5s, width 0.5s 0s;
+    -gecko-transition: opacity .5s .5s, width 0.5s 0s;
+    -o-transition: opacity .5s .5s, width 0.5s 0s;
+}
+
 #public form.login>div.email {
-    display: none;
+    width: 0;
+    overflow: hidden;
+    opacity: 0;
+}
+
+#public form.register>div.email {
+    width: 150px;
+    opacity: 1;
 }
 
 #public form>div.submit {
@@ -59,6 +73,7 @@
 }
 
 #public form input {
+    outline: none;
     background-color: #DEEAF3;
     width: 122px;
     height: 28px;
@@ -69,6 +84,10 @@
     z-index: 1;
     padding: 3px 6px;
     font: 18px Arial, Helvetica, Microsoft YaHei, 微软雅黑;
+}
+
+#public form input:focus {
+    background-color: #F0F5FA;
 }
 
 #public form label {
