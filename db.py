@@ -214,7 +214,7 @@ def get_following(uid):
     if not u:
         return error.user_not_found(raw=True)
     ret = {
-            'has_more': false,
+            'has_more': False,
             'items': [get_user(uuid) for uuid in u['following']]
             }
     return ret
@@ -225,16 +225,17 @@ def get_follower(uid):
     if not u:
         return error.user_not_found(raw=True)
     ret = {
-            'has_more': false,
+            'has_more': False,
             'items': [get_user(uuid) for uuid in u['follower']]
             }
     return ret
 
 def recommend_user(uuid):
     ''' naive user recommendation. '''
+    # TODO more reasonable recommendation
     u = get_user(uuid)
     if u:
-        return list(users.find({'_id': {'$nin': u['following']}})
+        return list(users.find({'_id': {'$nin': u['following'] + [u['_id']]}})
                 .limit(conf.stream_item_max))
     else:
         return error.user_not_found(raw=True)
