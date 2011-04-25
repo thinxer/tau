@@ -6,7 +6,7 @@
 
     var setupClick=function(){
         var publish=function(){
-            var o=$('textarea#publisher'),v=o.val().trim();
+            var o=$('textarea#publisher'),v = $.trim(o.val());
             if(!v.length){
                 // show error ?
                 return;
