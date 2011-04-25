@@ -30,7 +30,7 @@
     display: block;
 }
 
-#home>.content .timeline {
+#home>.content .timeline, .recommendation_list {
     list-style-type: none;
     padding: 0px;
 }
@@ -62,3 +62,38 @@
     margin-top: 4px;
     font-size: 12px;
 }
+
+ol.recommendation_list{
+    display: block;
+    position: relative;
+}
+
+ol.recommendation_list>li>div{
+    display:block;
+    height: 80px;
+    width: 200px;
+}
+
+ol.recommendation_list>li>div>div {
+    float: left;
+    padding: 5px 0 0 10px;
+}
+
+ol.recommendation_list>li>div>div.recommendation_desc{
+    padding-top:10px;
+}
+
+#main ol.recommendation_list a{
+    color: #ffffff;
+    position:relative;
+    top:10px;
+}
+
+#main ol.recommendation_list a:hover{
+    color: #aaaaaa;
+}
+
+button#more_recommendation{
+    display:none;
+}
+

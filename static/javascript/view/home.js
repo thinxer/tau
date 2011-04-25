@@ -4,7 +4,7 @@
     var K=window.K=window.K||{},C=window.C=window.C||{};
     var c=C[name]={},u=U[name]={};
 
-    c.setupClick=function(){
+    var setupClick=function(){
         var publish=function(){
             var o=$('textarea#publisher'),v=o.val().trim();
             if(!v.length){
@@ -14,7 +14,7 @@
             T.publish({content:v}).success(function(){
                 o.val('');
                 U.PAGE.statusDiv.showHide('发布成功！');
-                c.updateStream(1);
+                updateStream(1);
             }).error(function(){
             });
         };
@@ -26,7 +26,7 @@
         });
     };
     // when > 0 means newer, when =0 means all, when < 0 means older
-    c.callStreamAPI=function(callback,when){
+    var callStreamAPI=function(callback,when){
         var p={};
         if(when>0){
             p.newerThan=+$('ol.timeline>li .timestamp').first().attr('data-timestamp');
@@ -41,8 +41,8 @@
         });
     };
     // when > 0 means newer, when =0 means all, when < 0 means older
-    c.updateStream=function(when){
-        c.callStreamAPI(function(d,hasmore){
+    var updateStream=function(when){
+        callStreamAPI(function(d,hasmore){
             var o=U.render('stream_item',d,{
                 getDate:function(m){
                     var d=new Date(m),now=jQuery.now(),delta=now-d;
@@ -66,18 +66,63 @@
             else o.appendTo('ol.timeline');
         },when);
     };
+    var renderRecommendation = function(d, hasmore){
+        console.log(hasmore);
+        $(d).each(function(i, d){
+            d.seq = i;
+        });
+        if (d.length > 0){
+            U.render('recommendation_item', d).fillTo('ol.recommendation_list');
+            if(hasmore){
+                $('button#more_recommendation').css('display', 'block');
+            }else{
+                $('button#more_recommendation').css('display', 'none');
+            }
+        }else{
+            $('button#more_recommendation').css('display', 'none');
+            $('ol.recommendation_list').children().remove();
+        }
+    };
+    var showRecommendation = function(){
+        T.recommend_user().success(function(r){
+            r = r.users;
+            var it = 0;
+            var d = r.slice(it, it+3);
+            renderRecommendation(d, r.length > 3);
+            $('button#more_recommendation').click(function(){
+                it += 3;
+                d = r.slice(it, it+3);
+                console.log(it);
+                console.log(r.length);
+                renderRecommendation(d, r.length > it+3);
+            });
+            $('ol.recommendation_list a').live('click', function(){
+                var curli = $(this).parents('ol.recommendation_list>li');
+                var uid = ($(this).siblings('div').text());
+                T.follow({uid: uid}).success(function(){
+                    U.PAGE.statusDiv.showHide("关注成功");
+                    var curseq = +curli.attr('data-seq');
+                    curli.remove();
+                    r = $.merge(r.slice(0, it+curseq),r.slice(it+curseq+1,r.length));
+                    d = r.slice(it, it+3);
+                    renderRecommendation(d, r.length > it+3);
+                });
+            });
+        });
+    };
 
     c.start=function(curuser){
         U.PAGE.header.show();
-        c.setupClick();
-        c.updateStream(0);
+        setupClick();
+        updateStream(0);
         $(document).scroll(function(){
             if($(window).scrollTop() > $(document).height()-$(window).height()-20){
                 if($('ol.timeline>li').last().attr('data-hasmore')){
-                    c.updateStream(-1);
+                    updateStream(-1);
                 }
             }
         });
+        showRecommendation();
     };
     c.end=function(){
         $(document).unbind('scroll');
