@@ -66,19 +66,17 @@
             else o.appendTo('ol.timeline');
         },when);
     };
-    var renderRecommendation = function(d, hasmore){
+    
+    var nextRecSelector = 'div.user_recommendation .next';
+    var prevRecSelector = 'div.user_recommendation .prev';
+
+    var renderRecommendation = function(d){
         $(d).each(function(i, d){
             d.seq = i;
         });
         if (d.length > 0){
             U.render('recommendation_item', d).fillTo('ol.recommendation_list');
-            if(hasmore){
-                $('button#more_recommendation').css('display', 'block');
-            }else{
-                $('button#more_recommendation').css('display', 'none');
-            }
         }else{
-            $('button#more_recommendation').css('display', 'none');
             $('ol.recommendation_list').children().remove();
         }
     };
@@ -87,11 +85,34 @@
             r = r.users;
             var it = 0;
             var d = r.slice(it, it+3);
-            renderRecommendation(d, r.length > 3);
-            $('button#more_recommendation').click(function(){
+            if (!d.length){
+                return;
+            }
+            var showBtn = function(){
+                if (!it){
+                    $(prevRecSelector).css('display', 'none');
+                }else{
+                    $(prevRecSelector).css('display', 'block');
+                }
+                if (r.length > it+3){
+                    $(nextRecSelector).css('display', 'block');
+                }else{
+                    $(nextRecSelector).css('display', 'none');
+                }
+            };
+            var goPrev = function(){
+                it = it > 3 ? it - 3 : 0;
+                showBtn();
+                renderRecommendation(r.slice(it, it+3));
+            };
+            showBtn();
+            renderRecommendation(d);
+            $(prevRecSelector).click(goPrev);
+            $(nextRecSelector).click(function(){
                 it += 3;
                 d = r.slice(it, it+3);
-                renderRecommendation(d, r.length > it+3);
+                showBtn();
+                renderRecommendation(d);
             });
             $('ol.recommendation_list a').live('click', function(){
                 var curli = $(this).parents('ol.recommendation_list>li');
@@ -101,8 +122,15 @@
                     var curseq = +curli.attr('data-seq');
                     curli.remove();
                     r = $.merge(r.slice(0, it+curseq),r.slice(it+curseq+1,r.length));
+                    it = it < r.length ? it : (r.length > 3 ? r.length-3 : 0);
                     d = r.slice(it, it+3);
-                    renderRecommendation(d, r.length > it+3);
+                    if (d.length > 0){
+                        renderRecommendation(d);
+                        showBtn();
+                    }else{
+                        $(nextRecSelector).css('display', 'none');
+                        $(prevRecSelector).css('display', 'none');
+                    }
                 });
             });
         });
