@@ -38,7 +38,6 @@
         if (U&&U.PAGE.statusDiv) {
             U.PAGE.statusDiv.show(s);
         } else {
-            console.log(U);
         }
     };
 
@@ -77,11 +76,9 @@
                         if (resp.error == -4) {
                             c.showError(K.PUBLIC.INVALID_UID);
                         } else {
-                            console.log('unknow server error', resp);
                         }
                     }
                 }).error(function() {
-                    console.log('server too far away to reach, I believe it\'s 500, server internel error');
                     c.showError(K.PUBLIC.SERVER_ERR);
                 });
             }

@@ -67,7 +67,6 @@
         },when);
     };
     var renderRecommendation = function(d, hasmore){
-        console.log(hasmore);
         $(d).each(function(i, d){
             d.seq = i;
         });
@@ -92,8 +91,6 @@
             $('button#more_recommendation').click(function(){
                 it += 3;
                 d = r.slice(it, it+3);
-                console.log(it);
-                console.log(r.length);
                 renderRecommendation(d, r.length > it+3);
             });
             $('ol.recommendation_list a').live('click', function(){
