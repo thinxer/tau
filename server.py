@@ -9,7 +9,6 @@ import conf
 import db
 import error
 import photo
-import session
 import spec
 import util
 
@@ -29,7 +28,13 @@ app = web.application(urls, globals())
 render = web.template.render('template/')
 
 def createSession():
-    return web.session.Session(app, session.MongoStore(db.db, 'sessions'))
+    if conf.session_type == 'mongo':
+        import session_mongo
+        return web.session.Session(app, session_mongo.MongoStore(db.db, 'sessions'))
+    elif conf.session_type == 'memcache':
+        # TODO add more memcache options to conf
+        import session_memcache
+        return web.session.Session(app, session_memcache.MemcacheStore(['127.0.0.1:11211'], 1440))
 
 if web.config.debug:
     # dirty hack to make session work with reloader

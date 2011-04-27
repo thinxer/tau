@@ -2,6 +2,9 @@ db_name = "tau"
 secret = "PUT YOUR SERVER SECRET HERE"
 version = '1'
 
+# possible values: mongo, memcache.
+session_type = 'memcache'
+
 reserved_names = set(["www", "admin", "setting", "settings", \
         "login", "logout", "api"])
 
