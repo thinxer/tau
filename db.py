@@ -87,13 +87,16 @@ def unfollow(uuid, target):
     else:
         return error.user_not_found(raw=True)
 
-def publish(uuid, content):
+def publish(uuid, content, parent = None, type = 'normal'):
     u = get_user(uuid)
+    # TODO embed parent object?
     doc = {
             'owner': ObjectId(uuid),
             'content': content,
             'timestamp': utcnow(),
-            'entities': contentparser.parse(content)
+            'entities': contentparser.parse(content),
+            'parent': parent and ObjectId(parent) or None,
+            'type': type
             }
     # TODO check result
     messages.save(doc)

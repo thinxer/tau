@@ -4,6 +4,7 @@ import exceptions
 import re
 import traceback
 import web
+import bson
 
 import conf
 import db
@@ -110,7 +111,8 @@ class api:
     FILTERS = {
             'uid': re.compile(r'[a-zA-Z][a-zA-Z0-9]+'),
             'email': re.compile(r'(.+)@(.+).(.+)'),
-            'datetime': lambda _: _ and int(_) or None
+            'datetime': lambda _: _ and int(_) or None,
+            'objectid': lambda _: bson.objectid.ObjectId(_)
             }
     VALIDATE_SPECS = {
             'register': {
@@ -123,7 +125,9 @@ class api:
                 'password': True
                 },
             'publish': {
-                'content': True
+                'content': True,
+                'parent': (FILTERS['objectid'], False),
+                'type': (lambda _: _ in ['normal', 'reply', 'forward'], False)
                 },
             'follow': {
                 'uid': FILTERS['uid']
@@ -182,7 +186,9 @@ class api:
                 'uid': spec.untaint,
                 'content': spec.untaint,
                 'timestamp': spec.untaint,
-                'entities': spec.untaint
+                'entities': spec.untaint,
+                'parent': (spec.untaint, None),
+                'type': (spec.untaint, 'normal')
                 },
             'stream_response': {
                 'has_more': spec.untaint,
@@ -197,6 +203,11 @@ class api:
                 'olderThan': (lambda _: _ and util.parseTimestamp(int(_)) or None, None),
                 'newerThan': (lambda _: _ and util.parseTimestamp(int(_)) or None, None),
                 'uid': (spec.untaint, None),
+                'type': (str, 'normal')
+                },
+            'publish_request': {
+                'content': spec.untaint,
+                'parent': (FILTERS['objectid'], None),
                 'type': (str, 'normal')
                 }
             }
@@ -315,7 +326,8 @@ class api:
         elif action == 'unfollow':
             return jsond(db.unfollow(uuid, d.uid))
         elif action == 'publish':
-            return jsond(db.publish(uuid, d.content))
+            req = spec.extract(self.EXTRACT_SPECS['publish_request'], d)
+            return jsond(db.publish(uuid, **req))
         elif action == 'update_profile':
             u = db.update_profile(uuid, d)
             return jsond(spec.extract(self.EXTRACT_SPECS['current_user'], u))
