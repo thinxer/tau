@@ -39,6 +39,9 @@
 #public form {
     margin: 0 auto;
     -webkit-transition: width .5s;
+    -moz-transition: width .5s;
+    -o-transition: width .5s;
+    transition: width .5s;
 }
 
 #public form.login {
@@ -58,8 +61,9 @@
 
 #public form>div.email {
     -webkit-transition: opacity .5s .5s, width 0.5s 0s;
-    -gecko-transition: opacity .5s .5s, width 0.5s 0s;
+    -moz-transition: opacity .5s .5s, width 0.5s 0s;
     -o-transition: opacity .5s .5s, width 0.5s 0s;
+    transition: opacity .5s .5s, width 0.5s 0s;
 }
 
 #public form.login>div.email {
