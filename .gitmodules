@@ -4,3 +4,6 @@
 [submodule "external/webassets"]
 	path = external/webassets
 	url = git://github.com/miracle2k/webassets.git
+[submodule "external/pymmseg-cpp"]
+	path = external/pymmseg-cpp
+	url = git://github.com/pluskid/pymmseg-cpp.git
