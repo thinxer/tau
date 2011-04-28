@@ -89,7 +89,14 @@ def unfollow(uuid, target):
 
 def publish(uuid, content, parent = None, type = 'normal'):
     u = get_user(uuid)
-    # TODO embed parent object?
+
+    # We should not embed the parent message, otherwise it'd be too difficult
+    # to delete the parent.
+    if type == 'forward':
+        m = messages.find_one(ObjectId(parent))
+        if not m:
+            return error.invalid_message_id(raw=True)
+
     doc = {
             'owner': ObjectId(uuid),
             'content': content,
@@ -103,58 +110,55 @@ def publish(uuid, content, parent = None, type = 'normal'):
     return { 'success':1 }
 
 def get_message(uuid):
-    m = messages.find_one(ObjectId(uuid))
-    if m:
-        u = get_user(m['owner'])
-        if u:
-            m['uid'] = u['uid']
-            m['id'] = str(m['_id'])
-            return {
-                    'item': m,
-                    'user': u
-                    }
+    msg = stream(None, msg_uuid=uuid, type='unique')
+    if msg['items']:
+        return msg
     return None
 
-def stream(uuid, olderThan = None, newerThan = None, uid = None, type = 'normal'):
+def stream(uuid, olderThan = None, newerThan = None, uid = None, msg_uuid = None, type = 'normal'):
     '''
     olderThan, newerThan: time since epoch (in milliseconds).
     uid: if exist, return uid's public messages.
     type (if uid is None):
         normal: the home timeline for uuid.
         mentions: messages mentioning uuid.
+        unique: only one message specified by msg_uuid.
     type (if uid is not None):
-        undefined.
+        normal: the messages published by uid.
     '''
 
     # setup basic query
-    u = get_user(uuid)
-    if uid:
-        # get uid's public tweets
-        target = find_user(uid)
-        if target:
-            query = { 'owner':target['_id'] }
+    if type == 'unique':
+        query = {
+                '_id': ObjectId(msg_uuid)
+                }
+    elif type == 'normal':
+        if uid:
+            # get uid's public tweets
+            target = find_user(uid)
+            if target:
+                query = { 'owner':target['_id'] }
+            else:
+                return error.user_not_found(raw=True)
         else:
-            return error.user_not_found(raw=True)
-    else:
-        following = u['following']
-        following_query = {
-                'owner': {'$in': following + [u['_id']]}
-                }
-        mention_query = {
-                'entities.mentions.mention': '@' + u['uid']
-                }
-        if type == 'normal':
-            # get current user's main timeline
+            # uuid's main timeline
+            u = get_user(uuid)
+            following = u['following']
+            following_query = {
+                    'owner': {'$in': following + [u['_id']]}
+                    }
+            mention_query = {
+                    'entities.mentions.mention': '@' + u['uid']
+                    }
             query = {
                     '$or': [following_query, mention_query]
                     }
-        elif type == 'mentions':
-            # only mentions
-            query = {
-                    'entities.mentions.mention': '@' + u['uid']
-                    }
-        else:
-            return error.stream_type_not_supported(raw=True)
+    elif type == 'mentions':
+        query = {
+                'entities.mentions.mention': '@' + u['uid']
+                }
+    else:
+        return error.stream_type_not_supported(raw=True)
 
     # setup time constraints
     if olderThan or newerThan:
@@ -180,6 +184,12 @@ def stream(uuid, olderThan = None, newerThan = None, uid = None, type = 'normal'
     for item in c:
         if count > conf.stream_item_max and item['timestamp'] != last_datetime:
             break
+        if item.get('type', 'normal') == 'forward':
+            m = messages.find_one(ObjectId(item['parent']))
+            if m:
+                item['parent_message'] = m
+                user_set.add(str(m['owner']))
+
         user_set.add(str(item['owner']))
         ret.append(item)
         count += 1
@@ -193,10 +203,17 @@ def stream(uuid, olderThan = None, newerThan = None, uid = None, type = 'normal'
             uuid_dict[uuid] = u
             uid_dict[u['uid']] = u
 
+    # final pass
     for item in ret:
         item['id'] = str(item['_id'])
         u = uuid_dict.get(str(item['owner']))
         item['uid'] = u and u['uid'] or '!invalid'
+
+        if item.get('type', 'normal') == 'forward':
+            embed = item['parent_message']
+            embed['id'] = str(embed['_id'])
+            uu = uuid_dict.get(str(embed['owner']))
+            embed['uid'] = uu and uu['uid'] or '!invalid'
 
     return {
             'items': ret,

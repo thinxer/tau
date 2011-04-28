@@ -142,7 +142,7 @@ class api:
                 'email': (FILTERS['email'], False)
                 },
             'get_message': {
-                'id': True
+                'id': FILTERS['objectid']
                 },
             'validate': {
                 'action': True,
@@ -188,7 +188,10 @@ class api:
                 'timestamp': spec.untaint,
                 'entities': spec.untaint,
                 'parent': (spec.untaint, None),
-                'type': (spec.untaint, 'normal')
+                'type': (spec.untaint, 'normal'),
+                'parent_message': (lambda _: _ and
+                    spec.extract(api.EXTRACT_SPECS['stream_item'], _) or None,
+                    None)
                 },
             'stream_response': {
                 'has_more': spec.untaint,
@@ -261,10 +264,7 @@ class api:
         elif action == 'get_message':
             ret = db.get_message(d.id)
             if ret:
-                return jsond({
-                    'item': spec.extract(self.EXTRACT_SPECS['stream_item'], ret['item']),
-                    'user': spec.extract(self.EXTRACT_SPECS['userinfo'], ret['user'])
-                    })
+                return jsond(spec.extract(self.EXTRACT_SPECS['stream_response'], ret))
             else:
                 return error.message_not_found()
 
