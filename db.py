@@ -118,11 +118,65 @@ def delete(uuid, msg_id):
         # XXX more detailed error messages?
         return error.message_not_found(raw=True)
 
+def _process_messages(cursor):
+    '''
+    This helper method will get around conf.stream_item_max items from cursor.
+    '''
+    ret = []
+    user_set = set()
+
+    # The logic here is to make sure we won't break in 'a' time.
+    # e.g. When multiple messages are at the same time, we make sure
+    # to retrieve them together.
+    last_datetime = None
+    count = 0
+    for item in cursor:
+        if count > conf.stream_item_max and item['timestamp'] != last_datetime:
+            break
+        if item.get('type', 'normal') == 'forward':
+            m = messages.find_one(ObjectId(item['parent']))
+            if m:
+                item['parent_message'] = m
+                user_set.add(str(m['owner']))
+
+        user_set.add(str(item['owner']))
+        ret.append(item)
+        count += 1
+        last_datetime = item['timestamp']
+
+    uuid_dict = {}
+    uid_dict = {}
+    for uuid in user_set:
+        u = get_user(uuid)
+        if u:
+            uuid_dict[uuid] = u
+            uid_dict[u['uid']] = u
+
+    # final pass
+    for item in ret:
+        item['id'] = str(item['_id'])
+        u = uuid_dict.get(str(item['owner']))
+        item['uid'] = u and u['uid'] or '!invalid'
+
+        if item.get('type', 'normal') == 'forward':
+            if 'parent_message' in item:
+                embed = item['parent_message']
+                embed['id'] = str(embed['_id'])
+                uu = uuid_dict.get(str(embed['owner']))
+                embed['uid'] = uu and uu['uid'] or '!invalid'
+
+    return {
+            'items': ret,
+            'users': uid_dict,
+            'has_more': cursor.alive
+            }
+
 def get_message(uuid, msg_id):
-    msg = stream(uuid, msg_uuid=msg_id, type='unique')
-    if msg['items']:
-        return msg
-    return None
+    c = messages.find({'_id': ObjectId(msg_id)})
+    ret = _process_messages(c)
+    if len(ret['items']) == 0:
+        return error.message_not_found(raw=True)
+    return ret
 
 def stream(uuid, olderThan = None, newerThan = None, uid = None, msg_uuid = None, type = 'normal'):
     '''
@@ -182,54 +236,7 @@ def stream(uuid, olderThan = None, newerThan = None, uid = None, msg_uuid = None
             .sort('timestamp', pymongo.DESCENDING) \
             .batch_size(conf.stream_item_max)
 
-    ret = []
-    user_set = set()
-
-    # The logic here is to make sure we won't break in 'a' time.
-    # e.g. When multiple messages are at the same time, we make sure
-    # to retrieve them together.
-    last_datetime = None
-    count = 0
-    for item in c:
-        if count > conf.stream_item_max and item['timestamp'] != last_datetime:
-            break
-        if item.get('type', 'normal') == 'forward':
-            m = messages.find_one(ObjectId(item['parent']))
-            if m:
-                item['parent_message'] = m
-                user_set.add(str(m['owner']))
-
-        user_set.add(str(item['owner']))
-        ret.append(item)
-        count += 1
-        last_datetime = item['timestamp']
-
-    uuid_dict = {}
-    uid_dict = {}
-    for uuid in user_set:
-        u = get_user(uuid)
-        if u:
-            uuid_dict[uuid] = u
-            uid_dict[u['uid']] = u
-
-    # final pass
-    for item in ret:
-        item['id'] = str(item['_id'])
-        u = uuid_dict.get(str(item['owner']))
-        item['uid'] = u and u['uid'] or '!invalid'
-
-        if item.get('type', 'normal') == 'forward':
-            if 'parent_message' in item:
-                embed = item['parent_message']
-                embed['id'] = str(embed['_id'])
-                uu = uuid_dict.get(str(embed['owner']))
-                embed['uid'] = uu and uu['uid'] or '!invalid'
-
-    return {
-            'items': ret,
-            'users': uid_dict,
-            'has_more': c.alive
-            }
+    return _process_messages(c)
 
 def update_profile(uuid, profile):
     u = users.find_one(ObjectId(uuid))

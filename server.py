@@ -269,10 +269,10 @@ class api:
 
         elif action == 'get_message':
             ret = db.get_message(uuid, d.msg_id)
-            if ret:
-                return jsond(spec.extract(self.EXTRACT_SPECS['stream_response'], ret))
+            if 'error' in ret:
+                return jsond(ret)
             else:
-                return error.message_not_found()
+                return jsond(spec.extract(self.EXTRACT_SPECS['stream_response'], ret))
 
         elif action == 'validate':
             act = d.action
