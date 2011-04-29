@@ -106,7 +106,7 @@ def get_input(s):
 class api:
     GET_ACTIONS = set('stream current_user userinfo get_message validate\
             get_following get_follower recommend_user'.split())
-    POST_ACTIONS = set('register login logout publish follow unfollow\
+    POST_ACTIONS = set('register login logout publish delete follow unfollow\
             update_profile upload_photo'.split())
     FILTERS = {
             'uid': re.compile(r'[a-zA-Z][a-zA-Z0-9]+'),
@@ -128,6 +128,9 @@ class api:
                 'content': True,
                 'parent': (FILTERS['objectid'], False),
                 'type': (lambda _: _ in ['normal', 'reply', 'forward'], False)
+                },
+            'delete': {
+                'msg_id': FILTERS['objectid']
                 },
             'follow': {
                 'uid': FILTERS['uid']
@@ -212,6 +215,9 @@ class api:
                 'content': spec.untaint,
                 'parent': (FILTERS['objectid'], None),
                 'type': (str, 'normal')
+                },
+            'delete_request': {
+                'msg_id': FILTERS['objectid']
                 }
             }
 
@@ -323,11 +329,18 @@ class api:
 
         if action == 'follow':
             return jsond(db.follow(uuid, d.uid))
+
         elif action == 'unfollow':
             return jsond(db.unfollow(uuid, d.uid))
+
         elif action == 'publish':
             req = spec.extract(self.EXTRACT_SPECS['publish_request'], d)
             return jsond(db.publish(uuid, **req))
+
+        elif action == 'delete':
+            req = spec.extract(self.EXTRACT_SPECS['delete_request'], d)
+            return jsond(db.delete(uuid, **req))
+
         elif action == 'update_profile':
             u = db.update_profile(uuid, d)
             return jsond(spec.extract(self.EXTRACT_SPECS['current_user'], u))
@@ -344,6 +357,7 @@ class api:
             except Exception, e:
                 traceback.print_exc()
                 return error.photo_upload_failed()
+
         elif action == 'logout':
             session.kill()
             return jsond({ 'success':1 })

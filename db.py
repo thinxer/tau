@@ -109,6 +109,15 @@ def publish(uuid, content, parent = None, type = 'normal'):
     messages.save(doc)
     return { 'success':1 }
 
+def delete(uuid, msg_id):
+    m = messages.find_one({'owner': ObjectId(uuid), '_id': ObjectId(msg_id)})
+    if m:
+        messages.remove(m)
+        return { 'success':1 }
+    else:
+        # XXX more detailed error messages?
+        return error.message_not_found(raw=True)
+
 def get_message(uuid):
     msg = stream(None, msg_uuid=uuid, type='unique')
     if msg['items']:
@@ -210,10 +219,11 @@ def stream(uuid, olderThan = None, newerThan = None, uid = None, msg_uuid = None
         item['uid'] = u and u['uid'] or '!invalid'
 
         if item.get('type', 'normal') == 'forward':
-            embed = item['parent_message']
-            embed['id'] = str(embed['_id'])
-            uu = uuid_dict.get(str(embed['owner']))
-            embed['uid'] = uu and uu['uid'] or '!invalid'
+            if 'parent_message' in item:
+                embed = item['parent_message']
+                embed['id'] = str(embed['_id'])
+                uu = uuid_dict.get(str(embed['owner']))
+                embed['uid'] = uu and uu['uid'] or '!invalid'
 
     return {
             'items': ret,
