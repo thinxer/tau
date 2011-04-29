@@ -145,7 +145,7 @@ class api:
                 'email': (FILTERS['email'], False)
                 },
             'get_message': {
-                'id': FILTERS['objectid']
+                'msg_id': FILTERS['objectid']
                 },
             'validate': {
                 'action': True,
@@ -268,7 +268,7 @@ class api:
             return jsond(ret)
 
         elif action == 'get_message':
-            ret = db.get_message(d.id)
+            ret = db.get_message(uuid, d.msg_id)
             if ret:
                 return jsond(spec.extract(self.EXTRACT_SPECS['stream_response'], ret))
             else:

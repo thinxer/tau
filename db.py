@@ -118,8 +118,8 @@ def delete(uuid, msg_id):
         # XXX more detailed error messages?
         return error.message_not_found(raw=True)
 
-def get_message(uuid):
-    msg = stream(None, msg_uuid=uuid, type='unique')
+def get_message(uuid, msg_id):
+    msg = stream(uuid, msg_uuid=msg_id, type='unique')
     if msg['items']:
         return msg
     return None
