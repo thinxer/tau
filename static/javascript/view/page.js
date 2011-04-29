@@ -41,6 +41,8 @@
         e.preventDefault();
         // Set path through our router.
         R.path(jQuery(this).attr('href').substring(1));
+        // Quirk to blur this.
+        $(this).blur();
     });
 
     R.path('notfound',function(){U.render('notfound').fillTo('#main');})
