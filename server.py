@@ -122,7 +122,7 @@ def get_input(s):
 
 class api:
     GET_ACTIONS = set('stream current_user userinfo get_message validate\
-            get_following get_follower recommend_user\
+            get_following get_follower recommend_user search\
             get_lists get_list_info get_list_users'.split())
     POST_ACTIONS = set('register login logout publish remove follow unfollow\
             update_profile upload_photo\
@@ -207,6 +207,9 @@ class api:
             'get_list_users': {
                 'id': FILTERS['objectid'],
                 'skip': (FILTERS['positive_integer'], False)
+                },
+            'search': {
+                'query': True
                 }
             }
     EXTRACT_SPECS = {
@@ -386,6 +389,10 @@ class api:
             new_items = [spec.extract(self.EXTRACT_SPECS['userinfo'], u) for u in ret['items']]
             ret['items'] = new_items
             return jsond(ret)
+
+        elif action == 'search':
+            ret = db.search(uuid, d.query)
+            return jsond(spec.extract(self.EXTRACT_SPECS['stream_response'], ret))
 
         return error.not_implemented()
 

@@ -10,6 +10,7 @@ from bson.objectid import ObjectId
 import conf
 import error
 import contentparser
+import seg
 
 utcnow = datetime.datetime.utcnow
 
@@ -104,7 +105,8 @@ def publish(uuid, content, parent = None, type = 'normal'):
             'timestamp': utcnow(),
             'entities': contentparser.parse(content),
             'parent': parent and ObjectId(parent) or None,
-            'type': type
+            'type': type,
+            'keywords': list(set(seg.segment(content)))
             }
     # TODO check result
     messages.save(doc)
@@ -242,6 +244,12 @@ def stream(uuid, olderThan = None, newerThan = None, uid = None, list_id = None,
             .sort('timestamp', pymongo.DESCENDING) \
             .batch_size(conf.stream_item_max)
 
+    return _process_messages(c)
+
+def search(uuid, query):
+    ''' uuid is currenly unused. '''
+    keywords = seg.segment(query)
+    c = messages.find({'keywords': {'$all': keywords}})
     return _process_messages(c)
 
 def update_profile(uuid, profile):
