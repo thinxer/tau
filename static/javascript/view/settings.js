@@ -1,6 +1,6 @@
 (function() {
 
-var settingsHandler = function(path, level) {
+var settingsHandler = function(path, oldPath, level) {
     U.PAGE.header.show();
 
     var basicInfoSubmit = function(e) {

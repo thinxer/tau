@@ -66,7 +66,7 @@
             else o.appendTo('ol.timeline');
         },when);
     };
-    
+
     var nextRecSelector = 'div.user_recommendation .next';
     var prevRecSelector = 'div.user_recommendation .prev';
 
@@ -134,7 +134,7 @@
         });
     };
 
-    c.start=function(curuser){
+    start=function(curuser){
         U.PAGE.header.show();
         setupClick();
         updateStream(0);
@@ -147,18 +147,21 @@
         });
         showRecommendation();
     };
-    c.end=function(){
+    end=function(){
         $(document).unbind('scroll');
     };
 
-    R.path('home', function() {
-        if (!T.checkLogin()) {
-            R.path('public');
-        } else {
-            T.current_user().success(function(d) {
-                U.render('home', d).fillTo('#main').done(c.start);
-            });
-        }
+    R.path('home', {
+        enter: function() {
+            if (!T.checkLogin()) {
+                R.path('public');
+            } else {
+                T.current_user().success(function(d) {
+                    U.render('home', d).fillTo('#main').done(start);
+                });
+            }
+        },
+        leave: end
     });
 
 })('HOME');
