@@ -14,12 +14,26 @@
             return;
         }
         T.userinfo({uid: cur_uid}).success(function(d){
-            U.render('profile', d, { }).fillTo('#main');
+            U.render('profile', d, { }).fillTo('#main').done(function(){
+                T.stream({uid: cur_uid}).success(function(r){
+                    $(r.items).each(function(i, e){
+                        e['user'] = r.users[e.uid];
+                    });
+                    U.render('stream_item', r.items, {
+                       getDate: C.HOME.getReadableDate
+                    }).appendTo('ol.timeline').done(function(t){
+                        if (r.has_more) {
+                            t.last().attr('data-hasmore', 'true');
+                        }
+                    });
+                });
+            });
         });
     };
     
     R.path('u', {
         enter: function(){
+            U.PAGE.header.show();
             if (!T.checkLogin()) {
                 // TODO: should we show this page like sina do when not logged in ? 
                 R.path('public');

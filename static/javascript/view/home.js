@@ -4,6 +4,18 @@
     var K=window.K=window.K||{},C=window.C=window.C||{};
     var c=C[name]={},u=U[name]={};
 
+    c.getReadableDate = function(m){
+        var d=new Date(m),now=jQuery.now(),delta=now-d;
+        if(delta<3600000){
+            return Math.round(delta/60000)+'分钟前';
+        }else if(delta<86400000){
+            return Math.round(delta/3600000)+'小时前';
+        }else if(delta<259200000){      //three days
+            return Math.round(delta/86400000)+'天前';
+        }
+        return new Date(m).toLocaleDateString();
+    };
+
     var setupClick=function(){
         var publish=function(){
             var o=$('textarea#publisher'),v = $.trim(o.val());
@@ -44,17 +56,7 @@
     var updateStream=function(when){
         callStreamAPI(function(d,hasmore){
             var o=U.render('stream_item',d,{
-                getDate:function(m){
-                    var d=new Date(m),now=jQuery.now(),delta=now-d;
-                    if(delta<3600000){
-                        return Math.round(delta/60000)+'分钟前';
-                    }else if(delta<86400000){
-                        return Math.round(delta/3600000)+'小时前';
-                    }else if(delta<259200000){      //three days
-                        return Math.round(delta/86400000)+'天前';
-                    }
-                    return new Date(m).toLocaleDateString();
-                }
+                getDate: c.getReadableDate
             });
             if(hasmore){
                 o.done(function(t){
