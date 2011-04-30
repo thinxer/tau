@@ -20,10 +20,10 @@
         var publish=function(){
             var o=$('textarea#publisher'),v = $.trim(o.val());
             if(!v.length){
-                // show error ?
+                // TODO: show error ?
                 return;
             }
-            T.publish({content:v}).success(function(){
+            T.publish({content: v}).success(function(){
                 o.val('');
                 U.PAGE.statusDiv.showHide('发布成功！');
                 updateStream(1);
@@ -40,10 +40,12 @@
     // when > 0 means newer, when =0 means all, when < 0 means older
     var callStreamAPI=function(callback,when){
         var p={};
-        if(when>0){
-            p.newerThan=+$('ol.timeline>li .timestamp').first().attr('data-timestamp');
-        }else if(when<0){
-            p.olderThan=+$('ol.timeline>li .timestamp').last().attr('data-timestamp');
+        if ($('ol.timeline').children().length) {
+            if(when>0){
+                p.newerThan=+$('ol.timeline>li .timestamp').first().attr('data-timestamp');
+            }else if(when<0){
+                p.olderThan=+$('ol.timeline>li .timestamp').last().attr('data-timestamp');
+            }
         }
         T.stream(p).success(function(r){
             jQuery(r.items).each(function(i,e){
