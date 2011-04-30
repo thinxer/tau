@@ -19,6 +19,7 @@ bundles:
             - javascript/view/page.js
             - javascript/view/public.js
             - javascript/view/home.js
+            - javascript/view/profile.js
             - javascript/view/settings.js
             - javascript/view/debug.js
     css_all:
@@ -28,5 +29,6 @@ bundles:
             - stylesheet/main.css
             - stylesheet/public.css
             - stylesheet/home.css
+            - stylesheet/profile.css
             - stylesheet/settings.css
 

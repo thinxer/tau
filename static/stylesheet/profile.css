@@ -1,0 +1,37 @@
+#profile>img {
+    width: 100px;
+    height: 100px;
+    border-radius: 6px;
+    float: left;
+    margin: 20px;
+}
+
+#profile>.basic_info {
+    float: left;
+    font-size: 20px;
+    margin-top: 8px;
+    clear: right;
+}
+
+#profile>.basic_info>.location {
+    font-size: 16px;
+}
+
+#profile>.basic_info>.bio {
+    font-size: 14px;
+}
+
+#profile>.basic_info>a {
+    color: #EEEEEE;
+    font-size: 14px;
+}
+
+#profile>.basic_info>a:hover {
+    color: #AAAAAA;
+}
+
+#profile>.social_info {
+    position: relative;
+    line-height: 20px;
+    left: 40px;
+}
