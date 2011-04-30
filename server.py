@@ -209,6 +209,8 @@ class api:
                 'skip': (FILTERS['positive_integer'], False)
                 },
             'search': {
+                'olderThan': (FILTERS['datetime'], False),
+                'newerThan': (FILTERS['datetime'], False),
                 'query': True
                 }
             }
@@ -285,6 +287,11 @@ class api:
                 'name': spec.untaint,
                 'people': len,
                 'curator': str
+                },
+            'search_request': {
+                'olderThan': (lambda _: _ and util.parseTimestamp(int(_)) or None, None),
+                'newerThan': (lambda _: _ and util.parseTimestamp(int(_)) or None, None),
+                'query': spec.untaint
                 }
             }
 
@@ -391,7 +398,8 @@ class api:
             return jsond(ret)
 
         elif action == 'search':
-            ret = db.search(uuid, d.query)
+            req = spec.extract(self.EXTRACT_SPECS['search_request'], d)
+            ret = db.search(uuid, **req)
             return jsond(spec.extract(self.EXTRACT_SPECS['stream_response'], ret))
 
         return error.not_implemented()

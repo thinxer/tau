@@ -246,10 +246,24 @@ def stream(uuid, olderThan = None, newerThan = None, uid = None, list_id = None,
 
     return _process_messages(c)
 
-def search(uuid, query):
+def search(uuid, query=None, newerThan=None, olderThan=None):
     ''' uuid is currenly unused. '''
     keywords = seg.segment(query)
-    c = messages.find({'keywords': {'$all': keywords}})
+
+    # basic query
+    query = {
+            'keywords': {'$all': keywords}
+            }
+
+    # setup time constraints
+    if olderThan or newerThan:
+        query['timestamp'] = {}
+    if olderThan:
+        query['timestamp']['$lt'] = olderThan
+    if newerThan:
+        query['timestamp']['$gt'] = newerThan
+
+    c = messages.find(query)
     return _process_messages(c)
 
 def update_profile(uuid, profile):
