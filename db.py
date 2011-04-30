@@ -25,6 +25,14 @@ users = db.users
 messages = db.messages
 lists = db.lists
 
+# ensure indexes
+users.ensure_index('uid')
+messages.ensure_index('owner')
+messages.ensure_index('keywords')
+messages.ensure_index('entities.mentions.mention')
+messages.ensure_index('entities.tags.hash')
+messages.ensure_index('timestamp')
+
 def register(uid, email, password):
     if uid in conf.reserved_names or users.find_one({'uid': uid}):
         return error.invalid_uid(raw=True)
