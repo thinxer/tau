@@ -52,17 +52,25 @@
             callback(r.items,r.has_more);
         });
     };
+
+    var updating = false;
+
     // when > 0 means newer, when =0 means all, when < 0 means older
     var updateStream=function(when){
+        if (updating) return;
+        updating = true;
         callStreamAPI(function(d,hasmore){
             var o=U.render('stream_item',d,{
                 getDate: c.getReadableDate
             });
-            if(hasmore){
-                o.done(function(t){
+            o.done(function(t){
+                if(hasmore){
                     t.last().attr('data-hasmore','true');
-                });
-            }
+                } else {
+                    $(document).unbind('scroll');
+                }
+                updating = false;
+            });
             if(!when) $('ol.timeline').html('');
             if(when>0) o.prependTo('ol.timeline');
             else o.appendTo('ol.timeline');
