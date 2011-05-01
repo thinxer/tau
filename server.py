@@ -12,6 +12,7 @@ import error
 import photo
 import spec
 import util
+import i18n
 
 from jsonencoder import jsond
 
@@ -26,7 +27,8 @@ urls = (
 
 web.config.debug = conf.debug
 app = web.application(urls, globals())
-render = web.template.render('template/')
+i18n.load(conf.locale)
+render = web.template.render('template/', globals={ '_':i18n.gettext })
 
 def createSession():
     if conf.session_type == 'mongo':

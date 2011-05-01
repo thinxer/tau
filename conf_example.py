@@ -1,6 +1,7 @@
 db_name = "tau"
 secret = "PUT YOUR SERVER SECRET HERE"
 version = '1'
+locale = 'zh_CN'
 
 # possible values: mongo, memcache.
 session_type = 'memcache'

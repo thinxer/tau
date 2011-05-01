@@ -9,3 +9,27 @@ To update the translations, do the following:
 Or you can run:
 
     ./update zh_CN
+
+
+To use the translations in python,
+
+    import i18n
+
+from the tau directory. Use
+
+    i18n.load('zh_CN')
+
+to load a translation. Use
+
+    i18n.gettext('Hello %s!', 'World')
+
+to get translations.
+
+
+To use the translations in javascript, include static/javascript/core/i18n.js.
+Then you should include a translation js like static/javascript/i18n/zh_CN.js.
+And you can use
+
+    _('Hello %s!', 'World')
+
+to get translations.
