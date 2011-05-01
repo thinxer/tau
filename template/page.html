@@ -5,16 +5,16 @@ $def with(version, jsfiles, cssfiles, debug)
 <link rel='shortcut icon' href='/static/image/favicon.ico?$(version)' />
 $for file in cssfiles:
     <link rel='stylesheet' type='text/css' href='$file' />
-<title>滔滔不绝</title>
+<title>$_('tau title')</title>
 $if not debug and version:
     <script type='text/javascript'>VERSION='$(version)'</script>
 <body>
     <div id="wrapper">
         <div id="header">
-            <div class="title"><a href='#home'>Tau</a></div>
+            <div class="title"><a href='#home'>$_('tau title')</a></div>
             <div class="nav">
-                <a href='#settings'>帐户设置</a>
-                <a href='#logout'>退出</a>
+                <a href='#settings'>$_('account settings')</a>
+                <a href='#logout'>$_('logout')</a>
             </div>
             <div class='clear'></div>
         </div>
@@ -25,15 +25,15 @@ $if not debug and version:
     <div id="footer">
         <div>
             <p>
-            <span>© 滔滔不绝</span>
-            <span> <a href='#about'>关于我们</a> </span>
-            <span> <a href='/new'>新鲜功能</a> </span>
-            <span> <a href='/api'>应用扩展</a> </span>
+            <span>© $_('tau title')</span>
+            <span> <a href='#about'>$_('about us')</a> </span>
+            <span> <a href='/new'>$_('new features')</a> </span>
+            <span> <a href='/api'>$_('api for developers')</a> </span>
         </div>
     </div>
     <div id="flash">
         <p></p>
-        <button class="close">隐藏</button>
+        <button class="close">$_('hide')</button>
     </div>
 $for file in jsfiles:
     <script type='text/javascript' src='$file'></script>
