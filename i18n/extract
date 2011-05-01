@@ -1,0 +1,2 @@
+#!/bin/bash
+./gettext.py ../template/*.html ../static/javascript/view/*.js | ./makejson.py $1

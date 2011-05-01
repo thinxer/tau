@@ -1,0 +1,11 @@
+In each file (template or js), use _('text') to get translated text.
+
+To update the translations, do the following:
+
+    ./extract zh_CN
+    ./fillblank.py zh_CN
+    ./makejs.py zh_CN
+
+Or you can run:
+
+    ./update zh_CN
