@@ -19,12 +19,12 @@ var settingsHandler = function(path, oldPath, level) {
 
         // Check user inputs.
         d['action'] = 'update_profile';
-        U.info('正在保存，请稍候……', 0);
+        U.info(_('saving...'), 0);
         T.validate(d).success(function(res) {
             if (res.success) {
                 // Correct, submit it.
                 T.update_profile(d).success(function() {
-                    U.success('保存成功！');
+                    U.success(_('your profile have been saved'));
                 });
             } else {
                 // Validation failed. Point to wrong field.
@@ -52,15 +52,15 @@ var settingsHandler = function(path, oldPath, level) {
                         T.current_user().success(function(d) {
                             jQuery('#settings .photo_box img').attr('src', d.photo);
                         });
-                        U.success('修改成功！', 3000);
+                        U.success(_('photo saved'), 3000);
                     } else {
-                        U.error('头像修改失败，请更换一个文件格式再试。');
+                        U.error(_('photo update failed'));
                     }
                 }
             });
             form.find('[type=file]').change(function() {
                 form.submit();
-                U.info('正在上传，请稍候……');
+                U.info(_('uploading...'));
             });
         });
     });

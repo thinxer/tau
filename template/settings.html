@@ -1,48 +1,48 @@
 $def with(version='')
 <div id='settings' class='general_box dark'>
-    <h1>账号设置</h1>
+    <h1>_('account settings')</h1>
     <div class='section photo_info'>
         <form class='photo_upload_form' action='/api/upload_photo' enctype='multipart/form-data' method='POST'>
             <div class='photo_box'>
                 <img src='$${photo}' />
                 <input type='file' name='photo' value=''/>
-                <div class='hint'>更新头像</div>
+                <div class='hint'>_('update photo')</div>
             </div>
         </form>
     </div>
     <div class='section basic_info'>
-        <h2>基本资料</h2>
+        <h2>_('basic profile')</h2>
         <form action='/api/update_profile' method='POST'>
             <table cellspacing=0 cellpadding=0 >
                 <tbody>
                     <tr>
-                        <td class='desc'>账号名</td>
+                        <td class='desc'>_('username')</td>
                         <td class='value'>$${uid}</td>
                     </tr>
                     <tr>
-                        <td class='desc'>显示名</td>
+                        <td class='desc'>_('displayname')</td>
                         <td class='value'><input type='text' name='name' value='$${name}' /></td>
                     </tr>
                     <tr>
-                        <td class='desc'>所在地</td>
+                        <td class='desc'>_('location')</td>
                         <td class='value'><input type='text' name='location' value='$${location}' /></td>
                     </tr>
                     <tr>
-                        <td class='desc'>简介</td>
+                        <td class='desc'>_('bio')</td>
                         <td class='value'><textarea name='bio' rows=3>$${bio}</textarea></td>
                     </tr>
                     <tr>
-                        <td class='desc'>网页</td>
+                        <td class='desc'>_('web')</td>
                         <td class='value'><input type='url' name='web' value='$${web}' /></td>
                     </tr>
                     <tr>
-                        <td class='desc'>邮箱</td>
+                        <td class='desc'>_('email')</td>
                         <td class='value'><input type='email' name='email' value='$${email}' /></td>
                     </tr>
                 </tbody>
             </table>
             <div class='form_footer'>
-                <button type='submit' class='submit' name='submit' >保存资料</button>
+                <button type='submit' class='submit' name='submit' >_('save basic profile')</button>
             </div>
         </form>
     </div>
