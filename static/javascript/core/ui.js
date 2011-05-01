@@ -2,13 +2,18 @@
  * Tau ui library.
  * Requires jQuery and jQuery Templates.
  */
-(function(name) {
-    var ui = window[name] = {};
+
+/**
+ * The template helper.
+ * Requires jQuery Templates.
+ */
+(function(name, $) {
+    var ui = window[name] = window[name] || {};
 
     /**
      * Reference the jQuery template cache.
      */
-    ui.template = jQuery.template;
+    ui.template = $.template;
 
     /**
      * Loads a template from the server.
@@ -20,7 +25,7 @@
         if (window.VERSION) param.v = VERSION;
 
         return $.get('/tmpl', param, function(d) {
-            jQuery.template(tmpl_name, d);
+            $.template(tmpl_name, d);
         }, 'text');
     };
 
@@ -31,7 +36,7 @@
      * Returns a jQuery object.
      */
     ui.tmpl = function(name, data, option) {
-        return jQuery.tmpl(name, data, option);
+        return $.tmpl(name, data, option);
     };
 
     // DeferredTemplate is a template with deferred property.
@@ -47,7 +52,7 @@
      */
     DeferredTemplate.prototype.fillTo = function(target) {
         return this.done(function(t) {
-            jQuery(target).html(t);
+            $(target).html(t);
         });
     };
 
@@ -82,7 +87,7 @@
      *      U.render('main').appendTo('#wrapper');
      */
     ui.render = function(name, data, option) {
-        var d = jQuery.Deferred();
+        var d = $.Deferred();
 
         if (ui.template[name]) {
             d.resolve(ui.tmpl(name, data, option));
@@ -97,6 +102,64 @@
         return new DeferredTemplate(d);
     };
 
-})('U');
+})('U', jQuery);
+
+/**
+ * Flash messages.
+ */
+(function(name, $) {
+    var types = ['info', 'error', 'success'];
+    var default_duration = {
+        info: 5000,
+        error: 10000,
+        success: 3000
+    };
+    var ui = window[name] = window[name] || {};
+
+    var flash;
+
+    // general flash messages
+    var timeout;
+    ui.flash = function(msg, type, duration) {
+        // Setup flash div.
+        if (!flash) {
+            flash = $('#flash');
+            flash.find('.close').click(function() {
+                flash.slideUp();
+            });
+        }
+
+        if (msg) {
+            flash.find('p').text(msg);
+        } else {
+            flash.slideUp();
+            return;
+        }
+        // Set proper class.
+        flash.removeClass(types.join(' ')).addClass(type);
+        // Display it.
+        flash.slideDown('fast');
+
+        // Set auto hide.
+        if (timeout) {
+            clearTimeout(timeout);
+        }
+        if (typeof(duration) === 'undefined') {
+            duration = default_duration[type] || 0;
+        }
+        if (duration) {
+            timeout = setTimeout(function() {
+                flash.slideUp();
+            }, duration);
+        };
+    };
+
+    // specific information
+    $(types).each(function(i, type) {
+        ui[type] = function(msg, duration) {
+            ui.flash(msg, type, duration);
+        };
+    });
+})('U', jQuery);
 
 // vim: set et ts=4 sw=4 tw=0 :

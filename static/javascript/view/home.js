@@ -25,7 +25,7 @@
             }
             T.publish({content: v}).success(function(){
                 o.val('');
-                U.PAGE.statusDiv.showHide('发布成功！');
+                U.success('发布成功！', 1000);
                 updateStream(1);
             }).error(function(){
             });
@@ -128,7 +128,7 @@
                 var curli = $(this).parents('ol.recommendation_list>li');
                 var uid = ($(this).siblings('div').text());
                 T.follow({uid: uid}).success(function(){
-                    U.PAGE.statusDiv.showHide("关注成功");
+                    U.success("关注成功");
                     var curseq = +curli.attr('data-seq');
                     curli.remove();
                     r = $.merge(r.slice(0, it+curseq),r.slice(it+curseq+1,r.length));

@@ -2,6 +2,8 @@ body {
     background: #2C4762;
     font: normal 14px Arial, Helvetica, Microsoft YaHei, 微软雅黑;
     color: white;
+    margin: 0;
+    padding: 0;
 }
 
 img {
@@ -137,6 +139,49 @@ textarea {
     -moz-border-radius: 4px;
     -o-border-radius: 4px;
     border-radius: 4px;
+}
+
+#flash {
+    display: none;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    padding: 6px 0;
+    text-align: center;
+    color: black;
+    background-color: #efefef;
+    font-size: 16px;
+}
+
+#flash.info {
+    color: black;
+    background-color: #FFF1A8;
+}
+
+#flash.error {
+    color: #de0f0d;
+    background-color: #f9e6e6;
+}
+
+#flash.success {
+    color: #060;
+    background-color: #bbffb6;
+}
+
+#flash p {
+    margin: 5px 10px;
+}
+
+#flash .close {
+    display: none;
+    position: absolute;
+    top: 8px;
+    right: 10px;
+}
+
+#flash:hover .close {
+    display: block;
 }
 
 /* vim: set et ts=4 sw=4 tw=0 :*/

@@ -9,7 +9,6 @@ $for file in cssfiles:
 $if not debug and version:
     <script type='text/javascript'>VERSION='$(version)'</script>
 <body>
-    <div id="statusDiv"></div>
     <div id="wrapper">
         <div id="header">
             <div class="title"><a href='#home'>Tau</a></div>
@@ -31,6 +30,10 @@ $if not debug and version:
             <span> <a href='/new'>新鲜功能</a> </span>
             <span> <a href='/api'>应用扩展</a> </span>
         </div>
+    </div>
+    <div id="flash">
+        <p></p>
+        <button class="close">隐藏</button>
     </div>
 $for file in jsfiles:
     <script type='text/javascript' src='$file'></script>

@@ -1,29 +1,10 @@
 /**
- *  For page.html
+ *  For page.html,
+ *  requires ui.js.
  */
 
 (function(name){
-    var U=window.U=window.U||{},C=window.C=window.C||{};
-    var u=U[name]={};
-    var c=C[name]={};
-
-    u.statusDiv={
-        id:'div#statusDiv',
-        show:function(s,callback){
-            if(s)jQuery(u.statusDiv.id).text(s);
-            jQuery(u.statusDiv.id).slideDown('fast',callback);
-        },
-        hide:function(){
-            jQuery(u.statusDiv.id).slideUp('fast',function(){
-                jQuery(u.statusDiv.id).text('');
-            });
-        },
-        showHide:function(s,intv){
-            this.show(s,function(){
-                setTimeout(u.statusDiv.hide,intv||2000);
-            });
-        }
-    }
+    var u = U[name] = {};
 
     u.header = {
         show: function() {
@@ -45,7 +26,9 @@
         $(this).blur();
     });
 
-    R.path('notfound',function(){U.render('notfound').fillTo('#main');})
+    R.path('notfound',function() {
+        U.render('notfound').fillTo('#main');
+    });
     R.path('default', function() {
         if (T.checkLogin()) {
             R.path('home');
