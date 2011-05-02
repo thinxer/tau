@@ -5,7 +5,7 @@
     var c=C[name]={},u=U[name]={};
 
     c.getReadableDate = function(m){
-        var d=new Date(m),now=$.now(),delta=now-d;
+        var d=new Date(m),now=T.getServerTime(jQuery.now()),delta=now-d;
         if(delta<3600000){
             return Math.round(delta/60000) + ' ' + _('minutes ago');
         }else if(delta<86400000){
