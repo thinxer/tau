@@ -51,6 +51,24 @@
             });
             return false;
         });
+        $('ol.timeline a.forward').live('click', function(){
+            var item = $(this).parents('ol.timeline>li.item');
+            var msg = $(item).find('div.content');
+            var msgid = msg.attr('data-id');
+            T.publish({
+                content: msg.text(),
+                parent: msgid,
+                type: 'forward'
+            }).success(function(r){
+                if (r.success) {
+                    U.success(_('forward succeed'), 1000);
+                    updateStream(1);
+                } else {
+                    U.error(_('forward failed'), 1500);
+                }
+            });
+            return false;
+        });
     };
     // when > 0 means newer, when =0 means all, when < 0 means older
     var callStreamAPI=function(when){

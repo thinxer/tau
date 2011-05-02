@@ -13,6 +13,8 @@ $def with(version="")
     </div>
     {{if $$item.isCurUser(uid)}}
     <a href="javascript:;" class="delete">_('delete')</a>
+    {{else}}
+    <a href="javascript:;" class="forward">_('forward')</a>
     {{/if}}
     <div class="clear"></div>
 </li>
