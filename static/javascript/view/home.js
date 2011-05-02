@@ -134,6 +134,13 @@
     };
     var showRecommendation = function(){
         T.recommend_user().success(function(r){
+            if (r.error) {
+                alert(r.desc);
+                if (r.error == -1){
+                    R.path('public');
+                }
+                return;
+            }
             r = r.users;
             var it = 0;
             var d = r.slice(it, it+3);
@@ -168,7 +175,7 @@
                 var curli = $(this).parents('ol.recommendation_list>li');
                 var uid = ($(this).siblings('div').text());
                 T.follow({uid: uid}).success(function(){
-                    U.success("关注成功");
+                    U.success(_('following'));
                     var curseq = +curli.attr('data-seq');
                     curli.remove();
                     r = $.merge(r.slice(0, it+curseq),r.slice(it+curseq+1,r.length));
