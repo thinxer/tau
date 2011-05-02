@@ -24,22 +24,38 @@
         };
     });
 
+    var wrap = function(name, success, fail) {
+        var orig_fn = tau[name];
+        tau[name] = function(param) {
+            return orig_fn(param).then(success, fail);
+        };
+    };
+
+    // allow check login quickly
     tau.checkLogin = function() {
         return jQuery.cookie('uid');
     };
 
-    var orig_login = tau.login;
-    tau.login = function(param) {
-        return orig_login(param).success(function(d) {
-            jQuery.cookie('uid', d.uid);
-        });
-    };
+    wrap('login', function(d) {
+        jQuery.cookie('uid', uid);
+    });
 
-    var orig_logout = tau.logout;
-    tau.logout = function(param) {
-        return orig_logout(param).success(function() {
-            jQuery.cookie('uid', null);
-        });
+    wrap('logout', function(d) {
+        jQuery.cookie('uid', null);
+    });
+
+    // calibrate client time
+    var time_diff = 0;
+    wrap('stream', function(d, textStatus, xhr) {
+        try {
+            var serverTime = new Date(xhr.getResponseHeader('Date'));
+            var clientTime = new Date();
+            time_diff = serverTime - clientTime;
+        } catch (e) {}
+    });
+
+    tau.getServerTime = function(clientTime) {
+        return clientTime + time_diff;
     };
 
 })('T');
