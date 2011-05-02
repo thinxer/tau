@@ -37,7 +37,9 @@
     };
 
     wrap('login', function(d) {
-        jQuery.cookie('uid', uid);
+        // If login failed, d.uid will be undefined, thus clear the cookie.
+        // If login succeeded, set cookie.
+        jQuery.cookie('uid', d.uid);
     });
 
     wrap('logout', function(d) {
