@@ -1,19 +1,24 @@
 $def with(version="")
 <li class="item">
-    <a href="#u/$${uid}" class="photo">
+    <a href="#u/$${user.uid}" class="photo">
         <img src="$${user.photo}" />
     </a>
     <div class="container">
         <a class="uid" href="#u/$${uid}">$${uid}</a>
-        <span class="name">$${user.name}</span>
+        {{if type=='forward'}}
+        <span>_('forwarded from') 
+            <a href="#u/$${user.uid}">$${user.uid}</a>
+        </span>
+        {{/if}}
         <div class="content" data-id="$${id}">$${content}</div>
         <div class="timestamp" data-timestamp="$${timestamp}">
             $${$$item.getDate(timestamp)}
         </div>
     </div>
-    {{if $$item.isCurUser(uid)}}
+    {{if showDelete}}
     <a href="javascript:;" class="delete">_('delete')</a>
-    {{else}}
+    {{/if}}
+    {{if showForward}}
     <a href="javascript:;" class="forward">_('forward')</a>
     {{/if}}
     <div class="clear"></div>

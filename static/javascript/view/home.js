@@ -1,20 +1,8 @@
-// for home.html
+// for home.html, need post_stream.js
 
 (function(name, $){
     var K=window.K=window.K||{},C=window.C=window.C||{};
     var c=C[name]={},u=U[name]={};
-
-    c.getReadableDate = function(m){
-        var d=new Date(m),now=T.getServerTime(jQuery.now()),delta=now-d;
-        if(delta<3600000){
-            return Math.round(delta/60000) + ' ' + _('minutes ago');
-        }else if(delta<86400000){
-            return Math.round(delta/3600000) + ' ' + _('hours ago');
-        }else if(delta<259200000){      //three days
-            return Math.round(delta/86400000) + ' ' + _('days ago');
-        }
-        return new Date(m).toLocaleDateString();
-    };
 
     var cur_user;
 
@@ -28,7 +16,7 @@
             T.publish({content: v}).success(function(){
                 o.val('');
                 U.success(_('post succeeded') + _('!'), 1000);
-                updateStream(1);
+                C.POST_STREAM.updateStream(1);
             }).error(function(){
             });
         };
@@ -38,85 +26,7 @@
                 publish();
             }
         });
-        $('ol.timeline a.delete').live('click', function(){
-            var item = $(this).parents('ol.timeline>li.item');
-            var msgid = $(item).find('div.content').attr('data-id');
-            T.remove({msg_id: msgid}).success(function(r){
-                if (r.success) {
-                    item.remove();
-                    U.success(_('delete succeeded'), 1000);
-                } else {
-                    U.error(_('delete failed'), 1500);
-                }
-            });
-            return false;
-        });
-        $('ol.timeline a.forward').live('click', function(){
-            var item = $(this).parents('ol.timeline>li.item');
-            var msg = $(item).find('div.content');
-            var msgid = msg.attr('data-id');
-            T.publish({
-                content: msg.text(),
-                parent: msgid,
-                type: 'forward'
-            }).success(function(r){
-                if (r.success) {
-                    U.success(_('forward succeed'), 1000);
-                    updateStream(1);
-                } else {
-                    U.error(_('forward failed'), 1500);
-                }
-            });
-            return false;
-        });
-    };
-    // when > 0 means newer, when =0 means all, when < 0 means older
-    var callStreamAPI=function(when){
-        var p={};
-        if ($('ol.timeline').children().length) {
-            if(when>0){
-                p.newerThan=+$('ol.timeline>li .timestamp').first().attr('data-timestamp');
-            }else if(when<0){
-                p.olderThan=+$('ol.timeline>li .timestamp').last().attr('data-timestamp');
-            }
-        }
-        var d = $.Deferred();
-        T.stream(p).success(function(r){
-            $(r.items).each(function(i,e){
-                e['user']=r.users[e.uid];
-            });
-            d.resolve(r.items,r.has_more);
-        });
-        return d;
-    };
-
-    var updating = false;
-
-    // when > 0 means newer, when =0 means all, when < 0 means older
-    var updateStream=function(when){
-        if (updating) return;
-        updating = true;
-        var d = callStreamAPI(when);
-        d.done(function(d,hasmore){
-            var o=U.render('stream_item',d,{
-                getDate: c.getReadableDate,
-                isCurUser: function(d){
-                    return d == cur_user.uid;
-                }
-            });
-            o.done(function(t){
-                if(hasmore){
-                    t.last().attr('data-hasmore','true');
-                } else {
-                    $(document).unbind('scroll');
-                }
-                updating = false;
-            });
-            if(!when) $('ol.timeline').html('');
-            if(when>0) o.prependTo('ol.timeline');
-            else o.appendTo('ol.timeline');
-        });
-        return d;
+        C.POST_STREAM.start();
     };
 
     var nextRecSelector = 'div.user_recommendation .next';
@@ -196,21 +106,21 @@
     start=function(curuser){
         U.PAGE.header.show();
         setupClick();
-        updateStream(0);
+        C.POST_STREAM.updateStream(0);
         $(document).scroll(function(){
             if($(window).scrollTop() > $(document).height()-$(window).height()-20){
                 if($('ol.timeline>li').last().attr('data-hasmore')){
-                    updateStream(-1);
+                    C.POST_STREAM.updateStream(-1);
                 }
             }
         });
         showRecommendation();
     };
 
-    end=function(){
+    end = function(){
         $(document).unbind('scroll');
         $('ol.recommendation_list a').die('click');
-        $('ol.timeline a.delete').die('click');
+        C.POST_STREAM.end();
     };
 
     R.path('home', {
@@ -220,6 +130,7 @@
             } else {
                 T.current_user().success(function(d) {
                     cur_user = d;
+                    C.POST_STREAM.setCurUser(d);
                     U.render('home', d).fillTo('#main').done(start);
                 });
             }

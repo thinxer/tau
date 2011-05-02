@@ -1,4 +1,4 @@
-// for user profile page
+// for user profile page, need post_stream.js
 // path ~ tau/#u/ztrix
 
 (function(name, $){
@@ -8,38 +8,6 @@
     var cur_uid;
     var updating = false;
 
-    var updateStream = function(){
-        if (updating) return;
-        updating = true;
-
-        var p = {uid: cur_uid, type: 'user'};
-        if ($('ol.timeline>li').last().attr('data-hasmore')) {
-            p.olderThan = +$('ol.timeline>li .timestamp').last().attr('data-timestamp');
-        }
-        T.stream(p).success(function(r) {
-            $(r.items).each(function(i, e) {
-                e['user'] = r.users[e.uid];
-            });
-            U.render('stream_item', r.items, {
-                getDate: C.HOME.getReadableDate,
-                getName: function(uid, name){   // TODO: use name or uid ? 
-                    if (name && name.length > 0) return name;
-                    return uid;
-                },
-                isCurUser: function(d) {
-                    return true;
-                }
-            }).appendTo('ol.timeline').done(function(t){
-                if (r.has_more) {
-                    t.last().attr('data-hasmore', 'true');
-                } else {
-                    $(document).unbind('scroll');
-                }
-                updating = false;
-            });
-        });
-    };
-
     var getDataAndShow = function(){
         if (!cur_uid) {
             // TODO: handle this with robustness
@@ -47,23 +15,10 @@
             return;
         }
         T.userinfo({uid: cur_uid}).success(function(d){
-            U.render('profile', d, { }).fillTo('#main').done(updateStream);
-        });
-    };
-
-    var setupClick = function(){
-        $('ol.timeline a.delete').live('click', function(){
-            var item = $(this).parents('ol.timeline>li.item');
-            var msgid = $(item).find('div.content').attr('data-id');
-            T.remove({msg_id: msgid}).success(function(r){
-                if (r.success) {
-                    item.remove();
-                    U.success(_('delete succeeded'), 1000);
-                } else {
-                    U.error(_('delete failed'), 1500);
-                }
+            C.POST_STREAM.setCurUser(d);
+            U.render('profile', d, { }).fillTo('#main').done(function(){
+                C.POST_STREAM.updateStream(0, {uid: cur_uid});
             });
-            return false;
         });
     };
 
@@ -75,7 +30,11 @@
                 R.path('public');
             } else {
                 if (R.path().length > 1) {
-                    cur_uid = R.path()[1];
+                    if (cur_uid == R.path()[1]) {
+                            return;
+                    } else {
+                        cur_uid = R.path()[1];
+                    }
                 } else {
                     // TODO: WTF ?
                 }
@@ -83,16 +42,16 @@
                 $(document).scroll(function(){
                     if ($(window).scrollTop() > $(document).height() - $(window).height() - 20) {
                         if ($('ol.timeline>li').last().attr('data-hasmore')) {
-                            updateStream();
+                            C.POST_STREAM.updateStream(-1, {uid: cur_uid});
                         }
                     }
                 });
-                setupClick();
+                C.POST_STREAM.start();
             }
         },
         leave: function(){
             $(document).unbind('scroll');
-            $('ol.timeline a.delete').die('click');
+            C.POST_STREAM.end();
         }
     });
 
