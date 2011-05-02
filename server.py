@@ -30,6 +30,7 @@ app = web.application(urls, globals())
 i18n.load(conf.locale)
 render = web.template.render('template/', globals={ '_':i18n.gettext })
 
+# Setup session
 def createSession():
     if conf.session_type == 'mongo':
         import session_mongo
@@ -49,8 +50,21 @@ if web.config.debug:
 else:
     session = createSession()
 
+# setup assets
 import webassets.loaders
+import webassets.filter
 
+class CSSURLVersionFilter(webassets.filter.Filter):
+    name = 'url_version'
+
+    def input(self, _in, out, **kwargs):
+        ret = re.subn(r'url\((.*?)\)', r'url(\1?%s)' % conf.version, _in.read(), re.M)
+        out.write(ret[0])
+
+    def output(self, _in, out, **kwargs):
+        out.write(_in.read())
+
+webassets.filter.register_filter(CSSURLVersionFilter)
 loader = webassets.loaders.YAMLLoader('assets.yaml')
 assets_env = loader.load_environment()
 assets_env.debug = web.config.debug
