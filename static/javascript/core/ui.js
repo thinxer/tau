@@ -118,8 +118,13 @@
 
     var flash;
 
-    // general flash messages
+    // last timeout id.
     var timeout;
+    /**
+     * Display a bar containing the message in the given type.
+     * If msg is undefined or null, it will hide the bar.
+     * If duration is set to 0, it will not auto-hide.
+     */
     ui.flash = function(msg, type, duration) {
         // Setup flash div.
         if (!flash) {
@@ -129,6 +134,7 @@
             });
         }
 
+        // Setup message or hide and return.
         if (msg) {
             flash.find('p').text(msg);
         } else {

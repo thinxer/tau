@@ -30,6 +30,7 @@
                 U.error(_('wrong username or password'));
                 jQuery('#password').focus().select();
             } else {
+                U.flash();
                 R.path('home');
             }
         }).error(function() {
