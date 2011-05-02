@@ -25,6 +25,9 @@
                 getName: function(uid, name){   // TODO: use name or uid ? 
                     if (name && name.length > 0) return name;
                     return uid;
+                },
+                isCurUser: function(d) {
+                    return true;
                 }
             }).appendTo('ol.timeline').done(function(t){
                 if (r.has_more) {

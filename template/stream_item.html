@@ -6,10 +6,13 @@ $def with(version="")
     <div class="container">
         <a class="uid" href="#u/$${uid}">$${uid}</a>
         <span class="name">$${user.name}</span>
-        <div class="content">$${content}</div>
+        <div class="content" data-id="$${id}">$${content}</div>
         <div class="timestamp" data-timestamp="$${timestamp}">
             $${$$item.getDate(timestamp)}
         </div>
     </div>
+    {{if $$item.isCurUser(uid)}}
+    <a href="javascript:;" class="delete">_('delete')</a>
+    {{/if}}
     <div class="clear"></div>
 </li>

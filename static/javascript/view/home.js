@@ -1,20 +1,22 @@
 // for home.html
 
-(function(name){
+(function(name, $){
     var K=window.K=window.K||{},C=window.C=window.C||{};
     var c=C[name]={},u=U[name]={};
 
     c.getReadableDate = function(m){
-        var d=new Date(m),now=jQuery.now(),delta=now-d;
+        var d=new Date(m),now=$.now(),delta=now-d;
         if(delta<3600000){
-            return Math.round(delta/60000)+'分钟前';
+            return Math.round(delta/60000) + ' ' + _('minutes ago');
         }else if(delta<86400000){
-            return Math.round(delta/3600000)+'小时前';
+            return Math.round(delta/3600000) + ' ' + _('hours ago');
         }else if(delta<259200000){      //three days
-            return Math.round(delta/86400000)+'天前';
+            return Math.round(delta/86400000) + ' ' + _('days ago');
         }
         return new Date(m).toLocaleDateString();
     };
+
+    var cur_user;
 
     var setupClick=function(){
         var publish=function(){
@@ -25,20 +27,33 @@
             }
             T.publish({content: v}).success(function(){
                 o.val('');
-                U.success('发布成功！', 1000);
+                U.success(_('post succeeded') + _('!'), 1000);
                 updateStream(1);
             }).error(function(){
             });
         };
-        jQuery('.pub_btn').click(publish);
-        jQuery('#publisher').keypress(function(e){
+        $('.pub_btn').click(publish);
+        $('#publisher').keypress(function(e){
             if(e.ctrlKey && (e.keyCode==13 || e.keyCode==10)){
                 publish();
             }
         });
+        $('ol.timeline a.delete').live('click', function(){
+            var item = $(this).parents('ol.timeline>li.item');
+            var msgid = $(item).find('div.content').attr('data-id');
+            T.delete({msg_id: msgid}).success(function(r){
+                if (r.success) {
+                    item.remove();
+                    U.success(_('delete succeeded'), 1000);
+                } else {
+                    U.error(_('delete failed'), 1500);
+                }
+            });
+            return false;
+        });
     };
     // when > 0 means newer, when =0 means all, when < 0 means older
-    var callStreamAPI=function(callback,when){
+    var callStreamAPI=function(when){
         var p={};
         if ($('ol.timeline').children().length) {
             if(when>0){
@@ -47,12 +62,14 @@
                 p.olderThan=+$('ol.timeline>li .timestamp').last().attr('data-timestamp');
             }
         }
+        var d = $.Deferred();
         T.stream(p).success(function(r){
-            jQuery(r.items).each(function(i,e){
+            $(r.items).each(function(i,e){
                 e['user']=r.users[e.uid];
             });
-            callback(r.items,r.has_more);
+            d.resolve(r.items,r.has_more);
         });
+        return d;
     };
 
     var updating = false;
@@ -61,9 +78,13 @@
     var updateStream=function(when){
         if (updating) return;
         updating = true;
-        callStreamAPI(function(d,hasmore){
+        var d = callStreamAPI(when);
+        d.done(function(d,hasmore){
             var o=U.render('stream_item',d,{
-                getDate: c.getReadableDate
+                getDate: c.getReadableDate,
+                isCurUser: function(d){
+                    return d == cur_user.uid;
+                }
             });
             o.done(function(t){
                 if(hasmore){
@@ -76,7 +97,8 @@
             if(!when) $('ol.timeline').html('');
             if(when>0) o.prependTo('ol.timeline');
             else o.appendTo('ol.timeline');
-        },when);
+        });
+        return d;
     };
 
     var nextRecSelector = 'div.user_recommendation .next';
@@ -159,8 +181,11 @@
         });
         showRecommendation();
     };
+
     end=function(){
         $(document).unbind('scroll');
+        $('ol.recommendation_list a').die('click');
+        $('ol.timeline a.delete').die('click');
     };
 
     R.path('home', {
@@ -169,6 +194,7 @@
                 R.path('public');
             } else {
                 T.current_user().success(function(d) {
+                    cur_user = d;
                     U.render('home', d).fillTo('#main').done(start);
                 });
             }
@@ -176,5 +202,5 @@
         leave: end
     });
 
-})('HOME');
+})('HOME', jQuery);
 
