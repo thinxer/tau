@@ -4,3 +4,4 @@ static/photo/*
 !static/photo/_.png
 *.swp
 static/all.*
+static/javascript/i18n/*

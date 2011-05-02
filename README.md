@@ -9,10 +9,17 @@ Run the following commands:
     git submodule update --init
     mv conf_example.py conf.py
     vim conf.py
+    i18n/makejs.py zh_CN
 
 Depends on: python 2.6+, PIL, pymongo, pyyaml, cssmin.
 
     pip install pil pymongo pyyaml cssmin
+
+## debug mode
+
+Just need to run server.py.
+
+    python2 server.py
 
 
 ## deployment
