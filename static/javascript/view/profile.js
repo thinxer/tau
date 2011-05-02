@@ -1,7 +1,7 @@
 // for user profile page
 // path ~ tau/#u/ztrix
 
-(function(name){
+(function(name, $){
     var K = window.K = window.K || {}, C = window.C = window.C || {};
     var c = C[name] = {}, u = U[name] = {};
 
@@ -51,6 +51,22 @@
         });
     };
 
+    var setupClick = function(){
+        $('ol.timeline a.delete').live('click', function(){
+            var item = $(this).parents('ol.timeline>li.item');
+            var msgid = $(item).find('div.content').attr('data-id');
+            T.delete({msg_id: msgid}).success(function(r){
+                if (r.success) {
+                    item.remove();
+                    U.success(_('delete succeeded'), 1000);
+                } else {
+                    U.error(_('delete failed'), 1500);
+                }
+            });
+            return false;
+        });
+    };
+
     R.path('u', {
         enter: function(){
             U.PAGE.header.show();
@@ -71,11 +87,13 @@
                         }
                     }
                 });
+                setupClick();
             }
         },
         leave: function(){
             $(document).unbind('scroll');
+            $('ol.timeline a.delete').die('click');
         }
     });
 
-})('PROFILE');
+})('PROFILE', jQuery);
