@@ -40,15 +40,12 @@ def createSession():
         import session_memcache
         return web.session.Session(app, session_memcache.MemcacheStore(['127.0.0.1:11211'], 1440))
 
-if web.config.debug:
-    # dirty hack to make session work with reloader
-    if web.config.get('_session'):
-        session = web.config._session
-    else:
-        session = createSession()
-        web.config._session = session
+# dirty hack to make session work with reloader
+if web.config.get('_session'):
+    session = web.config._session
 else:
     session = createSession()
+    web.config._session = session
 
 # setup assets
 import webassets.loaders
@@ -64,7 +61,11 @@ class CSSURLVersionFilter(webassets.filter.Filter):
     def output(self, _in, out, **kwargs):
         out.write(_in.read())
 
-webassets.filter.register_filter(CSSURLVersionFilter)
+# dirty hack to make it work with reloader
+if not web.config.get('_registered_url_version_filter'):
+    webassets.filter.register_filter(CSSURLVersionFilter)
+    web.config._registered_url_version_filter = True
+
 loader = webassets.loaders.YAMLLoader('assets.yaml')
 assets_env = loader.load_environment()
 assets_env.debug = web.config.debug
