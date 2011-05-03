@@ -1,5 +1,7 @@
 {
 "!": "！", 
+"Are you sure you want to delete ?": "确定删除？", 
+"Are you sure you want to forward this post ?": "你确定要转发吗？", 
 "about us": "关于我们", 
 "account settings": "帐号设置", 
 "api for developers": "开发者文档", 
@@ -33,6 +35,7 @@
 "minutes ago": "分钟前", 
 "new features": "新鲜功能", 
 "next page": "下一页", 
+"no": "否", 
 "page not found": "页面不存在", 
 "password": "密码", 
 "password too short": "密码太短了", 
@@ -56,5 +59,6 @@
 "username": "用户名", 
 "web": "个人主页", 
 "wrong username or password": "错误的用户名或者密码", 
+"yes": "是", 
 "your profile have been saved": "更新成功！"
 }

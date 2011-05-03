@@ -173,4 +173,94 @@
     });
 })('U', jQuery);
 
+/**
+ * dialog
+ */
+(function(name, $) {
+    var ui = window[name] = window[name] || {};
+
+    ui.center = function(e) {
+        $(e).offset({
+            left: ($(window).width() - $(e).width()) / 2,
+            top: ($(window).height() - $(e).height()) / 2
+        });
+    };
+
+    var remove_dialog = function(){
+        $('.dialog-wrapper').remove();
+    };
+
+    /**
+     * show custom dialog 
+     * 
+     * @param {boolean} modal, whether the dialog is modal
+     * @param {string} title, the title of the dialog
+     * 
+     * note that the dialog will have display property none, you must
+     * set display block when the dialog is ready to show
+     * (e.g. adjust position, add content ...)
+     */
+    ui.dialog = function(modal, title) {
+        return ui.render('dialog',{
+            title: title
+        }).appendTo('body').done(function(r){
+            if (modal) {
+                r.addClass('fog');
+            }
+            $('.dialog .dialog-close').click(function(e){
+                remove_dialog();
+            });
+        });
+    }
+
+
+    /**
+     * show confirm dialog
+     * 
+     * @param {function} on_yes, yes handler
+     * @param {function} on_no, no handler
+     * @param {string} title, title of the dialog
+     *
+     * if 1 arguments given, it should be on_yes or title
+     * if 2 arguments given, the first must be on_yes, the second can be on_no or title
+     * if 3 given, they must be on_yes on_no and title
+     */
+    ui.confirm_dialog = function(on_yes, on_no, title) {
+        if (arguments.length == 1) {
+            if ($.isFunction(arguments[0])) {
+                on_yes = arguments[0];
+            } else if ($.type(arguments[0] === 'string')) {
+                title = arguments[0];
+            }
+        } else if (arguments.length == 2) {
+            if ($.isFunction(arguments[1])) {
+                on_no = arguments[1];
+            } else if ($.type(arguments[1]) === 'string') {
+                title = arguments[1];
+            }
+        } else if(arguments.length > 2){
+            on_no = arguments[1];
+            title = arguments[2];
+        }
+        if (!title) {
+            title = _('Are you sure ?');
+        }
+        ui.dialog(false, title).done(function(){
+            ui.render('confirm_dialog').fillTo('.dialog-wrapper .dialog-content').done(function(){
+                $('.dialog-content .yes').click(function(){
+                    remove_dialog();
+                    if (on_yes) on_yes();
+                });
+                $('.dialog-content .no').click(function(){
+                    remove_dialog();
+                    if (on_no) on_no();
+                });
+                ui.center('body .dialog');
+                $('body .dialog').css('display', 'block');
+            });
+        });
+    }
+
+})('U', jQuery);
+
 // vim: set et ts=4 sw=4 tw=0 :

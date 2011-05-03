@@ -130,7 +130,6 @@
             } else {
                 T.current_user().success(function(d) {
                     cur_user = d;
-                    C.POST_STREAM.setCurUser(d);
                     U.render('home', d).fillTo('#main').done(start);
                 });
             }

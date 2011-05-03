@@ -15,7 +15,6 @@
             return;
         }
         T.userinfo({uid: cur_uid}).success(function(d){
-            C.POST_STREAM.setCurUser(d);
             U.render('profile', d, { }).fillTo('#main').done(function(){
                 C.POST_STREAM.updateStream(0, {uid: cur_uid});
             });
@@ -25,7 +24,8 @@
     R.path('u', {
         enter: function(){
             U.PAGE.header.show();
-            if (!T.checkLogin()) {
+            var uid = T.checkLogin();
+            if (!uid) {
                 // TODO: should we show this page like sina do when not logged in ? 
                 R.path('public');
                 return;
@@ -40,14 +40,14 @@
             });
         },
         change: function(r){
-            if (R.path().length > 1) {
-                if (cur_uid == R.path()[1]) {
+            if (r.length > 1) {
+                if (cur_uid == r[1]) {
                     return;
                 } else {
-                    cur_uid = R.path()[1];
+                    cur_uid = r[1];
                 }
             } else {
-                // TODO: WTF ?
+                R.path('home');
             }
             getDataAndShow();
         },
@@ -58,3 +58,4 @@
     });
 
 })('PROFILE', jQuery);
+

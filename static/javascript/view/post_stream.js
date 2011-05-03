@@ -4,13 +4,6 @@
     var C = window.C = window.C || {}, U = window.U = window.U || {};
     var c = C[name] = {}, u = U[name] = {};
 
-    var cur_user;
-
-    // ! must set cur_user before using POST_STREAM
-    c.setCurUser = function(u) {
-        cur_user = u;
-    }
-
     c.getReadableDate = function(m){
         var d = new Date(m), now = T.getServerTime(jQuery.now()), delta = now - d;
         if (delta < 3600000){
@@ -37,13 +30,13 @@
         T.stream(p).success(function(r){
             var data = [];
             $(r.items).each(function(i, e){
-                var isCurUser = cur_user.uid == e.uid;
+                var isCurUser = T.checkLogin() == e.uid;
                 e.showDelete = isCurUser;
                 e.showForward = !isCurUser;
                 e.showReply = !isCurUser;
                 if (e.type == 'normal') {
                     data.push($.extend(e, {
-                        user: r.users[e.uid],
+                        user: r.users[e.uid]
                     }));
                 } else if(e.type == 'forward') {
                     data.push($.extend(e, {
@@ -73,7 +66,7 @@
         var d = callStreamAPI(when, option);
         d.done(function(d,hasmore){
             var o = U.render('stream_item', d, {
-                getDate: c.getReadableDate,
+                getDate: c.getReadableDate
             });
             o.done(function(t){
                 if (hasmore){
@@ -92,32 +85,38 @@
         $('ol.timeline a.delete').live('click', function(){
             var item = $(this).parents('ol.timeline>li.item');
             var msgid = $(item).find('div.content').attr('data-id');
-            T.remove({msg_id: msgid}).success(function(r){
-                if (r.success) {
-                    item.remove();
-                    U.success(_('delete succeeded'), 1000);
-                } else {
-                    U.error(_('delete failed'), 1500);
-                }
-            });
+            U.confirm_dialog(function(){
+                T.remove({msg_id: msgid}).success(function(r){
+                    if (r.success) {
+                        item.remove();
+                        U.success(_('delete succeeded'), 1000);
+                    } else {
+                        U.error(_('delete failed'), 1500);
+                    }
+                });
+            }, _('Are you sure you want to delete ?'));
             return false;
         });
         $('ol.timeline a.forward').live('click', function(){
             var item = $(this).parents('ol.timeline>li.item');
             var msg = $(item).find('div.content');
             var msgid = msg.attr('data-id');
-            T.publish({
-                content: '',
-                parent: msgid,
-                type: 'forward'
-            }).success(function(r){
-                if (r.success) {
-                    U.success(_('forward succeed'), 1000);
-                    c.updateStream(1);
-                } else {
+            U.confirm_dialog(function(){
+                T.publish({
+                    content: '',
+                    parent: msgid,
+                    type: 'forward'
+                }).success(function(r){
+                    if (r.success) {
+                        U.success(_('forward succeed'), 1000);
+                        c.updateStream(1);
+                    } else {
+                        U.error(_('forward failed'), 1500);
+                    }
+                }).error(function() {
                     U.error(_('forward failed'), 1500);
-                }
-            });
+                });
+            }, _('Are you sure you want to forward this post ?'));
             return false;
         });
     };
