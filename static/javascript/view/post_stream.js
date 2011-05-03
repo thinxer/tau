@@ -53,6 +53,7 @@
     };
 
     var updating = false;
+    var last_option;
 
     /**
      * Update stream according to time and condition
@@ -63,6 +64,7 @@
     c.updateStream = function(when, option){
         if (updating) return;
         updating = true;
+        last_option = option;
         var d = callStreamAPI(when, option);
         d.done(function(d,hasmore){
             var o = U.render('stream_item', d, {
@@ -109,7 +111,7 @@
                 }).success(function(r){
                     if (r.success) {
                         U.success(_('forward succeed'), 1000);
-                        c.updateStream(1);
+                        c.updateStream(1, last_option);
                     } else {
                         U.error(_('forward failed'), 1500);
                     }
