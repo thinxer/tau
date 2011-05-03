@@ -15,6 +15,15 @@ Depends on: python 2.6+, PIL, pymongo, pyyaml, cssmin.
 
     pip install pil pymongo pyyaml cssmin
 
+## search
+
+To use search, set enable\_search=True in conf.py. You'll also need to specify a text segmentor, such as 'pymmseg'.
+
+To use pymmseg, you need to compile it:
+
+    cd pymmseg/mmseg-cpp
+    python2 build.py
+
 ## debug mode
 
 Just need to run server.py.

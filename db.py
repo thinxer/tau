@@ -10,7 +10,9 @@ from bson.objectid import ObjectId
 import conf
 import error
 import contentparser
-import seg
+
+if conf.enable_search:
+    import seg
 
 utcnow = datetime.datetime.utcnow
 
@@ -113,9 +115,12 @@ def publish(uuid, content, parent = None, type = 'normal'):
             'timestamp': utcnow(),
             'entities': contentparser.parse(content),
             'parent': parent and ObjectId(parent) or None,
-            'type': type,
-            'keywords': list(set(seg.segment(content)))
+            'type': type
             }
+
+    if conf.enable_search:
+        doc['keywords'] = list(set(seg.segment(content)))
+
     # TODO check result
     messages.save(doc)
     return { 'success':1 }
@@ -255,6 +260,8 @@ def stream(uuid, olderThan = None, newerThan = None, uid = None, list_id = None,
     return _process_messages(c)
 
 def search(uuid, query=None, newerThan=None, olderThan=None):
+    if not conf.enable_search:
+        return error.search_not_enabled(raw=True)
     ''' uuid is currenly unused. '''
     keywords = seg.segment(query)
 

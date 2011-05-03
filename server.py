@@ -400,7 +400,10 @@ class api:
         elif action == 'search':
             req = spec.extract(self.EXTRACT_SPECS['search_request'], d)
             ret = db.search(uuid, **req)
-            return jsond(spec.extract(self.EXTRACT_SPECS['stream_response'], ret))
+            if 'error' in ret:
+                return jsond(ret)
+            else:
+                return jsond(spec.extract(self.EXTRACT_SPECS['stream_response'], ret))
 
         return error.not_implemented()
 

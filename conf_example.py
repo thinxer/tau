@@ -3,6 +3,9 @@ secret = "PUT YOUR SERVER SECRET HERE"
 version = '1'
 locale = 'zh_CN'
 
+enable_search = False
+text_segmentor = 'pymmseg'
+
 # possible values: mongo, memcache.
 session_type = 'memcache'
 
