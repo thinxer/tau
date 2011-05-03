@@ -1,0 +1,15 @@
+.userstream {
+}
+
+.userstream li {
+    border-top: solid 1px grey;
+}
+
+.userstream li .photo {
+    float: left;
+    padding: 2px 10px 2px 0;
+}
+
+.userstream li {
+    padding: 5px;
+}
