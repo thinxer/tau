@@ -179,16 +179,16 @@ def get_message(uuid, msg_id):
         return error.message_not_found(raw=True)
     return ret
 
-def stream(uuid, olderThan = None, newerThan = None, uid = None, msg_uuid = None, type = 'normal'):
+def stream(uuid, olderThan = None, newerThan = None, uid = None, list_id = None, type = 'normal'):
     '''
     olderThan, newerThan: time since epoch (in milliseconds).
     uid: if exist, return uid's public messages.
-    type (if uid is None):
+    type:
         normal: the home timeline for uuid.
         mentions: messages mentioning uuid.
         unique: only one message specified by msg_uuid.
-    type (if uid is not None):
-        normal: the messages published by uid.
+        user: messages published by uid.
+        list: message published by users in list_id.
     '''
 
     # setup basic query
@@ -197,30 +197,35 @@ def stream(uuid, olderThan = None, newerThan = None, uid = None, msg_uuid = None
                 '_id': ObjectId(msg_uuid)
                 }
     elif type == 'normal':
-        if uid:
-            # get uid's public tweets
-            target = find_user(uid)
-            if target:
-                query = { 'owner':target['_id'] }
-            else:
-                return error.user_not_found(raw=True)
-        else:
-            # uuid's main timeline
-            u = get_user(uuid)
-            following = u['following']
-            following_query = {
-                    'owner': {'$in': following + [u['_id']]}
-                    }
-            mention_query = {
-                    'entities.mentions.mention': '@' + u['uid']
-                    }
-            query = {
-                    '$or': [following_query, mention_query]
-                    }
+        # uuid's home timeline
+        u = get_user(uuid)
+        following = u['following']
+        following_query = {
+                'owner': {'$in': following + [u['_id']]}
+                }
+        mention_query = {
+                'entities.mentions.mention': '@' + u['uid']
+                }
+        query = {
+                '$or': [following_query, mention_query]
+                }
     elif type == 'mentions':
         query = {
                 'entities.mentions.mention': '@' + u['uid']
                 }
+    elif type == 'user':
+        # get uid's public tweets
+        target = find_user(uid)
+        if target:
+            query = { 'owner':target['_id'] }
+        else:
+            return error.user_not_found(raw=True)
+    elif type == 'list':
+        l = lists.find_one(ObjectId(list_id))
+        if l:
+            query = { 'owner':{'$in':l['people']} }
+        else:
+            return error.list_not_found(raw=True)
     else:
         return error.stream_type_not_supported(raw=True)
 

@@ -12,7 +12,7 @@
         if (updating) return;
         updating = true;
 
-        var p = {uid: cur_uid};
+        var p = {uid: cur_uid, type: 'user'};
         if ($('ol.timeline>li').last().attr('data-hasmore')) {
             p.olderThan = +$('ol.timeline>li .timestamp').last().attr('data-timestamp');
         }

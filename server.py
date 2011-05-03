@@ -173,7 +173,8 @@ class api:
             'stream': {
                 'olderThan': (FILTERS['datetime'], False),
                 'newerThan': (FILTERS['datetime'], False),
-                'uid': (FILTERS['uid'], False)
+                'uid': (FILTERS['uid'], False),
+                'list_id': (FILTERS['objectid'], False)
                 },
             'get_following': {
                 'uid': FILTERS['uid'],
@@ -255,7 +256,8 @@ class api:
                 'olderThan': (lambda _: _ and util.parseTimestamp(int(_)) or None, None),
                 'newerThan': (lambda _: _ and util.parseTimestamp(int(_)) or None, None),
                 'uid': (spec.untaint, None),
-                'type': (str, 'normal')
+                'type': (str, 'normal'),
+                'list_id': (spec.untaint, None)
                 },
             'publish_request': {
                 'content': spec.untaint,
@@ -301,6 +303,12 @@ class api:
 
         if action == 'stream':
             param = spec.extract(self.EXTRACT_SPECS['stream_request'], d)
+            if param['type'] == 'user':
+                if not param['uid']:
+                    raise web.badrequest()
+            elif param['type'] == 'list':
+                if not param['list_id']:
+                    raise web.badrequest()
             ret = db.stream(uuid, **param)
             if 'error' in ret:
                 return jsond(ret)
