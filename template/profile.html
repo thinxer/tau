@@ -3,8 +3,12 @@ $def with(version="")
     <img src="$${photo}"/><br/>
     <div class="basic_info">
         $${uid} <br/>
+        {{if location}}
         <span class="location">_('come from') $${location}</span><br/>
+        {{/if}}
+        {{if bio}}
         <span class="bio">_('bio'): $${bio}<br/></span>
+        {{/if}}
         <a href="$${web}">
             <span class="web">$${web}</span>
         </a>
