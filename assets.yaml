@@ -18,6 +18,7 @@ bundles:
             - javascript/core/router.js
             - javascript/core/ui.js
             - javascript/i18n/zh_CN.js
+            - javascript/view/user_stream.js
             - javascript/view/page.js
             - javascript/view/public.js
             - javascript/view/home.js
@@ -33,4 +34,5 @@ bundles:
             - stylesheet/home.css
             - stylesheet/profile.css
             - stylesheet/settings.css
+            - stylesheet/userstream.css
 

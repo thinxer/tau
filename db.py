@@ -256,25 +256,25 @@ def update_photo(uuid, has_photo):
     users.save(u)
     return { 'success':1 }
 
-# TODO enable paging
-def get_following(uid):
+def get_following(uuid, uid, skip=0):
     u = find_user(uid)
     if not u:
         return error.user_not_found(raw=True)
+    max_index = skip + conf.stream_item_max
     ret = {
-            'has_more': False,
-            'items': [get_user(uuid) for uuid in u['following']]
+            'has_more': max_index < len(u['following']),
+            'items': [get_user(uuid) for uuid in u['following'][skip:max_index]]
             }
     return ret
 
-# TODO enable paging
-def get_follower(uid):
+def get_follower(uuid, uid, skip=0):
     u = find_user(uid)
     if not u:
         return error.user_not_found(raw=True)
+    max_index = skip + conf.stream_item_max
     ret = {
-            'has_more': False,
-            'items': [get_user(uuid) for uuid in u['follower']]
+            'has_more': max_index < len(u['following']),
+            'items': [get_user(uuid) for uuid in u['follower'][skip:max_index]]
             }
     return ret
 

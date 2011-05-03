@@ -129,7 +129,8 @@ class api:
             'uid': re.compile(r'[a-zA-Z][a-zA-Z0-9]+'),
             'email': re.compile(r'(.+)@(.+).(.+)'),
             'datetime': lambda _: _ and int(_) or None,
-            'objectid': lambda _: bson.objectid.ObjectId(_)
+            'objectid': lambda _: bson.objectid.ObjectId(_),
+            'positive_integer': lambda _: int(_) >= 0
             }
     VALIDATE_SPECS = {
             'register': {
@@ -173,10 +174,12 @@ class api:
                 'uid': (FILTERS['uid'], False)
                 },
             'get_following': {
-                'uid': FILTERS['uid']
+                'uid': FILTERS['uid'],
+                'skip': (FILTERS['positive_integer'], False)
                 },
             'get_follower': {
-                'uid': FILTERS['uid']
+                'uid': FILTERS['uid'],
+                'skip': (FILTERS['positive_integer'], False)
                 }
             }
     EXTRACT_SPECS = {
@@ -235,6 +238,10 @@ class api:
                 },
             'remove_request': {
                 'msg_id': FILTERS['objectid']
+                },
+            'userlist_request': {
+                'uid': str,
+                'skip': (int, 0)
                 }
             }
 
@@ -273,13 +280,15 @@ class api:
             return jsond(spec.extract(self.EXTRACT_SPECS['userinfo'], u))
 
         elif action == 'get_following':
-            ret = db.get_following(d.uid)
+            param = spec.extract(self.EXTRACT_SPECS['userlist_request'], d)
+            ret = db.get_following(uuid, **param)
             new_items = [spec.extract(self.EXTRACT_SPECS['userinfo'], u) for u in ret['items']]
             ret['items'] = new_items
             return jsond(ret)
 
         elif action == 'get_follower':
-            ret = db.get_follower(d.uid)
+            param = spec.extract(self.EXTRACT_SPECS['userlist_request'], d)
+            ret = db.get_follower(uuid, **param)
             new_items = [spec.extract(self.EXTRACT_SPECS['userinfo'], u) for u in ret['items']]
             ret['items'] = new_items
             return jsond(ret)
