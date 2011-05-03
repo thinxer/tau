@@ -80,6 +80,7 @@
             form.addClass('register');
             form.find('button[type=submit]').text(_('register'));
             form.find('#email').attr('disabled', false);
+            jQuery(this).blur();
             e.preventDefault();
         });
         extra.find('a.show_login').click(function(e) {
@@ -87,6 +88,7 @@
             form.addClass('login');
             form.find('button[type=submit]').text(_('login'));
             form.find('#email').attr('disabled', true);
+            jQuery(this).blur();
             e.preventDefault();
         });
     };
