@@ -38,6 +38,7 @@
 
 #public form {
     margin: 0 auto;
+    position: relative;
     -webkit-transition: width .5s;
     -moz-transition: width .5s;
     -o-transition: width .5s;
@@ -78,7 +79,9 @@
 }
 
 #public form>div.submit {
-    float: right;
+    position: absolute;
+    right: 0;
+    top: 0;
 }
 
 #public form input {

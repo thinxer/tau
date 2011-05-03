@@ -5,6 +5,9 @@ $def with(version, jsfiles, cssfiles, debug)
 <link rel='shortcut icon' href='/static/image/favicon.ico?$(version)' />
 $for file in cssfiles:
     <link rel='stylesheet' type='text/css' href='$file' />
+<!--[if lte IE 7]>
+    <link rel='stylesheet' type='text/css' href='/static/stylesheet/ie7.css' />
+<![endif]-->
 <title>$_('tau title')</title>
 $if not debug and version:
     <script type='text/javascript'>VERSION='$(version)'</script>
