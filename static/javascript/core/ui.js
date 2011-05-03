@@ -17,16 +17,23 @@
 
     /**
      * Loads a template from the server.
-     * Returns a Promise.
+     * If force_reload is true, it will ignore the template cache.
+     * Returns a Promise which will resolve with the compiled template.
      */
-    ui.load = function(tmpl_name) {
+    ui.load = function(tmpl_name, force_reload) {
         var param = {};
         param.name = tmpl_name;
         if (window.VERSION) param.v = VERSION;
 
-        return $.get('/tmpl', param, function(d) {
-            $.template(tmpl_name, d);
-        }, 'text');
+        var deferred = jQuery.Deferred();
+        if (ui.template[tmpl_name] && !force_reload) {
+            deferred.resolve(ui.template[tmpl_name]);
+        } else {
+            $.get('/tmpl', param, function(d) {
+                deferred.resolve($.template(tmpl_name, d));
+            }, 'text').error(deferred.reject);
+        }
+        return deferred.promise();
     };
 
     /**
@@ -92,11 +99,9 @@
         if (ui.template[name]) {
             d.resolve(ui.tmpl(name, data, option));
         } else {
-            ui.load(name).success(function() {
+            ui.load(name).done(function() {
                 d.resolve(ui.tmpl(name, data, option));
-            }).error(function() {
-                d.reject(arguments);
-            });
+            }).fail(d.reject);
         }
 
         return new DeferredTemplate(d);
