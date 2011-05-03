@@ -40,12 +40,9 @@
             });
         },
         change: function(r){
+            console.log(r);
             if (r.length > 1) {
-                if (cur_uid == r[1]) {
-                    return;
-                } else {
-                    cur_uid = r[1];
-                }
+                cur_uid = r[1];
             } else {
                 R.path('home');
             }
