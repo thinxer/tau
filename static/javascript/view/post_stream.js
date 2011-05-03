@@ -4,9 +4,11 @@
     var C = window.C = window.C || {}, U = window.U = window.U || {};
     var c = C[name] = {}, u = U[name] = {};
 
-    c.getReadableDate = function(m){
+    var getReadableDate = function(m){
         var d = new Date(m), now = T.getServerTime(jQuery.now()), delta = now - d;
-        if (delta < 3600000){
+        if (delta < 30000) {
+            return _('just now');
+        } else if (delta < 3600000){
             return Math.round(delta/60000) + ' ' + _('minutes ago');
         } else if (delta < 86400000){
             return Math.round(delta/3600000) + ' ' + _('hours ago');
@@ -68,7 +70,7 @@
         var d = callStreamAPI(when, option);
         d.done(function(d,hasmore){
             var o = U.render('stream_item', d, {
-                getDate: c.getReadableDate
+                getDate: getReadableDate
             });
             o.done(function(t){
                 if (hasmore){
