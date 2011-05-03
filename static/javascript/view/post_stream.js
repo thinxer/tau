@@ -89,7 +89,7 @@
         $('ol.timeline a.delete').live('click', function(){
             var item = $(this).parents('ol.timeline>li.item');
             var msgid = $(item).find('div.content').attr('data-id');
-            U.confirm_dialog(function(){
+            U.confirm_dialog(_('Are you sure you want to delete ?')).done(function(){
                 T.remove({msg_id: msgid}).success(function(r){
                     if (r.success) {
                         item.remove();
@@ -98,14 +98,14 @@
                         U.error(_('delete failed'), 1500);
                     }
                 });
-            }, _('Are you sure you want to delete ?'));
+            });
             return false;
         });
         $('ol.timeline a.forward').live('click', function(){
             var item = $(this).parents('ol.timeline>li.item');
             var msg = $(item).find('div.content');
             var msgid = msg.attr('data-id');
-            U.confirm_dialog(function(){
+            U.confirm_dialog(_('Are you sure you want to forward this post ?')).done(function(){
                 T.publish({
                     content: '',
                     parent: msgid,
@@ -120,7 +120,7 @@
                 }).error(function() {
                     U.error(_('forward failed'), 1500);
                 });
-            }, _('Are you sure you want to forward this post ?'));
+            });
             return false;
         });
     };
