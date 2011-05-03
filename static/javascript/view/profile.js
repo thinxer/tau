@@ -28,26 +28,28 @@
             if (!T.checkLogin()) {
                 // TODO: should we show this page like sina do when not logged in ? 
                 R.path('public');
-            } else {
-                if (R.path().length > 1) {
-                    if (cur_uid == R.path()[1]) {
-                            return;
-                    } else {
-                        cur_uid = R.path()[1];
-                    }
-                } else {
-                    // TODO: WTF ?
-                }
-                getDataAndShow();
-                $(document).scroll(function(){
-                    if ($(window).scrollTop() > $(document).height() - $(window).height() - 20) {
-                        if ($('ol.timeline>li').last().attr('data-hasmore')) {
-                            C.POST_STREAM.updateStream(-1, {uid: cur_uid});
-                        }
-                    }
-                });
-                C.POST_STREAM.start();
+                return;
             }
+            C.POST_STREAM.start();
+            $(document).scroll(function(){
+                if ($(window).scrollTop() > $(document).height() - $(window).height() - 20) {
+                    if ($('ol.timeline>li').last().attr('data-hasmore')) {
+                        C.POST_STREAM.updateStream(-1, {uid: cur_uid});
+                    }
+                }
+            });
+        },
+        change: function(r){
+            if (R.path().length > 1) {
+                if (cur_uid == R.path()[1]) {
+                    return;
+                } else {
+                    cur_uid = R.path()[1];
+                }
+            } else {
+                // TODO: WTF ?
+            }
+            getDataAndShow();
         },
         leave: function(){
             $(document).unbind('scroll');

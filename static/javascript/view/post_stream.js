@@ -40,6 +40,7 @@
                 var isCurUser = cur_user.uid == e.uid;
                 e.showDelete = isCurUser;
                 e.showForward = !isCurUser;
+                e.showReply = !isCurUser;
                 if (e.type == 'normal') {
                     data.push($.extend(e, {
                         user: r.users[e.uid],
@@ -59,7 +60,13 @@
     };
 
     var updating = false;
-    // when > 0 means newer, when == 0 means all, when < 0 means older
+
+    /**
+     * Update stream according to time and condition
+     *
+     * @param {number} when , when > 0 means newer, when == 0 means refresh, when < 0 means older
+     * @param {object} option, options as filters passed to the api, e.g. {uid: 'some uid'}
+     */
     c.updateStream = function(when, option){
         if (updating) return;
         updating = true;
@@ -71,8 +78,6 @@
             o.done(function(t){
                 if (hasmore){
                     t.last().attr('data-hasmore', 'true');
-                } else {
-                    $(document).unbind('scroll');
                 }
                 updating = false;
             });
@@ -101,7 +106,6 @@
             var item = $(this).parents('ol.timeline>li.item');
             var msg = $(item).find('div.content');
             var msgid = msg.attr('data-id');
-            console.log(msg);
             T.publish({
                 content: '',
                 parent: msgid,
