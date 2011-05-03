@@ -109,7 +109,7 @@ def publish(uuid, content, parent = None, type = 'normal'):
     messages.save(doc)
     return { 'success':1 }
 
-def delete(uuid, msg_id):
+def remove(uuid, msg_id):
     m = messages.find_one({'owner': ObjectId(uuid), '_id': ObjectId(msg_id)})
     if m:
         messages.remove(m)

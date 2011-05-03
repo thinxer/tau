@@ -123,7 +123,7 @@ def get_input(s):
 class api:
     GET_ACTIONS = set('stream current_user userinfo get_message validate\
             get_following get_follower recommend_user'.split())
-    POST_ACTIONS = set('register login logout publish delete follow unfollow\
+    POST_ACTIONS = set('register login logout publish remove follow unfollow\
             update_profile upload_photo'.split())
     FILTERS = {
             'uid': re.compile(r'[a-zA-Z][a-zA-Z0-9]+'),
@@ -146,7 +146,7 @@ class api:
                 'parent': (FILTERS['objectid'], False),
                 'type': (lambda _: _ in ['normal', 'reply', 'forward'], False)
                 },
-            'delete': {
+            'remove': {
                 'msg_id': FILTERS['objectid']
                 },
             'follow': {
@@ -233,7 +233,7 @@ class api:
                 'parent': (FILTERS['objectid'], None),
                 'type': (str, 'normal')
                 },
-            'delete_request': {
+            'remove_request': {
                 'msg_id': FILTERS['objectid']
                 }
             }
@@ -354,9 +354,9 @@ class api:
             req = spec.extract(self.EXTRACT_SPECS['publish_request'], d)
             return jsond(db.publish(uuid, **req))
 
-        elif action == 'delete':
-            req = spec.extract(self.EXTRACT_SPECS['delete_request'], d)
-            return jsond(db.delete(uuid, **req))
+        elif action == 'remove':
+            req = spec.extract(self.EXTRACT_SPECS['remove_request'], d)
+            return jsond(db.remove(uuid, **req))
 
         elif action == 'update_profile':
             u = db.update_profile(uuid, d)

@@ -11,7 +11,7 @@
     var updateStream = function(){
         if (updating) return;
         updating = true;
-        
+
         var p = {uid: cur_uid};
         if ($('ol.timeline>li').last().attr('data-hasmore')) {
             p.olderThan = +$('ol.timeline>li .timestamp').last().attr('data-timestamp');
@@ -55,7 +55,7 @@
         $('ol.timeline a.delete').live('click', function(){
             var item = $(this).parents('ol.timeline>li.item');
             var msgid = $(item).find('div.content').attr('data-id');
-            T.delete({msg_id: msgid}).success(function(r){
+            T.remove({msg_id: msgid}).success(function(r){
                 if (r.success) {
                     item.remove();
                     U.success(_('delete succeeded'), 1000);
