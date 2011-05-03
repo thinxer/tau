@@ -51,6 +51,7 @@
             }
         }
         if (when == 'older' && !this.list.children().last().hasClass('has-more')) {
+            this.updating = false;
             return;
         }
         return T.stream(p).success(function(r){
@@ -83,9 +84,12 @@
                 if (r.has_more) {
                     t.last().addClass('has-more');
                 }
+            });
+            o.then(function(){
                 this_ref.updating = false;
             });
         }).error(function(r) {
+            this_ref.updating = false;
         });
     };
 
