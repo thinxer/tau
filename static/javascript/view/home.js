@@ -5,6 +5,7 @@
     var c=C[name]={},u=U[name]={};
 
     var cur_user;
+    var stream;
 
     var setupClick=function(){
         var publish=function(){
@@ -16,7 +17,7 @@
             T.publish({content: v}).success(function(){
                 o.val('');
                 U.success(_('post succeeded') + _('!'), 1000);
-                C.POST_STREAM.updateStream(1);
+                stream.update('newer');
             }).error(function(){
             });
         };
@@ -26,7 +27,7 @@
                 publish();
             }
         });
-        C.POST_STREAM.start();
+        stream.start();
     };
 
     var nextRecSelector = 'div.user_recommendation .next';
@@ -103,24 +104,17 @@
         });
     };
 
-    start=function(curuser){
+    start = function(curuser){
         U.PAGE.header.show();
+        stream = new U.PostStream('div.timeline_wrapper');
         setupClick();
-        C.POST_STREAM.updateStream(0);
-        $(document).scroll(function(){
-            if($(window).scrollTop() > $(document).height()-$(window).height()-20){
-                if($('ol.timeline>li').last().attr('data-hasmore')){
-                    C.POST_STREAM.updateStream(-1);
-                }
-            }
-        });
         showRecommendation();
     };
 
     end = function(){
         $(document).unbind('scroll');
         $('ol.recommendation_list a').die('click');
-        C.POST_STREAM.end();
+        stream.end();
     };
 
     R.path('home', {
