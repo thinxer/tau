@@ -7,7 +7,7 @@
 # error list
 errors = 'not_logged_in wrong_action not_implemented invalid_uid wrong_login\
         photo_upload_failed user_not_found message_not_found \
-        stream_type_not_supported invalid_message_id'.split()
+        stream_type_not_supported invalid_message_id list_not_found'.split()
 
 # a callable class
 class error_func(object):

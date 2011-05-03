@@ -11,8 +11,8 @@
     // while fn = function(data) {}
     //
     // For more information, please refer to API SPEC in server code
-    var get_methods = 'stream userinfo current_user get_message validate get_following get_follower recommend_user'.split(' ');
-    var post_methods = 'register login logout publish remove follow unfollow update_profile'.split(' ');
+    var get_methods = 'stream userinfo current_user get_message validate get_following get_follower recommend_user get_lists get_list_info get_list_users'.split(' ');
+    var post_methods = 'register login logout publish remove follow unfollow update_profile create_list remove_list add_to_list remove_from_list'.split(' ');
     jQuery(get_methods).each(function(i, t) {
         tau[t] = function(param) {
             return jQuery.getJSON('/api/' + t, param);

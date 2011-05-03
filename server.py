@@ -122,9 +122,11 @@ def get_input(s):
 
 class api:
     GET_ACTIONS = set('stream current_user userinfo get_message validate\
-            get_following get_follower recommend_user'.split())
+            get_following get_follower recommend_user\
+            get_lists get_list_info get_list_users'.split())
     POST_ACTIONS = set('register login logout publish remove follow unfollow\
-            update_profile upload_photo'.split())
+            update_profile upload_photo\
+            create_list remove_list add_to_list remove_from_list'.split())
     FILTERS = {
             'uid': re.compile(r'[a-zA-Z][a-zA-Z0-9]+'),
             'email': re.compile(r'(.+)@(.+).(.+)'),
@@ -179,6 +181,30 @@ class api:
                 },
             'get_follower': {
                 'uid': FILTERS['uid'],
+                'skip': (FILTERS['positive_integer'], False)
+                },
+            'create_list': {
+                'name': str
+                },
+            'remove_list': {
+                'id': FILTERS['objectid']
+                },
+            'add_to_list': {
+                'id': FILTERS['objectid'],
+                'uid': FILTERS['uid']
+                },
+            'remove_from_list': {
+                'id': FILTERS['objectid'],
+                'uid': FILTERS['uid']
+                },
+            'get_lists': {
+                'uid': (FILTERS['uid'], False)
+                },
+            'get_list_info': {
+                'id': FILTERS['objectid']
+                },
+            'get_list_users': {
+                'id': FILTERS['objectid'],
                 'skip': (FILTERS['positive_integer'], False)
                 }
             }
@@ -239,9 +265,21 @@ class api:
             'remove_request': {
                 'msg_id': FILTERS['objectid']
                 },
+            # used by get_following/get_follower
             'userlist_request': {
                 'uid': str,
                 'skip': (int, 0)
+                },
+            # used by get_list_users
+            'list_userlist_request': {
+                'id': str,
+                'skip': (int, 0)
+                },
+            'listinfo': {
+                'id': str,
+                'name': spec.untaint,
+                'people': len,
+                'curator': str
                 }
             }
 
@@ -317,6 +355,30 @@ class api:
                     for u in db.recommend_user(uuid)]
                 })
 
+        elif action == 'get_lists':
+            ret = db.get_lists(uuid, d.get('uid'))
+            if 'error' in ret:
+                return jsond(ret)
+            else:
+                return jsond({
+                    'items': [spec.extract(self.EXTRACT_SPECS['listinfo'], l)
+                        for l in ret]
+                    })
+
+        elif action == 'get_list_info':
+            ret = db.get_list_info(uuid, d['id'])
+            if 'error' in ret:
+                return jsond(ret)
+            else:
+                return jsond(spec.extract(self.EXTRACT_SPECS['listinfo'], ret))
+
+        elif action == 'get_list_users':
+            param = spec.extract(self.EXTRACT_SPECS['list_userlist_request'], d)
+            ret = db.get_list_users(uuid, param['id'], param['skip'])
+            new_items = [spec.extract(self.EXTRACT_SPECS['userinfo'], u) for u in ret['items']]
+            ret['items'] = new_items
+            return jsond(ret)
+
         return error.not_implemented()
 
     def POST(self, action):
@@ -387,6 +449,18 @@ class api:
         elif action == 'logout':
             session.kill()
             return jsond({ 'success':1 })
+
+        elif action == 'create_list':
+            return jsond(db.create_list(uuid, d.name))
+
+        elif action == 'remove_list':
+            return jsond(db.remove_list(uuid, d['id']))
+
+        elif action == 'add_to_list':
+            return jsond(db.add_to_list(uuid, d['id'], d.uid))
+
+        elif action == 'remove_from_list':
+            return jsond(db.remove_from_list(uuid, d['id'], d.uid))
 
         return error.not_implemented()
 

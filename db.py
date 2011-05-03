@@ -22,6 +22,7 @@ db = conn[conf.db_name]
 
 users = db.users
 messages = db.messages
+lists = db.lists
 
 def register(uid, email, password):
     if uid in conf.reserved_names or users.find_one({'uid': uid}):
@@ -288,3 +289,79 @@ def recommend_user(uuid):
     else:
         return error.user_not_found(raw=True)
 
+def create_list(uuid, list_name):
+    list_id = lists.save({
+        'curator': ObjectId(uuid),
+        'name': list_name,
+        'people': []
+        })
+    return { 'list_id':list_id }
+
+def remove_list(uuid, list_id):
+    l = lists.find_one({
+        'curator': ObjectId(uuid),
+        '_id': ObjectId(list_id)
+        })
+    if not l:
+        return error.list_not_found(raw=True)
+    lists.remove(l)
+    return { 'success':1 }
+
+def add_to_list(uuid, list_id, uid):
+    u = find_user(uid)
+    if not u:
+        return error.user_not_found(raw=True)
+    if not lists.find_one(ObjectId(list_id)):
+        return error.list_not_found(raw=True)
+    lists.update({ '_id': ObjectId(list_id) }, {
+        '$addToSet':{'people': u['_id']}
+        })
+    return { 'success':1 }
+
+def remove_from_list(uuid, list_id, uid):
+    u = find_user(uid)
+    if not u:
+        return error.user_not_found(raw=True)
+    if not lists.find_one(ObjectId(list_id)):
+        return error.list_not_found(raw=True)
+    lists.update({ '_id': ObjectId(list_id) }, {
+        '$pull':{'people': u['_id']}
+        })
+    return { 'success':1 }
+
+def get_lists(uuid, uid=None):
+    target = ObjectId(uuid)
+    if uid:
+        u = find_user(uid)
+        if u:
+            target = u['_id']
+        else:
+            return error.user_not_found(raw=True)
+
+    ret = list(lists.find({ 'curator': target }))
+    for item in ret:
+        item['id'] = str(item['_id'])
+        u = get_user(item['curator'])
+        item['curator'] = u and u['uid'] or '!invalid'
+
+    return ret
+
+def get_list_info(uuid, list_id):
+    ret = lists.find_one(ObjectId(list_id))
+    if ret:
+        print ret
+        u = get_user(ret['curator'])
+        ret['id'] = ret['_id']
+        ret['curator'] = u and u['uid'] or '!invalid'
+    return ret or error.list_not_found(raw=True)
+
+def get_list_users(uuid, list_id, skip):
+    l = lists.find_one(ObjectId(list_id))
+    if not l:
+        return error.list_not_found(raw=True)
+    max_index = skip + conf.stream_item_max
+    ret = {
+            'has_more': max_index < len(l['people']),
+            'items': [get_user(uuid) for uuid in l['people'][skip:max_index]]
+            }
+    return ret
