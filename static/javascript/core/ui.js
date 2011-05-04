@@ -188,7 +188,11 @@
 
     /**
      * General dialog.
-     * Returns
+     *
+     * The Dialog itself is a Deferred.
+     * When buttons are clicked, resolve with button id and dialog itself.
+     * When close is hit, reject with 'close' and dialog itself.
+     *
      */
     ui.Dialog = function(options) {
         var defaults = {
@@ -205,7 +209,7 @@
         while (i--) {
             if (typeof(this.buttons[i]) === 'string') {
                 var type = this.buttons[i];
-                this.buttons[i]= this.defaultButtons[type];
+                this.buttons[i] = this.defaultButtons[type];
             }
         }
 
@@ -214,16 +218,19 @@
         deferred.promise(this);
 
         // Render the dialog.
-        ui.render('dialog', this).appendTo('body').done(function(d) {
+        var self = this;
+        this.tmpl = ui.render('dialog', this).appendTo('body').done(function(d) {
+            d.find('.content').html(self.content);
+            d.find('.bottom').html(self.bottom);
             // Center it.
             ui.center(d.find('.dialog'));
             // Set up button actions.
             d.find('.button').click(function() {
-                deferred.resolve($(this).data('id'));
+                deferred.resolve($(this).data('id'), self);
                 d.remove();
             });
             d.find('.close').click(function() {
-                deferred.reject();
+                deferred.reject('close', self);
                 d.remove();
             });
         });
@@ -254,6 +261,11 @@
             id: 'cancel',
             type: 'normal',
             text: _('button cancel')
+        },
+        'publish': {
+            id: 'publish',
+            type: 'default',
+            text: _('button publish')
         }
     };
 
@@ -273,14 +285,28 @@
      *
      */
     ui.confirm_dialog = function(title, content) {
-        if (!title) {
-            title = _('Are you sure?');
-        }
         return new ui.Dialog({
-            title: title,
+            title: title || _('Are you sure?'),
             content: content,
             buttons: ['confirm', 'cancel']
         });
+    }
+
+    /**
+     * show compose dialog
+     * this dialog has an additional method 'val',
+     * which can be used to set/get the text content.
+     */
+    ui.compose_dialog = function(title, content) {
+        var text = $('<textarea/>');
+        text.val(content);
+        var dialog = new ui.Dialog({
+            title: title || _('No title'),
+            content: text,
+            buttons: ['publish', 'cancel']
+        });
+        dialog.val = $.proxy(text.val, text);
+        return dialog;
     }
 
 })('U', jQuery);
