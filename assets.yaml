@@ -30,6 +30,7 @@ bundles:
         filters: url_version, cssmin
         output: all.css
         contents:
+            - stylesheet/reset.css
             - stylesheet/main.css
             - stylesheet/public.css
             - stylesheet/home.css

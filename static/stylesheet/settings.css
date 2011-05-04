@@ -9,8 +9,17 @@
     padding: 10px 0;
     clear: both;
 }
+
 #settings h1, #settings h2 {
     font-weight: normal;
+}
+
+#settings h1 {
+    font-size: 20px;
+}
+
+#settings h2 {
+    font-size: 18px;
 }
 
 #settings .basic_info td.desc {
