@@ -1,0 +1,7 @@
+/* This file contains various fix for IE7.*/
+
+/* For public.html */
+#public form .input_wrapper{
+    display: inline !important;
+    zoom: 1;
+}
