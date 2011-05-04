@@ -3,6 +3,11 @@
     padding-bottom: 20px;
 }
 
+#settings .backlink {
+    display: inline-block;
+    margin: 4px auto 10px;
+}
+
 #settings .section {
     width: 80%;
     margin: auto;
