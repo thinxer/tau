@@ -46,10 +46,7 @@
     var showRecommendation = function(){
         T.recommend_user().success(function(r){
             if (r.error) {
-                alert(r.desc);
-                if (r.error == -1){
-                    R.path('public');
-                }
+                $('ol.recommendation_list').remove();
                 return;
             }
             r = r.users;
