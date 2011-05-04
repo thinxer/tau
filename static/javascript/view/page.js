@@ -26,6 +26,17 @@
         $(this).blur();
     });
 
+    // Automatically update timestamps on page.
+    setInterval(function() {
+        $('.timestamp').each(function() {
+            var e = jQuery(this);
+            var timestamp = e.data('timestamp');
+            if (timestamp) {
+                e.text(_.getReadableDate(timestamp));
+            }
+        });
+    }, 30000);
+
     R.path('notfound',function() {
         U.render('notfound').fillTo('#main');
     });
