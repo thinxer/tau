@@ -22,20 +22,6 @@
         this.update();
     };
 
-    var getReadableDate = function(m){
-        var d = new Date(m), now = T.getServerTime(jQuery.now()), delta = now - d;
-        if (delta < 30000) {
-            return _('just now');
-        } else if (delta < 3600000){
-            return Math.round(delta/60000) + ' ' + _('minutes ago');
-        } else if (delta < 86400000){
-            return Math.round(delta/3600000) + ' ' + _('hours ago');
-        } else if (delta < 259200000){      //three days
-            return Math.round(delta/86400000) + ' ' + _('days ago');
-        }
-        return new Date(m).toLocaleDateString();
-    };
-
     /**
      * Update stream according to time and condition
      *
@@ -77,9 +63,7 @@
                     // TODO: add reply logic
                 }
             });
-            var o = U.render('stream_item', data, {
-                getDate: getReadableDate
-            });
+            var o = U.render('stream_item', data);
             if (!when) this_ref.list.html('');
             if (when == 'newer') o.prependTo(this_ref.list);
             else o.appendTo(this_ref.list);

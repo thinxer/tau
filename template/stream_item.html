@@ -6,13 +6,13 @@ $def with(version="")
     <div class="container">
         <a class="uid" href="#u/$${uid}">$${uid}</a>
         {{if type=='forward'}}
-        <span>_('forwarded from') 
+        <span>_('forwarded from')
             <a href="#u/$${user.uid}">$${user.uid}</a>
         </span>
         {{/if}}
         <div class="content" data-id="$${id}">$${content}</div>
         <div class="timestamp" data-timestamp="$${timestamp}">
-            $${$$item.getDate(timestamp)}
+            {{= _.getReadableDate(timestamp)}}
         </div>
     </div>
     {{if showDelete}}
