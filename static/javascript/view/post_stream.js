@@ -4,16 +4,20 @@
     var C = window.C = window.C || {}, U = window.U = window.U || {};
     var c = C[name] = {}, u = U[name] = {};
 
-    var PostStream = function(target, option, listen_scroll, scroll_margin) {
-        $.extend(this, option);
+    var PostStream = function(target, api_option, class_option) {
         this.list = $('<ol/>').addClass('timeline');
         $(target).html(this.list);
         this.updating = false;
-        this.option = option;
+        this.api_option = api_option;
         this.selector = 'ol.timeline';
-        this.scroll_margin = scroll_margin == undefined ? 20 : scroll_margin;
-        this.listen_scroll = listen_scroll == undefined ? true : listen_scroll;
         this.started = false;
+
+        var defaults = {
+            scroll_margin: 20,
+            listen_scroll: true
+        };
+
+        $.extend(this, defaults, class_option);
 
         this.update();
     };
@@ -35,14 +39,13 @@
     /**
      * Update stream according to time and condition
      *
-     * @param {number} when , can be 'newer', 'older' or null
-     * @param {object} option, options as filters passed to the api, e.g. {uid: 'some uid'}
+     * @param {string} when , can be 'newer', 'older' or leave empty
      */
     PostStream.prototype.update = function(when){
         if (this.updating) return;
         this.updating = true;
         var this_ref = this;
-        var p = this.option || {};
+        var p = this.api_option || {};
         if (this.list.children().length) {
             if (when == 'newer'){
                 p.newerThan = +this.list.find('li .timestamp').first().attr('data-timestamp');
@@ -104,26 +107,26 @@
     PostStream.prototype.start = function(){
         if (this.started) return;
         var this_ref = this;
-        $(this.selector + ' a.delete').live('click', function(){
+        $('a.delete', $(this.selector)[0]).live('click', function(){
             var item = $(this).parents('li.item');
             var msgid = $(item).find('div.content').attr('data-id');
-            U.confirm_dialog(_('Are you sure you want to delete ?')).done(function(){
+            U.confirm_dialog(_('Are you sure you want to delete?')).done(function(){
                 T.remove({msg_id: msgid}).success(function(r){
                     if (r.success) {
                         item.remove();
                         U.success(_('delete succeeded'), 1000);
                     } else {
-                        U.error(_('delete failed'), 1500);
+                        U.error(_('delete failed'));
                     }
                 });
             });
             return false;
         });
-        $(this.selector + ' a.forward').live('click', function(){
+        $('a.forward', $(this.selector)).live('click', function(){
             var item = $(this).parents('li.item');
             var msg = $(item).find('div.content');
             var msgid = msg.attr('data-id');
-            U.confirm_dialog(_('Are you sure you want to forward this post ?')).done(function(){
+            U.confirm_dialog(_('Are you sure you want to forward this post?')).done(function(){
                 T.publish({
                     content: '',
                     parent: msgid,
@@ -133,10 +136,10 @@
                         U.success(_('forward succeed'), 1000);
                         this_ref.update('newer');
                     } else {
-                        U.error(_('forward failed'), 1500);
+                        U.error(_('forward failed'));
                     }
                 }).error(function() {
-                    U.error(_('forward failed'), 1500);
+                    U.error(_('forward failed'));
                 });
             });
             return false;
@@ -148,8 +151,8 @@
     };
 
     PostStream.prototype.end = function(){
-        $(this.selector + ' a.delete').die('click');
-        $(this.selector + ' a.forward').die('click');
+        $('a.delete', $(this.selector)[0]).die('click');
+        $('a.forward', $(this.selector)[0]).die('click');
         $(document).unbind('scroll', this.handle_scroll);
     };
 
