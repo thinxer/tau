@@ -10,7 +10,7 @@ $def with(version="")
             <a href="#u/$${user.uid}">$${user.uid}</a>
         </span>
         {{/if}}
-        <div class="content" data-id="$${id}">$${content}</div>
+        <div class="content" data-id="$${id}">{{html content}}</div>
         <div class="timestamp" data-timestamp="$${timestamp}">
             {{= _.getReadableDate(timestamp)}}
         </div>

@@ -41,6 +41,9 @@
         _trans = trans;
     };
 
+    // expose sprintf function.
+    _.sprintf = sprintf;
+
 })(this);
 
 /**

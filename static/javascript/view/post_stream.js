@@ -46,6 +46,7 @@
         return T.stream(p).success(function(r){
             var data = [];
             $(r.items).each(function(i, e){
+                e.content = H.formatEntities(e.content, e.entities);
                 var isCurUser = T.checkLogin() == e.uid;
                 e.showDelete = isCurUser;
                 e.showForward = !isCurUser;

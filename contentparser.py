@@ -6,6 +6,7 @@ url_pattern = re.compile('(?#Protocol)(?:(?:ht|f)tp(?:s?)\:\/\/|~\/|\/)?(?#Usern
 
 
 #TODO add tests to this parser
+#TODO prevent spans from overlap
 def parse(msg):
     '''
     This function will extract @mentions, #tags# and urls with their indexes.

@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 
+import bson
+import cgi
 import exceptions
 import re
 import traceback
 import web
-import bson
 
 import conf
 import db
@@ -265,7 +266,7 @@ class api:
                 'list_id': (spec.untaint, None)
                 },
             'publish_request': {
-                'content': spec.untaint,
+                'content': cgi.escape,
                 'parent': (FILTERS['objectid'], None),
                 'type': (str, 'normal')
                 },
