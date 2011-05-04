@@ -110,11 +110,12 @@
         $('a.delete', $(this.selector)[0]).live('click', function(){
             var item = $(this).parents('li.item');
             var msgid = $(item).find('div.content').attr('data-id');
-            U.confirm_dialog(_('Are you sure you want to delete?')).done(function(){
+            U.confirm_dialog(_('Are you sure you want to delete?')).done(function(button){
+                if (button !== 'confirm') return;
                 T.remove({msg_id: msgid}).success(function(r){
                     if (r.success) {
                         item.remove();
-                        U.success(_('delete succeeded'), 1000);
+                        U.success(_('delete succeeded'), 2000);
                     } else {
                         U.error(_('delete failed'));
                     }

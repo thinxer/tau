@@ -1,13 +1,24 @@
 $def with(version="")
-<div class="dialog-wrapper">
+<div class="dialog-wrapper {{= modal?'modal':'' }}">
     <div class="dialog">
-        <div class="dialog-header">
-            <h3 class="dialog-title">$${title}</h3>
-            <div class="dialog-close">
+        <div class="header">
+            <h3 class="title">{{= title }}</h3>
+            <div class="close">
                 <b>×</b>
             </div>
         </div>
-        <div class="dialog-content">
+        {{if content}}
+        <div class="content">{{html content}}</div>
+        {{/if}}
+        {{if bottom}}
+        <div class="bottom">{{html bottom}}</div>
+        {{/if}}
+        <div class="buttons">
+            {{each(i, button) buttons}}
+            <button data-id="{{= button.id}}" class="button {{= button.type}}">
+                {{= button.text}}
+            </button>
+            {{/each}}
         </div>
     </div>
 </div>

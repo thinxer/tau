@@ -141,7 +141,7 @@ textarea {
     border-radius: 4px;
 }
 
-#flash {
+body>.flash {
     display: none;
     position: fixed;
     top: 0px;
@@ -154,37 +154,37 @@ textarea {
     font-size: 16px;
 }
 
-#flash.info {
+body>.flash.info {
     color: black;
     background-color: #FFF1A8;
 }
 
-#flash.error {
+body>.flash.error {
     color: #de0f0d;
     background-color: #f9e6e6;
 }
 
-#flash.success {
+body>.flash.success {
     color: #060;
     background-color: #bbffb6;
 }
 
-#flash p {
+body>.flash p {
     margin: 5px 10px;
 }
 
-#flash .close {
+body>.flash .close {
     display: none;
     position: absolute;
     top: 8px;
     right: 10px;
 }
 
-#flash:hover .close {
+body>.flash:hover .close {
     display: block;
 }
 
-body div.fog {
+.dialog-wrapper.modal {
     background-color: #AAAAAA;
     opacity: 0.6;
     position: fixed;
@@ -194,8 +194,7 @@ body div.fog {
     top: 0px;
 }
 
-body div.dialog-wrapper .dialog {
-    display: none;
+.dialog-wrapper .dialog {
     position: fixed;
     width: 500px;
     top: 200px;
@@ -209,15 +208,15 @@ body div.dialog-wrapper .dialog {
     padding: 6px;
 }
 
-body div.dialog-wrapper .dialog-header {
+.dialog .header {
     position: relative;
 }
 
-body div.dialog-wrapper .dialog-title {
+.dialog .title {
     margin: 5px 0px 0px 5px;
 }
 
-body div.dialog-wrapper .dialog-close {
+.dialog .close {
     position: absolute;
     top: 0px;
     right: 0px;
@@ -234,17 +233,14 @@ body div.dialog-wrapper .dialog-close {
     cursor: pointer;
 }
 
-body div.dialog-wrapper .dialog-content {
+.dialog .content {
     padding: 6px;
     background-color: #FFFFFF;
+    color: #000;
     margin-top: 10px;
     border-radius: 4px;
     -webkit-border-radius: 4px;
     -moz-border-radius: 4px;
-}
-
-body div.dialog-wrapper .confirm {
-    
 }
 
 /* vim: set et ts=4 sw=4 tw=0 :*/

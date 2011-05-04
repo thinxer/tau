@@ -14,10 +14,10 @@ bundles:
             - javascript/lib/jquery.history.js
             - javascript/lib/jquery.tmpl.js
             - javascript/core/i18n.js
+            - javascript/i18n/zh_CN.js
             - javascript/core/tau.js
             - javascript/core/router.js
             - javascript/core/ui.js
-            - javascript/i18n/zh_CN.js
             - javascript/view/user_stream.js
             - javascript/view/page.js
             - javascript/view/post_stream.js

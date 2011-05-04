@@ -133,7 +133,7 @@
     ui.flash = function(msg, type, duration) {
         // Setup flash div.
         if (!flash) {
-            flash = $('#flash');
+            flash = $('body>.flash');
             flash.find('.close').click(function() {
                 flash.slideUp();
             });
@@ -186,62 +186,101 @@
         });
     };
 
-    var remove_dialog = function(){
-        $('.dialog-wrapper').remove();
+    /**
+     * General dialog.
+     * Returns
+     */
+    ui.Dialog = function(options) {
+        var defaults = {
+            title: 'dialog',
+            modal: false,
+            content: '',
+            bottom: '',
+            buttons: ['ok']
+        };
+        $.extend(this, defaults, options);
+
+        // Set up buttons.
+        var i = this.buttons.length;
+        while (i--) {
+            if (typeof(this.buttons[i]) === 'string') {
+                var type = this.buttons[i];
+                this.buttons[i]= this.defaultButtons[type];
+            }
+        }
+
+        // Set up deferred and promise.
+        var deferred = $.Deferred();
+        deferred.promise(this);
+
+        // Render the dialog.
+        ui.render('dialog', this).appendTo('body').done(function(d) {
+            // Center it.
+            ui.center(d.find('.dialog'));
+            // Set up button actions.
+            d.find('.button').click(function() {
+                deferred.resolve($(this).data('id'));
+                d.remove();
+            });
+            d.find('.close').click(function() {
+                deferred.reject();
+                d.remove();
+            });
+        });
+    };
+
+    ui.Dialog.prototype.defaultButtons = {
+        'ok': {
+            id: 'ok',
+            type: 'default',
+            text: _('button ok')
+        },
+        'yes': {
+            id: 'yes',
+            type: 'default',
+            text: _('button yes')
+        },
+        'no': {
+            id: 'no',
+            type: 'normal',
+            text: _('button no')
+        },
+        'confirm': {
+            id: 'confirm',
+            type: 'default',
+            text: _('button confirm')
+        },
+        'cancel': {
+            id: 'cancel',
+            type: 'normal',
+            text: _('button cancel')
+        }
     };
 
     /**
-     * show custom dialog 
-     * 
-     * @param {boolean} modal, whether the dialog is modal
-     * @param {string} title, the title of the dialog
-     * 
-     * note that the dialog will have display property none, you must
-     * set display block when the dialog is ready to show
-     * (e.g. adjust position, add content ...)
+     * shorthand method to create a dialog.
      */
-    ui.dialog = function(modal, title) {
-        return ui.render('dialog',{
-            title: title
-        }).appendTo('body').done(function(r){
-            if (modal) {
-                r.addClass('fog');
-            }
-        });
+    ui.dialog = function(options) {
+        return new ui.Dialog(options);
     }
 
 
     /**
      * show confirm dialog
-     * 
+     *
      * @param {string} title, title of the dialog
-     * @return {deferred} promise, use .done .fail to add yes no handler
+     * @return {deferred} promise, use .done .fail to add confirm cancel handler
      *
      */
-    ui.confirm_dialog = function(title) {
-        var d = $.Deferred();
+    ui.confirm_dialog = function(title, content) {
         if (!title) {
-            title = _('Are you sure ?');
+            title = _('Are you sure?');
         }
-        ui.dialog(false, title).done(function(){
-            ui.render('confirm_dialog').fillTo('.dialog-wrapper .dialog-content').done(function(){
-                $('.dialog-content .yes').click(function(){
-                    remove_dialog();
-                    d.resolve();
-                });
-                $('.dialog-content .no').click(function(){
-                    remove_dialog();
-                    d.reject();
-                });
-                $('.dialog .dialog-close').click(function(e){
-                    remove_dialog();
-                    d.reject();
-                });
-                ui.center('body .dialog');
-                $('body .dialog').css('display', 'block');
-            });
+        return new ui.Dialog({
+            title: title,
+            content: content,
+            buttons: ['confirm', 'cancel']
         });
-        return d;
     }
 
 })('U', jQuery);
