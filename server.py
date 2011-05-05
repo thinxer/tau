@@ -35,11 +35,13 @@ render = web.template.render('template/', globals={ '_':i18n.gettext })
 def createSession():
     if conf.session_type == 'mongo':
         import session_mongo
-        return web.session.Session(app, session_mongo.MongoStore(db.db, 'sessions'))
+        store = session_mongo.MongoStore(db.db, 'sessions')
     elif conf.session_type == 'memcache':
-        # TODO add more memcache options to conf
         import session_memcache
-        return web.session.Session(app, session_memcache.MemcacheStore(['127.0.0.1:11211'], 1440))
+        store = session_memcache.MemcacheStore(conf.session_memcache_servers, conf.session_timeout)
+    return web.session.Session(app, store)
+
+web.config.session_parameters['timeout'] = conf.session_timeout
 
 # dirty hack to make session work with reloader
 if web.config.get('_session'):

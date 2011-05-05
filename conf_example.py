@@ -8,6 +8,8 @@ text_segmentor = 'pymmseg'
 
 # possible values: mongo, memcache.
 session_type = 'memcache'
+session_timeout = 7*24*60*60    # for a week, in seconds
+session_memcache_servers = ['127.0.0.1:11211']
 
 reserved_names = set(["www", "admin", "setting", "settings", \
         "login", "logout", "api"])
