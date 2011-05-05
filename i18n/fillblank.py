@@ -15,5 +15,5 @@ for k in d.keys():
         s = raw_input(k+'\n')
         d[k] = s.decode('utf8')
 
-new = json.dumps(d, sort_keys=True, indent=0, ensure_ascii=False)
+new = json.dumps(d, sort_keys=True, indent=0, ensure_ascii=False, separators=(',',':'))
 open(locale + '.json', 'w').write(new.encode('utf8'))

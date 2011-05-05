@@ -13,4 +13,7 @@ class TauEncoder(json.JSONEncoder):
         return json.JSONEncoder.default(self, o)
 
 def jsond(d):
-    return json.dumps(d, cls=TauEncoder)
+    return json.dumps(d,
+            cls=TauEncoder,
+            ensure_ascii=False,
+            separators=(',',':'))

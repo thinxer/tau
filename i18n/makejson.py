@@ -18,5 +18,5 @@ while True:
     if s not in d:
         d[s] = ""
 
-new = json.dumps(d, sort_keys=True, indent=0, ensure_ascii=False)
+new = json.dumps(d, sort_keys=True, indent=0, ensure_ascii=False, separators=(',',':'))
 open(locale + '.json', 'w').write(new.encode('utf8'))
