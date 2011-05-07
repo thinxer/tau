@@ -131,7 +131,7 @@
             return false;
         });
         if (this.listen_scroll) {
-            $(document).scroll($.proxy(this.handle_scroll, this));
+            $(window).scroll($.proxy(this.handle_scroll, this));
         }
         this.started = true;
     };
@@ -139,7 +139,7 @@
     PostStream.prototype.end = function(){
         $('a.delete', $(this.selector)[0]).die('click');
         $('a.forward', $(this.selector)[0]).die('click');
-        $(document).unbind('scroll', this.handle_scroll);
+        $(window).unbind('scroll', this.handle_scroll);
     };
 
     U[name] = PostStream;

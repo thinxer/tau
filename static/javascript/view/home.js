@@ -109,7 +109,6 @@
     };
 
     end = function(){
-        $(document).unbind('scroll');
         $('ol.recommendation_list a').die('click');
         stream.end();
     };
