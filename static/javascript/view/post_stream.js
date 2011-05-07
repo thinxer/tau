@@ -112,7 +112,8 @@
             var item = $(this).parents('li.item');
             var msg = $(item).find('div.content');
             var msgid = msg.attr('data-id');
-            U.confirm_dialog(_('Are you sure you want to forward this post?')).done(function(){
+            U.confirm_dialog(_('Are you sure you want to forward this post?')).done(function(button){
+                if (button !== 'confirm') return;
                 T.publish({
                     content: '',
                     parent: msgid,
