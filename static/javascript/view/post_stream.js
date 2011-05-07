@@ -61,7 +61,9 @@
                         content: e.parent_message.content
                     }));
                 } else if (e.type == 'reply') {
-                    // TODO: add reply logic
+                    data.push($.extend(e, {
+                        user: r.users[e.uid]
+                    }));
                 }
             });
             var o = U.render('stream_item', data);
@@ -92,7 +94,8 @@
     PostStream.prototype.start = function(){
         if (this.started) return;
         var this_ref = this;
-        $('a.delete', $(this.selector)[0]).live('click', function(){
+        $('a.delete', $(this.selector)[0]).live('click', function(e) {
+            e.preventDefault();
             var item = $(this).parents('li.item');
             var msgid = $(item).find('div.content').attr('data-id');
             U.confirm_dialog(_('Are you sure you want to delete?')).done(function(button){
@@ -106,9 +109,9 @@
                     }
                 });
             });
-            return false;
         });
-        $('a.forward', $(this.selector)).live('click', function(){
+        $('a.forward', $(this.selector)).live('click', function(e) {
+            e.preventDefault();
             var item = $(this).parents('li.item');
             var msg = $(item).find('div.content');
             var msgid = msg.attr('data-id');
@@ -129,7 +132,31 @@
                     U.error(_('forward failed'));
                 });
             });
-            return false;
+        });
+        $('a.reply', $(this.selector)).live('click', function(e) {
+            e.preventDefault();
+            var item = $(this).parents('li.item');
+            var msgid = item.find('div.content').attr('data-id');
+            var uid = item.find('.uid').text();
+            var dialog = U.compose_dialog(_('add reply'), '@' + uid + ' ');
+            dialog.done(function(button) {
+                if (button === 'publish') {
+                    T.publish({
+                        content: dialog.val,
+                        parent: msgid,
+                        type: 'reply'
+                    }).success(function(r) {
+                        if (r.success) {
+                            U.success(_('reply succeed'));
+                            this_ref.update('newer');
+                        } else {
+                            U.error(_('reply failed'));
+                        }
+                    }).error(function() {
+                        U.error(_('reply failed'));
+                    });
+                }
+            });
         });
         if (this.listen_scroll) {
             $(window).scroll($.proxy(this.handle_scroll, this));
