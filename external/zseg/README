@@ -1,0 +1,10 @@
+Thanks to Kaixu Zhang for contributing zseg segmentation program.
+This program is quite fast.
+
+Setup:
+
+    Download zseg_data.tar.gz from the download section on github and
+    extract the two bin files here.
+
+    Compile zseg.cpp to zseg, test it with ./zseg. It reads from stdin
+    and outputs to stdout.

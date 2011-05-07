@@ -5,3 +5,4 @@ static/photo/*
 *.swp
 static/all.*
 static/javascript/i18n/*
+external/zseg/*
