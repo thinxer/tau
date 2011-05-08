@@ -107,25 +107,6 @@ a:hover {
     margin-left: 50px;
 }
 
-#statusDiv {
-    -webkit-border-radius:0 0 8px 8px;
-    -moz-border-radius:0 0 8px 8px;
-    -o-border-radius:0 0 8px 8px;
-    border-radius:0 0 8px 8px;
-    position:fixed;
-    top:0;
-    width:200px;
-    height:36px;
-    left:50%;
-    margin-left:-100px;
-    background-color:#29425B;
-    display:none;
-    transition:opacity 0.2s linear;
-    -webkit-transition: opacity 0.2s linear;
-    -o-transition: opacity 0.2s linear;
-    -moz-transition: opacity 0.2s linear;
-}
-
 textarea {
     resize:none;
 }
@@ -202,7 +183,7 @@ body>.flash:hover .close {
     position: fixed;
     width: 500px;
     top: 200px;
-    background-color: rgba(0, 0, 0, 0.8);
+    background: url(/static/image/dialog_bg.png) repeat;
     box-shadow: 0 3px 0 rgba(0, 0, 0, 0.1);
     -webkit-box-shadow: 0 3px 0 rgba(0, 0, 0, 0.1);
     -moz-box-shadow: 0 3px 0 rgba(0, 0, 0, 0.1);
