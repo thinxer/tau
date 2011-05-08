@@ -38,4 +38,5 @@ bundles:
             - stylesheet/profile.css
             - stylesheet/settings.css
             - stylesheet/userstream.css
+            - stylesheet/poststream.css
 

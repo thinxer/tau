@@ -38,39 +38,3 @@
     float: left;
 }
 
-#profile ol.timeline {
-    list-style-type: none;
-    padding: 0px;
-    margin-top: 20px;
-}
-
-#profile ol.timeline>.item {
-    margin-top: 10px;
-}
-
-#profile ol.timeline>.item .photo {
-    float: left;
-    padding-right: 10px;
-    width: 40px;
-    height: 40px;
-}
-
-#profile ol.timeline>.item .container {
-    margin-left: 50px;
-    word-wrap: break-word;
-}
-
-#profile ol.timeline>.item .uid {
-    font-weight: bold;
-}
-
-#profile ol.timeline>.item .name {
-    font-size: 12px;
-    color: #AAA;
-}
-
-#profile ol.timeline>.item .timestamp {
-    margin-top: 4px;
-    font-size: 12px;
-}
-

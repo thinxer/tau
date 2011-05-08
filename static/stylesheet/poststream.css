@@ -1,0 +1,35 @@
+.timeline{
+    list-style-type: none;
+    padding: 0px;
+}
+
+.timeline>.item {
+    margin-top: 10px;
+}
+
+.timeline>.item .photo {
+    float: left;
+    padding-right: 10px;
+    width: 40px;
+    height: 40px;
+}
+
+.timeline>.item .container {
+    margin-left: 50px;
+    word-wrap: break-word;
+}
+
+.timeline>.item .uid {
+    font-weight: bold;
+}
+
+.timeline>.item .name {
+    font-size: 12px;
+    color: #444;
+}
+
+.timeline>.item .timestamp {
+    margin-top: 4px;
+    font-size: 12px;
+}
+

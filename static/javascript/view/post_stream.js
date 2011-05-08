@@ -7,10 +7,14 @@
     var PostStream = function(target, api_option, class_option) {
         this.list = $('<ol/>').addClass('timeline');
         $(target).html(this.list);
+        this.newer_banner = $('<div/>').addClass('newer-banner');
+        this.newer_banner.prependTo(this.list);
         this.updating = false;
         this.api_option = api_option;
         this.selector = 'ol.timeline';
         this.started = false;
+        this.newer_buffer = [];
+        this.older_buffer = [];
 
         var defaults = {
             scroll_margin: 20,
@@ -26,12 +30,17 @@
      * Update stream according to time and condition
      *
      * @param {string} when , can be 'newer', 'older' or leave empty
+     * @param {boolean} imm, update immediately or just show a banner to let the user know
+     *                       there are newer post
      */
-    PostStream.prototype.update = function(when){
+    PostStream.prototype.update = function(when, imm){
         if (this.updating) return;
         this.updating = true;
         var this_ref = this;
         var p = this.api_option || {};
+        if (arguments.length < 2) {
+            imm = true;
+        }
         if (this.list.children().length) {
             if (when == 'newer'){
                 p.newerThan = +this.list.find('li .timestamp').first().attr('data-timestamp');
@@ -66,15 +75,22 @@
                     }));
                 }
             });
-            var o = U.render('stream_item', data);
-            if (!when) this_ref.list.html('');
-            if (when == 'newer') o.prependTo(this_ref.list);
-            else o.appendTo(this_ref.list);
-            o.done(function(t) {
-                if (r.has_more) {
-                    t.last().addClass('has-more');
+            if (imm) {
+                var o = U.render('stream_item', data);
+                if (!when) this_ref.list.children('li.item').remove();
+                if (when == 'newer') o.prependTo(this_ref.list);
+                else o.appendTo(this_ref.list);
+                o.done(function(t) {
+                    if (r.has_more) {
+                        t.last().addClass('has-more');
+                    }
+                });
+            } else {
+                if (when == 'newer') $.merge(this_ref.newer_buffer, data);
+                else if (when == 'older') {
+                    $.merge(this_ref.older_buffer, data);
                 }
-            });
+            }
             o.then(function(){
                 this_ref.updating = false;
             });

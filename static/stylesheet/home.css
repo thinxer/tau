@@ -30,34 +30,6 @@
     display: block;
 }
 
-#home>.content .timeline>.item {
-    margin-top: 10px;
-}
-
-#home>.content .timeline>.item .photo {
-    float: left;
-    padding-right: 10px;
-    width: 40px;
-    height: 40px;
-}
-
-#home>.content .timeline>.item .container {
-    margin-left: 50px;
-    word-wrap: break-word;
-}
-
-#home>.content .timeline>.item .uid {
-    font-weight: bold;
-}
-#home>.content .timeline>.item .name {
-    font-size: 12px;
-    color: #444;
-}
-#home>.content .timeline>.item .timestamp {
-    margin-top: 4px;
-    font-size: 12px;
-}
-
 .recommendation_list {
     display: block;
     position: relative;
@@ -78,24 +50,24 @@
     padding-top:10px;
 }
 
-#main ol.recommendation_list a {
+#main .recommendation_list a {
     color: #ffffff;
     position:relative;
     top:10px;
 }
 
-#main ol.recommendation_list a:hover {
+#main .recommendation_list a:hover {
     color: #aaaaaa;
 }
 
-.user_recommendation .next, div.user_recommendation .prev {
+.user_recommendation .next, .user_recommendation .prev {
     padding: 0px 4px;
     border: solid 1px #4183C4;
     cursor: pointer;
     background-color: transparent;
 }
 
-.user_recommendation .next[disabled], div.user_recommendation .prev[disabled] {
+.user_recommendation .next[disabled], .user_recommendation .prev[disabled] {
     border: solid 1px grey;
     cursor: default;
 }
