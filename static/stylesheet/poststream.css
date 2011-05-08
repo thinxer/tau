@@ -1,5 +1,8 @@
+.timeline-box {
+    margin: 20px 0;
+}
+
 .timeline{
-    list-style-type: none;
     padding: 0px;
 }
 
@@ -33,3 +36,20 @@
     font-size: 12px;
 }
 
+.timeline-box .newer-banner {
+    width: 100%;
+    height: 35px;
+    background: #feffb4;
+    cursor: pointer;
+    display: none;
+}
+
+.timeline-box .newer-banner:hover {
+    background: #d1d171;
+}
+
+.timeline-box .newer-banner .banner-text {
+    color: #BB861C;
+    margin: 10px;
+    float: right;
+}

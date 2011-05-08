@@ -38,15 +38,15 @@
             d.seq = i;
         });
         if (d.length > 0) {
-            U.render('recommendation_item', d).fillTo('ol.recommendation_list');
+            U.render('recommendation_item', d).fillTo('.recommendation_list');
         } else {
-            $('ol.recommendation_list').children().remove();
+            $('.recommendation_list').children().remove();
         }
     };
     var showRecommendation = function(){
         T.recommend_user().success(function(r){
             if (r.error) {
-                $('ol.recommendation_list').remove();
+                $('.recommendation_list').remove();
                 return;
             }
             r = r.users;
@@ -79,8 +79,8 @@
                 showBtn();
                 renderRecommendation(r.slice(it, it+3));
             });
-            $('ol.recommendation_list a').live('click', function(){
-                var curli = $(this).parents('ol.recommendation_list>li');
+            $('.recommendation_list a').live('click', function(){
+                var curli = $(this).parents('.recommendation_list>li');
                 var uid = ($(this).siblings('div').text());
                 T.follow({uid: uid}).success(function(){
                     U.success(_('follow succeeded'));
@@ -109,7 +109,7 @@
     };
 
     end = function(){
-        $('ol.recommendation_list a').die('click');
+        $('.recommendation_list a').die('click');
         stream.end();
     };
 
