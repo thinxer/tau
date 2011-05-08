@@ -94,7 +94,7 @@
     PostStream.prototype.start = function(){
         if (this.started) return;
         var this_ref = this;
-        $('a.delete', $(this.selector)[0]).live('click', function(e) {
+        $('a.delete', $(this.selector)).live('click', function(e) {
             e.preventDefault();
             var item = $(this).parents('li.item');
             var msgid = $(item).find('div.content').attr('data-id');
@@ -165,9 +165,10 @@
     };
 
     PostStream.prototype.end = function(){
-        $('a.delete', $(this.selector)[0]).die('click');
-        $('a.forward', $(this.selector)[0]).die('click');
-        $(window).unbind('scroll', this.handle_scroll);
+        $('a.delete', $(this.selector)).die('click');
+        $('a.forward', $(this.selector)).die('click');
+        $('a.reply', $(this.selector)).die('click');
+        $(window).unbind('scroll', $.proxy(this.handle_scroll, this));
     };
 
     U[name] = PostStream;
