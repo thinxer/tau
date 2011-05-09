@@ -1,5 +1,13 @@
 (function(name) {
     this[name] = this[name] || {};
+
+    /**
+     * Replace '&' '<' '>' with '&amp;' '&lt;' '&gt;'.
+     */
+    var escapeHTML = function(html) {
+        return html.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    };
+
     /**
      * This helper method is used to format the message content based on
      * the entities extracted from it, which are like:
@@ -10,22 +18,24 @@
      * the hash field can be url or mention, too.
      */
     this[name].formatEntities = function(content, entities) {
-        var sub = function(oldstr, span, newsub) {
-            return oldstr.substring(0, span[0]) + newsub + oldstr.substring(span[1]);
-        };
+        // Concatenate lists and sort it desending.
+        // Why do it backwards? Because i was stupid enough when writing it.
+        // Anyway, bad things didn't happen.
         var list = entities.urls.concat(entities.mentions, entities.tags);
         list.sort(function(left, right) {
             return right.span[1] - left.span[1] ;
         });
 
-        var ret = content;
-        var last_index = 1e10;
+        var parts = [];
+        var last_index = content.length;
         for (var i=0; i<list.length; i++) {
             var item = list[i];
 
             // prevent overlap
-            if (item.span[1] >= last_index) continue;
-            last_index = item.span[0];
+            if (item.span[1] > last_index) continue;
+
+            // normal text between entities
+            parts.unshift(escapeHTML(content.substring(item.span[1], last_index)));
 
             // extract anchor href and text
             var href = '';
@@ -34,18 +44,23 @@
                 href = item.url;
                 text = item.url;
             } else if ('hash' in item) {
-                // TODO further investigation on hash is needed.
-                href = '#tag/' + escape(item.hash.slice(1, item.hash.length-1)).replace('/', '%2f');
+                href = '#tag/' + encodeURI(item.hash.slice(1, item.hash.length-1)).replace('/', '%2f');
                 text = item.hash;
             } else if ('mention' in item) {
-                href = '#u/' + escape(item.mention.substring(1));
+                href = '#u/' + encodeURI(item.mention.substring(1));
                 text = item.mention;
             }
 
-            // replace original text with an anchor
-            var newstr = _.sprintf('<a href="%s">%s</a>', href, text);
-            ret = sub(ret, item.span, newstr);
+            // original text with an anchor
+            parts.unshift(_.sprintf('<a href="%s">%s</a>', href, escapeHTML(text)));
+
+            // update last_index
+            last_index = item.span[0];
         }
-        return ret;
+        // the last part
+        parts.unshift(escapeHTML(content.substring(0, last_index)));
+        // finally join parts together
+        return parts.join('');
     }
+
 })('H');
