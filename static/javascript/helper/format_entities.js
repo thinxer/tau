@@ -41,18 +41,23 @@
             var href = '';
             var text = '';
             if ('url' in item) {
-                href = item.url;
+                if (item.url.substring(0, 10).indexOf('://') < 0) {
+                    href = encodeURI('http://' + item.url);
+                } else {
+                    href = encodeURI(item.url);
+                }
                 text = item.url;
             } else if ('hash' in item) {
-                href = '#tag/' + encodeURI(item.hash.slice(1, item.hash.length-1)).replace('/', '%2f');
+                href = '#tag/' + encodeURIComponent(item.hash.slice(1, item.hash.length-1)).replace('/', '%2f');
                 text = item.hash;
             } else if ('mention' in item) {
-                href = '#u/' + encodeURI(item.mention.substring(1));
+                href = '#u/' + encodeURIComponent(item.mention.substring(1));
                 text = item.mention;
             }
 
             // original text with an anchor
-            parts.unshift(_.sprintf('<a href="%s">%s</a>', href, escapeHTML(text)));
+            // href value needs HTML escaping, otherwise &quot; will be dangerous.
+            parts.unshift(_.sprintf('<a href="%s">%s</a>', escapeHTML(href), escapeHTML(text)));
 
             // update last_index
             last_index = item.span[0];
