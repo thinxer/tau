@@ -34,17 +34,21 @@
     var prevRecSelector = 'div.user_recommendation .prev';
 
     var renderRecommendation = function(d){
+        if (!d) d = [];
         $(d).each(function(i, d){
             d.seq = i;
         });
         if (d.length > 0) {
             U.render('recommendation_item', d).fillTo('.recommendation_list');
+            $('.user_recommendation').css('display', 'block');
         } else {
             $('.recommendation_list').children().remove();
+            $('.user_recommendation').css('display', 'none');
         }
     };
     var showRecommendation = function(){
-        T.recommend_user().success(function(r){
+        renderRecommendation();
+        T.recommend_user().success(function(r) {
             if (r.error) {
                 $('.recommendation_list').remove();
                 return;
@@ -98,6 +102,8 @@
                     }
                 });
             });
+        }).error(function() {
+            renderRecommendation();
         });
     };
 
