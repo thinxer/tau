@@ -1,5 +1,5 @@
 $def with(version="")
-<div id="profile">
+<div id="profile" class="general_box light">
     <img src="$${photo}"/><br/>
     <div class="basic_info">
         $${uid} <br/>
@@ -19,5 +19,20 @@ $def with(version="")
         _('following number'): $${following}<br/>
     </div>
     <div class="clear"></div>
-    <div class="timeline_wrapper"></div>
+    <div id="profiletabs">
+            <ol class="tabbar">
+                <li class="tabtitle" data-name="timeline" data-for="timeline_wrapper">
+                    <a href="#u/{{= uid}}/timeline">_("%s's timeline", uid)</a>
+                </li>
+                <li class="tabtitle" data-name="following" data-for="following_wrapper">
+                    <a href="#u/{{= uid}}/following">_("%s's following", uid)</a>
+                </li>
+                <li class="tabtitle" data-name="follower" data-for="follower_wrapper">
+                    <a href="#u/{{= uid}}/follower">_("%s's followers", uid)</a>
+                </li>
+            </ol>
+            <div class="tabcontent timeline_wrapper"></div>
+            <div class="tabcontent following_wrapper"></div>
+            <div class="tabcontent follower_wrapper"></div>
+    </div>
 </div>

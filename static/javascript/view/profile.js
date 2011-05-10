@@ -7,6 +7,7 @@
 
     var cur_uid;
     var stream;
+    var loadDeferred = $.Deferred();
 
     var getDataAndShow = function(){
         if (!cur_uid) {
@@ -22,7 +23,7 @@
                 });
                 stream.start();
                 stream.update();
-            });
+            }).done(loadDeferred.resolve);
         });
     };
 
@@ -36,13 +37,31 @@
                 return;
             }
         },
-        change: function(r){
-            if (r.length > 1) {
-                cur_uid = r[1];
+        change: function(path, oldPath, level){
+            if (path.length > 1) {
+                cur_uid = path[1];
             } else {
                 R.path('home');
             }
-            getDataAndShow();
+
+            if (level <= 1) {
+                loadDeferred = jQuery.Deferred();
+                getDataAndShow();
+            }
+
+            loadDeferred.done(function() {
+                var target = path[2] || 'timeline';
+
+                var container = $('#profiletabs');
+                var tabbar = container.children('.tabbar');
+
+                tabbar.children('.tabtitle').removeClass('target');
+                container.children('.tabcontent').hide();
+
+                var title = tabbar.find('.tabtitle[data-name=' + target + ']');
+                title.addClass('target');
+                container.children('.tabcontent.' + title.data('for')).show();
+            });
         },
         leave: function(){
             if (stream) {

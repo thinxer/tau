@@ -83,7 +83,7 @@
                 var curli = $(this).parents('ol.recommendation_list>li');
                 var uid = ($(this).siblings('div').text());
                 T.follow({uid: uid}).success(function(){
-                    U.success(_('following'));
+                    U.success(_('follow succeeded'));
                     var curseq = +curli.attr('data-seq');
                     curli.remove();
                     r = $.merge(r.slice(0, it+curseq),r.slice(it+curseq+1,r.length));
