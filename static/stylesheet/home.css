@@ -63,37 +63,44 @@
     font-size: 12px;
 }
 
-ol.recommendation_list{
+.recommendation_list {
     display: block;
     position: relative;
 }
 
-ol.recommendation_list>li>div{
-    display:block;
+.recommendation_list>li>div {
+    display: block;
     height: 80px;
     width: 200px;
 }
 
-ol.recommendation_list>li>div>div {
+.recommendation_list>li>div>div {
     float: left;
     padding: 5px 0 0 10px;
 }
 
-ol.recommendation_list>li>div>div.desc{
+.recommendation_list>li>div>div.desc {
     padding-top:10px;
 }
 
-#main ol.recommendation_list a{
+#main ol.recommendation_list a {
     color: #ffffff;
     position:relative;
     top:10px;
 }
 
-#main ol.recommendation_list a:hover{
+#main ol.recommendation_list a:hover {
     color: #aaaaaa;
 }
 
-div.user_recommendation .next, div.user_recommendation .prev{
-    display:none;
+.user_recommendation .next, div.user_recommendation .prev {
+    padding: 0px 4px;
+    border: solid 1px #4183C4;
+    cursor: pointer;
+    background-color: transparent;
 }
 
+.user_recommendation .next[disabled], div.user_recommendation .prev[disabled] {
+    border: solid 1px grey;
+    cursor: default;
+}

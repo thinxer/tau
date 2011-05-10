@@ -37,9 +37,9 @@
         $(d).each(function(i, d){
             d.seq = i;
         });
-        if (d.length > 0){
+        if (d.length > 0) {
             U.render('recommendation_item', d).fillTo('ol.recommendation_list');
-        }else{
+        } else {
             $('ol.recommendation_list').children().remove();
         }
     };
@@ -55,16 +55,16 @@
             if (!d.length){
                 return;
             }
-            var showBtn = function(){
-                if (!it){
-                    $(prevRecSelector).css('display', 'none');
-                }else{
-                    $(prevRecSelector).css('display', 'block');
+            var showBtn = function() {
+                if (!it) {
+                    $(prevRecSelector).attr('disabled', true);
+                } else {
+                    $(prevRecSelector).removeAttr('disabled');
                 }
-                if (r.length > it+3){
-                    $(nextRecSelector).css('display', 'block');
-                }else{
-                    $(nextRecSelector).css('display', 'none');
+                if (r.length > it+3) {
+                    $(nextRecSelector).removeAttr('disabled');
+                } else {
+                    $(nextRecSelector).attr('disabled', true);
                 }
             };
             showBtn();
@@ -89,10 +89,10 @@
                     r = $.merge(r.slice(0, it+curseq),r.slice(it+curseq+1,r.length));
                     it = it < r.length ? it : (r.length > 3 ? r.length-3 : 0);
                     d = r.slice(it, it+3);
-                    if (d.length > 0){
+                    if (d.length > 0) {
                         renderRecommendation(d);
                         showBtn();
-                    }else{
+                    } else {
                         $(nextRecSelector).css('display', 'none');
                         $(prevRecSelector).css('display', 'none');
                     }
