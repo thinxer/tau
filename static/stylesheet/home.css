@@ -30,11 +30,6 @@
     display: block;
 }
 
-#home>.content .timeline, .recommendation_list {
-    list-style-type: none;
-    padding: 0px;
-}
-
 #home>.content .timeline>.item {
     margin-top: 10px;
 }

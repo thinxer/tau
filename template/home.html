@@ -23,7 +23,18 @@ $def with(version="")
             <button class="pub_btn"> _('share') </button>
             <div class="clear"></div>
         </div>
-        <div class="timeline_wrapper"></div>
+        <div id="streamtabs">
+            <ol class="tabbar">
+                <li class="tabtitle" data-name="timeline" data-for="timeline_wrapper">
+                    <a href="#home/timeline">_('timeline')</a>
+                </li>
+                <li class="tabtitle" data-name="mentions" data-for="emntions_wrapper">
+                    <a href="#home/mentions">_('mentions')</a>
+                </li>
+            </ol>
+            <div class="tabcontent timeline_wrapper"></div>
+            <div class="tabcontent mentions_wrapper"></div>
+        </div>
     </div>
     <div class="clear"></div>
 </div>

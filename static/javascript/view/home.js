@@ -114,15 +114,36 @@
     };
 
     R.path('home', {
+        loadDeferred: $.Deferred(),
         enter: function() {
             if (!T.checkLogin()) {
                 R.path('public');
             } else {
+                var self = this;
                 T.current_user().success(function(d) {
                     cur_user = d;
-                    U.render('home', d).fillTo('#main').done(start);
+                    U.render('home', d)
+                        .fillTo('#main')
+                        .done(start)
+                        .done(self.loadDeferred.resolve);
                 });
             }
+        },
+        change: function(path, oldPath, level) {
+            this.loadDeferred.done(function() {
+                var target = path[1] || 'timeline';
+
+                // TODO The following tab switch logic can be abstracted.
+                var container = $('#streamtabs');
+                var tabbar = container.children('.tabbar');
+
+                tabbar.children('.tabtitle').removeClass('target');
+                container.children('.tabcontent').hide();
+
+                var title = tabbar.find('.tabtitle[data-name=' + target + ']');
+                title.addClass('target');
+                container.children('.tabcontent.' + title.data('for')).show();
+            });
         },
         leave: end
     });

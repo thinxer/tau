@@ -233,4 +233,18 @@ body>.flash:hover .close {
     height: 100px;
 }
 
+.tabbar {
+    padding: 5px 10px 0;
+    background-color: #eee;
+}
+
+.tabbar .tabtitle {
+    display: inline-block;
+    padding: 4px;
+}
+
+.tabbar .tabtitle.target {
+    background-color: white;
+}
+
 /* vim: set et ts=4 sw=4 tw=0 :*/
