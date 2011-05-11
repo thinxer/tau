@@ -311,4 +311,44 @@
 
 })('U', jQuery);
 
+/**
+ * simple tabs.
+ */
+(function(name, $) {
+    var ui = window[name] = window[name] || {};
+
+    ui.Tabs = function(container) {
+        this.container = $(container);
+        this.tabbar = this.container.children('.tabbar');
+    };
+
+    $.extend(ui.Tabs.prototype, {
+        /**
+         * change current tab or bind change handler
+         */
+        change: function(fn) {
+            if (typeof(fn) === 'string') {
+                var old = this.tabbar.children('.tabtitle.target').data('name');
+                var target = fn;
+
+                this.tabbar.children('.tabtitle').removeClass('target');
+                this.container.children('.tabcontent').hide();
+
+                var title = this.tabbar.find('.tabtitle[data-name=' + target + ']');
+                title.addClass('target');
+                this.container.children('.tabcontent.' + title.data('for')).show();
+
+                this.container.trigger('tau-tab-change', [target, old]);
+            } else {
+                this.container.bind('tau-tab-change', fn);
+            }
+        }
+    });
+
+    ui.tabs = function(container) {
+        return new ui.Tabs(container);
+    };
+
+})('U', jQuery);
+
 // vim: set et ts=4 sw=4 tw=0 :

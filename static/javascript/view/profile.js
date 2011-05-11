@@ -51,16 +51,7 @@
 
             loadDeferred.done(function() {
                 var target = path[2] || 'timeline';
-
-                var container = $('#profiletabs');
-                var tabbar = container.children('.tabbar');
-
-                tabbar.children('.tabtitle').removeClass('target');
-                container.children('.tabcontent').hide();
-
-                var title = tabbar.find('.tabtitle[data-name=' + target + ']');
-                title.addClass('target');
-                container.children('.tabcontent.' + title.data('for')).show();
+                U.tabs('#profiletabs').change(target);
             });
         },
         leave: function(){

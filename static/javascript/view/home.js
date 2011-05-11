@@ -138,17 +138,7 @@
         change: function(path, oldPath, level) {
             this.loadDeferred.done(function() {
                 var target = path[1] || 'timeline';
-
-                // TODO The following tab switch logic can be abstracted.
-                var container = $('#streamtabs');
-                var tabbar = container.children('.tabbar');
-
-                tabbar.children('.tabtitle').removeClass('target');
-                container.children('.tabcontent').hide();
-
-                var title = tabbar.find('.tabtitle[data-name=' + target + ']');
-                title.addClass('target');
-                container.children('.tabcontent.' + title.data('for')).show();
+                U.tabs('#streamtabs').change(target);
             });
         },
         leave: end
