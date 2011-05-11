@@ -26,12 +26,20 @@
 
         var defaults = {
             scroll_margin: 20,
-            listen_scroll: true
+            listen_scroll: true,
+            auto_fresh: true
         };
 
         $.extend(this, defaults, class_option);
 
         this.update();
+    };
+
+    PostStream.prototype.onScroll = function(dir) {
+        if (!dir) dir = 'bottom';
+        if (dir == 'bottom') {
+            this.update('older');
+        }
     };
 
     PostStream.prototype.showBanner = function(who, display) {
@@ -62,7 +70,10 @@
      *                       there are newer post
      */
     PostStream.prototype.update = function(when, imm){
-        if (this.updating) return;
+        // TODO: once the code in this function cause an exception, TypeError e.g., updating will always be true, and global try catch does not work. should fix this later.
+        if (this.updating) {
+            return;
+        }
         this.updating = true;
         var this_ref = this;
         var p = this.api_option || {};
@@ -70,10 +81,10 @@
             imm = true;
         }
         if (this.list.children().length) {
-            if (when == 'newer'){
-                p.newerThan = +this.list.find('li .timestamp').first().attr('data-timestamp');
+            if (when == 'newer') {
+                p.newerThan = +this.list.find('li .timestamp').first().data('timestamp');
             } else if (when == 'older') {
-                p.olderThan = +this.list.find('li .timestamp').last().attr('data-timestamp');
+                p.olderThan = +this.list.find('li .timestamp').last().data('timestamp');
             }
         }
         if (this.newer_buffer.length) {
@@ -98,10 +109,12 @@
                         user: r.users[e.uid]
                     }));
                 } else if(e.type == 'forward') {
-                    data.push($.extend(e, {
-                        user: r.users[e.parent_message.uid],
-                        content: e.parent_message.content
-                    }));
+                    if (e.parent_message) {
+                        data.push($.extend(e, {
+                            user: r.users[e.parent_message.uid],
+                            content: e.parent_message.content
+                        }));
+                    }
                 } else if (e.type == 'reply') {
                     data.push($.extend(e, {
                         user: r.users[e.uid]
@@ -156,7 +169,7 @@
         $('a.delete', $(this.selector)).live('click', function(e) {
             e.preventDefault();
             var item = $(this).parents('li.item');
-            var msgid = $(item).find('div.content').attr('data-id');
+            var msgid = $(item).find('div.content').data('id');
             U.confirm_dialog(_('Are you sure you want to delete?')).done(function(button){
                 if (button !== 'confirm') return;
                 T.remove({msg_id: msgid}).success(function(r){
@@ -173,7 +186,7 @@
             e.preventDefault();
             var item = $(this).parents('li.item');
             var msg = $(item).find('div.content');
-            var msgid = msg.attr('data-id');
+            var msgid = msg.data('id');
             U.confirm_dialog(_('Are you sure you want to forward this post?')).done(function(button){
                 if (button !== 'confirm') return;
                 T.publish({
@@ -195,7 +208,7 @@
         $('a.reply', $(this.selector)).live('click', function(e) {
             e.preventDefault();
             var item = $(this).parents('li.item');
-            var msgid = item.find('div.content').attr('data-id');
+            var msgid = item.find('div.content').data('id');
             var uid = item.find('.uid').text();
             var dialog = U.compose_dialog(_('add reply'), '@' + uid + ' ');
             dialog.done(function(button) {
@@ -220,9 +233,11 @@
         $('.newer-banner', $(this.container_selector)).click(function(r) {
             this_ref.flush('newer');
         });
-        this.updateNewerInterval = setInterval(function() {
-            this_ref.update('newer', false);
-        }, 3000);
+        if (this.auto_fresh) {
+            this.updateNewerInterval = setInterval(function() {
+                this_ref.update('newer', false);
+            }, 3000);
+        }
         if (this.listen_scroll) {
             $(window).scroll($.proxy(this.handle_scroll, this));
         }
@@ -233,8 +248,10 @@
         $('a.delete', $(this.selector)).die('click');
         $('a.forward', $(this.selector)).die('click');
         $('a.reply', $(this.selector)).die('click');
-        $(window).unbind('scroll', $.proxy(this.handle_scroll, this));
-        if (this.updateNewerInterval) {
+        if (this.listen_scroll) {
+            $(window).unbind('scroll', $.proxy(this.handle_scroll, this));
+        }
+        if (this.auto_fresh && this.updateNewerInterval) {
             clearInterval(this.updateNewerInterval);
         }
         $('head title').text(_('tau'));

@@ -42,7 +42,13 @@
         return true;
     }
 
-    // Register with window.V
+    UserStream.prototype.onScroll = function(dir) {
+        if (!dir) dir = 'bottom';
+        if (dir == 'bottom') {
+            this.load_more();
+        }
+    };
+
     this.U = this.U || {};
     this.U[name] = UserStream;
 })(jQuery, 'UserStream');

@@ -21,9 +21,11 @@
         stream = new U.PostStream('div.timeline_wrapper', {
             uid: cur_uid,
             type: 'user'
+        }, {
+            listen_scroll: false,
+            auto_fresh: false
         });
         stream.start();
-        stream.update();
     }
 
     handler.following = function() {
@@ -39,12 +41,23 @@
         });
     };
 
+    var handle_scroll = function() {
+        if ($(window).scrollTop() > $('#profiletabs').height() +
+                                    $('#profiletabs').position().top -
+                                    $(window).height() - 20) {
+            if (stream && stream.onScroll) {
+                stream.onScroll('bottom');
+            }
+        }
+    };
+
     R.path('u', {
         enter: function(){
             U.PAGE.header.show();
             if (!T.checkLogin()) {
                 R.path('public');
             }
+            $(window).scroll(handle_scroll);
         },
         change: function(path, oldPath, level){
             cur_uid = path[1] || T.checkLogin();
@@ -63,9 +76,10 @@
             });
         },
         leave: function(){
-            if (stream) {
+            if (stream && stream.end) {
                 stream.end();
             }
+            $(window).unbind('scroll');
         }
     });
 
