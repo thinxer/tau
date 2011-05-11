@@ -5,7 +5,14 @@
     var c=C[name]={},u=U[name]={};
 
     var cur_user;   // object
-    var stream;
+    var streams = {};
+    var buttons = {};
+
+    var batchAction = function(array, action, param) {
+        $(array).each(function(i, e) {
+            e[action](param);
+        });
+    }
 
     var setupClick=function(){
         var publish=function(){
@@ -17,7 +24,7 @@
             T.publish({content: v}).success(function(){
                 o.val('');
                 U.success(_('post succeeded') + _('!'), 1000);
-                stream.update('newer');
+                batchAction(streams, 'update', 'newer');
             }).error(function(){
             });
         };
@@ -112,20 +119,6 @@
         });
     };
 
-    var handler = {};
-
-    handler.timeline = function() {
-        stream = new U.PostStream('div.timeline_wrapper');
-        stream.start();
-    };
-
-    handler.mentions = function() {
-        stream = new U.PostStream('div.mentions_wrapper', {
-            type: 'mentions',
-            uid: cur_user.uid
-        });
-        stream.start();
-    };
 
     start = function(curuser){
         U.PAGE.header.show();
@@ -135,9 +128,7 @@
 
     end = function(){
         $('.recommendation_list a').die('click');
-        if (stream && stream.end) {
-            stream.end();
-        }
+        batchAction(streams, 'end');
     };
 
     R.path('home', {
@@ -159,12 +150,31 @@
         },
         change: function(path, oldPath, level) {
             this.loadDeferred.done(function() {
-                if (stream && stream.end) {
-                    stream.end();
-                }
                 var target = path[1] || 'timeline';
+                
+                if (level < 1) {
+                    $('timeline mentions'.split(' ')).each(function(i, e) {
+                        buttons[e] = new U.AutoLoadButton(
+                            '.' + e + '_wrapper',
+                            function() {
+                                return streams[e].update('older');
+                            }
+                        );
+                        var opt = e == 'mentions' ? {
+                            type: e,
+                            uid: cur_user.uid
+                        } : null;
+                        streams[e] = new U.PostStream('div.' + e + '_wrapper', opt);
+                        streams[e].start();
+                    });
+                }
+                $.each(buttons, function(i, e) {
+                    e.active(false);
+                });
+
+                buttons[target].active(true);
+
                 U.tabs('#streamtabs').change(target);
-                handler[target]();
             });
         },
         leave: end

@@ -12,14 +12,17 @@
         newer_banner.html(banner_text);
         newer_banner.prependTo(this.box);
 
+        this.random_mark = Math.random();
+
         this.list = $('<ul/>').addClass('timeline');
+        this.list.data('mark', this.random_mark);
         this.list.appendTo(this.box);
         $(target).html(this.box);
 
         this.updating = false;
         this.api_option = api_option;
         this.container_selector = '.timeline-box';
-        this.selector = 'ul.timeline';
+        this.selector = target + ' ul.timeline';
         this.started = false;
         this.newer_buffer = [];
 
@@ -34,24 +37,12 @@
 
         $.extend(this, defaults, class_option);
 
-        this.update();
-    };
-
-    PostStream.prototype.onScroll = function(dir) {
-        if (!dir) dir = 'bottom';
-        if (dir == 'bottom') {
-            this.update('older');
-        }
+        this.hasmore = true;    // only for older, not for newer
     };
 
     PostStream.prototype.showBanner = function(who, display) {
         if (arguments.length < 2) display = 'block';
         this.box.find('.' + who + '-banner').css('display', display);
-        if (display == 'block') {
-            $('head title').text(_('tau') + ' (' + this.newer_buffer.length + ')');
-        } else {
-            $('head title').text(_('tau'));
-        }
     }
 
     PostStream.prototype.flush = function(who) {
@@ -71,12 +62,12 @@
      * @param {boolean} imm, update immediately or just show a banner to let the user know
      *                       there are newer post
      */
-    PostStream.prototype.update = function(when, imm){
-        // TODO: once the code in this function cause an exception, TypeError e.g., updating will always be true, and global try catch does not work. should fix this later.
+    PostStream.prototype.update = function(when, imm) {
         if (this.updating) {
             return;
         }
         this.updating = true;
+        var deferred = $.Deferred();
         var this_ref = this;
         var p = this.api_option || {};
         if (arguments.length < 2) {
@@ -94,72 +85,87 @@
                 p.newerThan = this.newer_buffer[0].timestamp;
             }
         }
-        if (when == 'older' && !this.list.children().last().hasClass('has-more')) {
-            this.updating = false;
-            return;
-        }
-        return T.stream(p).success(function(r){
-            var data = [];
-            $.extend(this_ref.users, r.users);
+        if (when == 'older' && !this.hasmore) {
+            deferred.resolve(false);
+        } else {
+            T.stream(p).success(function(r){
+                var data = [];
+                $.extend(this_ref.users, r.users);
+                if (when == 'older') {
+                    this_ref.hasmore = r.has_more;
+                }
 
-            $(r.items).each(function(i, e){
-                var o = {};
-                o[e.id] = e;
-                $.extend(this_ref.data, o);
+                $(r.items).each(function(i, e){
+                    var o = {};
+                    o[e.id] = e;
+                    $.extend(this_ref.data, o);
 
-                var isCurUser = T.checkLogin() == e.uid;
-                o = {
-                    content: e.type == 'normal' || e.type == 'reply' ? 
-                             H.formatEntities(e.content, e.entities) : 
-                             H.formatEntities(e.parent_message.content, e.parent_message.entities),
-                    showDelete: isCurUser,
-                    showForward: !isCurUser,
-                    showReply: !isCurUser,
-                    type: e.type,
-                    id: e.id,
-                    uid: e.uid,
-                    creator: e.type == 'normal' || e.type == 'reply' ? 
-                             e.uid : 
-                             e.parent_message.uid,
-                    timestamp: e.timestamp,
-                    photo: e.type == 'normal' || e.type == 'reply' ? 
-                           this_ref.users[e.uid].photo : 
-                           this_ref.users[e.parent_message.uid].photo
-                };
-                data.push(o);
-            });
-            if (imm) {
-                var o = U.render('stream_item', data);
-                if (when == 'newer') {
-                    this_ref.flush('newer');
-                    o.prependTo(this_ref.list);
-                } else if(when == 'older'){
-                    o.appendTo(this_ref.list);
+                    var isCurUser = T.checkLogin() == e.uid;
+                    if (e.type == 'forward' && !e.parent_message) {
+                        return;
+                    }
+                    o = {
+                        content: e.type == 'normal' || e.type == 'reply' ? 
+                                 H.formatEntities(e.content, e.entities) : 
+                                 H.formatEntities(e.parent_message.content, e.parent_message.entities),
+                        showDelete: isCurUser,
+                        showForward: !isCurUser,
+                        showReply: !isCurUser,
+                        type: e.type,
+                        id: e.id,
+                        uid: e.uid,
+                        creator: e.type == 'normal' || e.type == 'reply' ? 
+                                 e.uid : 
+                                 e.parent_message.uid,
+                        timestamp: e.timestamp,
+                        photo: e.type == 'normal' || e.type == 'reply' ? 
+                               this_ref.users[e.uid].photo : 
+                               this_ref.users[e.parent_message.uid].photo
+                    };
+                    data.push(o);
+                });
+                if (imm) {
+                    var o = U.render('stream_item', data);
+                    if (when == 'newer') {
+                        this_ref.flush('newer');
+                        o.prependTo(this_ref.list);
+                    } else if (when == 'older'){
+                        o.appendTo(this_ref.list);
+                    } else {
+                        o.fillTo(this_ref.list);
+                    }
+                    o.done(function(t) {
+                        if (r.has_more) {
+                            t.last().addClass('has-more');
+                        }
+                    });
+                    o.then(function() {
+                        deferred.resolve(this_ref.hasmore);
+                    });
                 } else {
-                    o.fillTo(this_ref.list);
-                }
-                o.done(function(t) {
-                    if (r.has_more) {
-                        t.last().addClass('has-more');
+                    if (when == 'newer') {
+                        this_ref.newer_buffer = $.merge(data, this_ref.newer_buffer);
+                        if (this_ref.newer_buffer.length > 0) {
+                            this_ref.showBanner('newer');
+                        }
+                    } else if (when == 'older') {
+                        //$.merge(this_ref.older_buffer, data); // older buffer currently not used
                     }
-                });
-                o.then(function(){
-                    this_ref.updating = false;
-                });
-            } else {
-                if (when == 'newer') {
-                    this_ref.newer_buffer = $.merge(data, this_ref.newer_buffer);
-                    if (this_ref.newer_buffer.length > 0) {
-                        this_ref.showBanner('newer');
-                    }
-                } else if (when == 'older') {
-                    //$.merge(this_ref.older_buffer, data); // older buffer currently not used
+                    deferred.resolve(this_ref.hasmore);
                 }
-                this_ref.updating = false;
-            }
-        }).error(function(r) {
+            }).error(function() {
+                deferred.resolve(false);
+            });
+        }
+        deferred.then(function() {
             this_ref.updating = false;
+            if (this_ref.auto_fresh && this_ref.random_mark == $(this_ref.selector).data('mark')) {
+                setTimeout(function() {
+                    this_ref.update('newer', false);
+                }, 3000);
+            }
         });
+        return deferred;
     };
 
     PostStream.prototype.handle_scroll = function() {
@@ -245,11 +251,6 @@
         $('.newer-banner', $(this.container_selector)).click(function(r) {
             this_ref.flush('newer');
         });
-        if (this.auto_fresh) {
-            this.updateNewerInterval = setInterval(function() {
-                this_ref.update('newer', false);
-            }, 3000);
-        }
         if (this.listen_scroll) {
             $(window).scroll($.proxy(this.handle_scroll, this));
         }
@@ -263,10 +264,6 @@
         if (this.listen_scroll) {
             $(window).unbind('scroll', $.proxy(this.handle_scroll, this));
         }
-        if (this.auto_fresh && this.updateNewerInterval) {
-            clearInterval(this.updateNewerInterval);
-        }
-        $('head title').text(_('tau'));
     };
 
     U[name] = PostStream;
