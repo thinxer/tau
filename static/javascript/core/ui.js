@@ -328,7 +328,7 @@
          */
         change: function(fn) {
             if (typeof(fn) === 'string') {
-                var old = this.tabbar.children('.tabtitle.target').data('name');
+                var old = this.current();
                 var target = fn;
 
                 this.tabbar.children('.tabtitle').removeClass('target');
@@ -342,6 +342,12 @@
             } else {
                 this.container.bind('tau-tab-change', fn);
             }
+        },
+        /**
+         * get current tab name
+         */
+        current: function() {
+            return this.tabbar.children('.tabtitle.target').data('name');
         }
     });
 
