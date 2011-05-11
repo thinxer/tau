@@ -225,6 +225,7 @@ def stream(uuid, olderThan = None, newerThan = None, uid = None, list_id = None,
                 '$or': [following_query, mention_query]
                 }
     elif type == 'mentions':
+        u = get_user(uuid)
         query = {
                 'entities.mentions.mention': '@' + u['uid']
                 }
