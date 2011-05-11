@@ -27,6 +27,8 @@ bundles:
             - javascript/view/home.js
             - javascript/view/profile.js
             - javascript/view/settings.js
+            - javascript/view/search_stream.js
+            - javascript/view/search.js
             - javascript/view/debug.js
     css_all:
         filters: url_version, cssmin
@@ -38,6 +40,7 @@ bundles:
             - stylesheet/home.css
             - stylesheet/profile.css
             - stylesheet/settings.css
+            - stylesheet/search.css
             - stylesheet/userstream.css
             - stylesheet/poststream.css
             - stylesheet/autoloadbutton.css

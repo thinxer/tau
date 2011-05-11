@@ -71,3 +71,7 @@
     border: solid 1px grey;
     cursor: default;
 }
+
+.search {
+    margin: 20px 0px;
+}

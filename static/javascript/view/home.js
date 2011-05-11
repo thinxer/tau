@@ -27,6 +27,10 @@
                 publish();
             }
         });
+        $('#main .search button').click(function() {
+            var p = $('#main .search input').val();
+            R.path('search/search_stream/'+p);
+        });
     };
 
     var nextRecSelector = 'div.user_recommendation .next';
