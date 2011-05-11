@@ -1,0 +1,18 @@
+.autoloadbutton {
+    text-align: center;
+    padding: 20px;
+    margin: 0 auto;
+}
+
+.autoloadbutton.hasmore:hover {
+    background-color: #eee;
+    cursor: pointer;
+}
+
+.autoloadbutton.nomore {
+    color: #aaa;
+}
+
+.autoloadbutton .loading {
+    display: none;
+}

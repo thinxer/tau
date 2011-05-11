@@ -2,7 +2,12 @@
 }
 
 .userstream li {
-    border-top: solid 1px grey;
+    border-top: solid 1px #eee;
+    padding: 5px;
+}
+
+.userstream li:first-child {
+    border-top: none;
 }
 
 .userstream li .photo {

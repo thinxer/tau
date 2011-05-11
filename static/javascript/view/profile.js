@@ -2,53 +2,54 @@
 // path ~ tau/#u/ztrix
 
 (function(name, $){
-    var K = window.K = window.K || {}, C = window.C = window.C || {};
-    var c = C[name] = {}, u = U[name] = {};
-
-    var cur_uid;
-    var stream;
     var loadDeferred;
 
-    var handler = {};
+    var streams = {};
+    var buttons = {};
 
     var load_profile = function() {
+        var cur_uid = R.path()[1] || T.checkLogin();
         T.userinfo({uid: cur_uid}).success(function(d) {
-            U.render('profile', d, {}).fillTo('#main').done(loadDeferred.resolve);
-        });
-    };
+            U.render('profile', d).fillTo('#main').done(function(t) {
+                streams['timeline'] = new U.PostStream('div.timeline_wrapper', {
+                    uid: cur_uid,
+                    type: 'user'
+                }, {
+                    listen_scroll: false,
+                    auto_fresh: false
+                });
 
-    handler.timeline = function() {
-        stream = new U.PostStream('div.timeline_wrapper', {
-            uid: cur_uid,
-            type: 'user'
-        }, {
-            listen_scroll: false,
-            auto_fresh: false
-        });
-        stream.start();
-    }
+                streams['following'] = new U.UserStream('div.following_wrapper', {
+                    uid: cur_uid,
+                    type: 'following'
+                });
 
-    handler.following = function() {
-        stream = new U.UserStream('div.following_wrapper', {
-            uid: cur_uid
-        });
-    };
+                streams['follower'] = new U.UserStream('div.follower_wrapper', {
+                    uid: cur_uid,
+                    type: 'follower'
+                });
 
-    handler.follower = function() {
-        stream = new U.UserStream('div.follower_wrapper', {
-            uid: cur_uid,
-            type: 'follower'
-        });
-    };
+                buttons['timeline'] = new U.AutoLoadButton(
+                    '.timeline_wrapper',
+                    function() {
+                        return streams['timeline'].update('older');
+                    }
+                );
+                buttons['following'] = new U.AutoLoadButton(
+                    '.following_wrapper',
+                    function() {
+                        return streams['following'].load_more();
+                    }
+                );
+                buttons['follower'] = new U.AutoLoadButton(
+                    '.follower_wrapper',
+                    function() {
+                        return streams['follower'].load_more();
+                    }
+                );
 
-    var handle_scroll = function() {
-        if ($(window).scrollTop() > $('#profiletabs').height() +
-                                    $('#profiletabs').position().top -
-                                    $(window).height() - 20) {
-            if (stream && stream.onScroll) {
-                stream.onScroll('bottom');
-            }
-        }
+            }).done(loadDeferred.resolve);
+        });
     };
 
     R.path('u', {
@@ -57,11 +58,9 @@
             if (!T.checkLogin()) {
                 R.path('public');
             }
-            $(window).scroll(handle_scroll);
         },
         change: function(path, oldPath, level){
-            cur_uid = path[1] || T.checkLogin();
-            if (!cur_uid) {
+            if (!path[1]) {
                 R.path('home');
             }
 
@@ -70,22 +69,16 @@
                 load_profile();
             }
 
-            // unbind live
-            if (stream && stream.end) {
-                stream.end();
-            }
-
             loadDeferred.done(function() {
                 var target = path[2] || 'timeline';
-                handler[target]();
+                $.each(buttons, function(key, button) {
+                    button.active(false);
+                });
+                buttons[target].active(true);
                 U.tabs('#profiletabs').change(target);
             });
         },
         leave: function(){
-            if (stream && stream.end) {
-                stream.end();
-            }
-            $(window).unbind('scroll', handle_scroll);
         }
     });
 

@@ -13,9 +13,6 @@
 
         this.list = $('<ul/>').addClass('userstream');
         $(target).html(this.list);
-
-        this.load_more();
-
     };
 
     var response_handler = function(d) {
@@ -25,29 +22,24 @@
     };
 
     UserStream.prototype.load_more = function() {
-        if (!this.has_more) return false;
+        if (!this.has_more)
+            return $.Deferred().resolve(false);
 
+        var req;
         if (this.type === 'follower') {
-            T.get_follower({
+            req = T.get_follower({
                 uid: this.uid,
                 skip: this.skip
-            }).success($.proxy(response_handler, this));
+            });
         } else if (this.type === 'following') {
-            T.get_following({
+            req = T.get_following({
                 uid: this.uid,
                 skip: this.skip
-            }).success($.proxy(response_handler, this));
+            });
         }
 
-        return true;
+        return req.success($.proxy(response_handler, this))
     }
-
-    UserStream.prototype.onScroll = function(dir) {
-        if (!dir) dir = 'bottom';
-        if (dir == 'bottom') {
-            this.load_more();
-        }
-    };
 
     this.U = this.U || {};
     this.U[name] = UserStream;
