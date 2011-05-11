@@ -43,6 +43,6 @@
     }
 
     // Register with window.V
-    this.V = this.V || {};
-    this.V[name] = UserStream;
+    this.U = this.U || {};
+    this.U[name] = UserStream;
 })(jQuery, 'UserStream');
