@@ -7,7 +7,17 @@
 }
 
 .timeline>.item {
-    margin-top: 10px;
+    padding: 5px;
+    -webkit-transition: background-color 0.1s linear;
+    border-top: solid 1px #eee;
+}
+
+.timeline>.item:first-child {
+    border-top: none;
+}
+
+.timeline>.item:hover {
+    background-color: #f3f3f3;
 }
 
 .timeline>.item .photo {
@@ -31,9 +41,23 @@
     color: #444;
 }
 
-.timeline>.item .timestamp {
-    margin-top: 4px;
+.timeline>.item .timestamp,
+.timeline>.item .delete,
+.timeline>.item .forward,
+.timeline>.item .reply {
     font-size: 12px;
+}
+
+.timeline>.item .delete,
+.timeline>.item .forward,
+.timeline>.item .reply {
+    display: none;
+}
+
+.timeline>.item:hover .delete,
+.timeline>.item:hover .forward,
+.timeline>.item:hover .reply {
+    display: inline;
 }
 
 .timeline-box .newer-banner {

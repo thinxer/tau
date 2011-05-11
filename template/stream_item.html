@@ -11,18 +11,18 @@ $def with(version="")
         </span>
         {{/if}}
         <div class="content" data-id="$${id}">{{html content}}</div>
-        <div class="timestamp" data-timestamp="$${timestamp}">
+        <span class="timestamp" data-timestamp="$${timestamp}">
             {{= _.getReadableDate(timestamp)}}
-        </div>
+        </span>
+        {{if showDelete}}
+        <a href="javascript:;" class="delete">_('delete')</a>
+        {{/if}}
+        {{if showForward}}
+        <a href="javascript:;" class="forward">_('forward')</a>
+        {{/if}}
+        {{if showReply}}
+        <a href="javascript:;" class="reply">_('reply')</a>
+        {{/if}}
     </div>
-    {{if showDelete}}
-    <a href="javascript:;" class="delete">_('delete')</a>
-    {{/if}}
-    {{if showForward}}
-    <a href="javascript:;" class="forward">_('forward')</a>
-    {{/if}}
-    {{if showReply}}
-    <a href="javascript:;" class="reply">_('reply')</a>
-    {{/if}}
     <div class="clear"></div>
 </li>
