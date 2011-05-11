@@ -22,7 +22,9 @@
         this.selector = 'ul.timeline';
         this.started = false;
         this.newer_buffer = [];
-        this.older_buffer = [];
+
+        this.data = {};
+        this.users = {};
 
         var defaults = {
             scroll_margin: 20,
@@ -98,28 +100,33 @@
         }
         return T.stream(p).success(function(r){
             var data = [];
+            $.extend(this_ref.users, r.users);
+
             $(r.items).each(function(i, e){
-                e.content = H.formatEntities(e.content, e.entities);
+                var o = {};
+                o[e.id] = e;
+                $.extend(this_ref.data, o);
+
                 var isCurUser = T.checkLogin() == e.uid;
-                e.showDelete = isCurUser;
-                e.showForward = !isCurUser;
-                e.showReply = !isCurUser;
-                if (e.type == 'normal') {
-                    data.push($.extend(e, {
-                        user: r.users[e.uid]
-                    }));
-                } else if(e.type == 'forward') {
-                    if (e.parent_message) {
-                        data.push($.extend(e, {
-                            user: r.users[e.parent_message.uid],
-                            content: e.parent_message.content
-                        }));
-                    }
-                } else if (e.type == 'reply') {
-                    data.push($.extend(e, {
-                        user: r.users[e.uid]
-                    }));
-                }
+                o = {
+                    content: e.type == 'normal' || e.type == 'reply' ? 
+                             H.formatEntities(e.content, e.entities) : 
+                             H.formatEntities(e.parent_message.content, e.parent_message.entities),
+                    showDelete: isCurUser,
+                    showForward: !isCurUser,
+                    showReply: !isCurUser,
+                    type: e.type,
+                    id: e.id,
+                    uid: e.uid,
+                    creator: e.type == 'normal' || e.type == 'reply' ? 
+                             e.uid : 
+                             e.parent_message.uid,
+                    timestamp: e.timestamp,
+                    photo: e.type == 'normal' || e.type == 'reply' ? 
+                           this_ref.users[e.uid].photo : 
+                           this_ref.users[e.parent_message.uid].photo
+                };
+                data.push(o);
             });
             if (imm) {
                 var o = U.render('stream_item', data);
@@ -169,7 +176,7 @@
         $('a.delete', $(this.selector)).live('click', function(e) {
             e.preventDefault();
             var item = $(this).parents('li.item');
-            var msgid = $(item).find('div.content').data('id');
+            var msgid = $(item).data('id');
             U.confirm_dialog(_('Are you sure you want to delete?')).done(function(button){
                 if (button !== 'confirm') return;
                 T.remove({msg_id: msgid}).success(function(r){
@@ -185,9 +192,14 @@
         $('a.forward', $(this.selector)).live('click', function(e) {
             e.preventDefault();
             var item = $(this).parents('li.item');
-            var msg = $(item).find('div.content');
-            var msgid = msg.data('id');
-            U.confirm_dialog(_('Are you sure you want to forward this post?')).done(function(button){
+            var msgid = item.data('id');
+            var data_item = this_ref.data[msgid];
+            var content = data_item.content;
+            if (data_item.type == 'forward') {
+                content = data_item.parent_message.content;
+                msgid = data_item.parent_message.id;
+            }
+            U.confirm_dialog(_('Are you sure you want to forward this post?'), content).done(function(button){
                 if (button !== 'confirm') return;
                 T.publish({
                     content: '',
@@ -208,8 +220,8 @@
         $('a.reply', $(this.selector)).live('click', function(e) {
             e.preventDefault();
             var item = $(this).parents('li.item');
-            var msgid = item.find('div.content').data('id');
-            var uid = item.find('.uid').text();
+            var msgid = item.data('id');
+            var uid = this_ref.data[msgid].uid;
             var dialog = U.compose_dialog(_('add reply'), '@' + uid + ' ');
             dialog.done(function(button) {
                 if (button === 'publish') {

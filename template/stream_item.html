@@ -1,17 +1,17 @@
 $def with(version="")
-<li class="item">
-    <a href="#u/$${user.uid}" class="photo">
-        <img src="$${user.photo}" />
+<li class="item" data-id="{{= id}}">
+    <a href="#u/{{= creator}}" class="photo">
+        <img src="{{= photo}}" />
     </a>
     <div class="container">
-        <a class="uid" href="#u/$${uid}">$${uid}</a>
+        <a class="uid" href="#u/{{= uid}}">{{= uid}}</a>
         {{if type=='forward'}}
         <span>_('forwarded from')
-            <a href="#u/$${user.uid}">$${user.uid}</a>
+            <a href="#u/{{= creator}}">{{= creator}}</a>
         </span>
         {{/if}}
-        <div class="content" data-id="$${id}">{{html content}}</div>
-        <span class="timestamp" data-timestamp="$${timestamp}">
+        <div class="content">{{html content}}</div>
+        <span class="timestamp" data-timestamp="{{= timestamp}}">
             {{= _.getReadableDate(timestamp)}}
         </span>
         {{if showDelete}}
