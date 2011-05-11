@@ -42,7 +42,9 @@
             d.seq = i;
         });
         if (d.length > 0) {
-            U.render('recommendation_item', d).fillTo('.recommendation_list');
+            U.render('recommendation_item', d).fillTo('.recommendation_list').done(function(t) {
+                U.FollowButton(t.find('.follow-button'));
+            });
             $('.user_recommendation').css('display', 'block');
         } else {
             $('.recommendation_list').children().remove();

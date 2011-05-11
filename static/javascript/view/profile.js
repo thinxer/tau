@@ -11,6 +11,7 @@
         var cur_uid = R.path()[1] || T.checkLogin();
         T.userinfo({uid: cur_uid}).success(function(d) {
             U.render('profile', d).fillTo('#main').done(function(t) {
+                U.FollowButton(t.find('.follow-button'))
                 streams['timeline'] = new U.PostStream('div.timeline_wrapper', {
                     uid: cur_uid,
                     type: 'user'

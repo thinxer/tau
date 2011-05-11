@@ -3,7 +3,7 @@ $def with(version="")
     <div class="photo">
         <img src="$${photo}">
     </div>
-    <div class="button follow_button" data-uid="$${uid}">_("follow")</div>
+    <div class="button follow-button" data-uid="{{= uid}}" data-isfollowing="{{= isfollowing}}"></div>
     <a href="#u/$${uid}">$${uid}</a>
     <span class="name">$${name}</span>
     <span class="following_number">_("following number"): $${following}</span>

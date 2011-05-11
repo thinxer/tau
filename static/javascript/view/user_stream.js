@@ -18,7 +18,9 @@
     var response_handler = function(d) {
         this.has_more = d.has_more;
         this.skip += d.items.length;
-        U.render('userstream_item', d.items).appendTo(this.list);
+        U.render('userstream_item', d.items).appendTo(this.list).done(function(t) {
+            U.FollowButton(t.find('.follow-button'));
+        });
     };
 
     UserStream.prototype.load_more = function() {

@@ -247,4 +247,45 @@ body>.flash:hover .close {
     background-color: white;
 }
 
+.button {
+    display: inline-block;
+    padding: 5px;
+    cursor: pointer;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -o-border-radius: 5px;
+    border-radius: 5px;
+}
+
+.button.follow-button {
+    background-color: grey;
+    width: 80px;
+    text-align: center;
+}
+
+.button.tiny {
+    display: inline !important;
+    background: transparent !important;
+    color: inherit !important;
+}
+
+.button.follow-button.following {
+    background-color: green;
+    color: white;
+}
+
+.button.follow-button.following:hover {
+    background-color: red;
+    color: white;
+}
+
+.button.follow-button.notfollowing {
+    background-color: grey;
+}
+
+.button.follow-button.notfollowing:hover {
+    background-color: green;
+    color: white;
+}
+
 /* vim: set et ts=4 sw=4 tw=0 :*/

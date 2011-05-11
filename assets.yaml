@@ -19,6 +19,7 @@ bundles:
             - javascript/core/router.js
             - javascript/core/ui.js
             - javascript/helper/format_entities.js
+            - javascript/view/followbutton.js
             - javascript/view/autoloadbutton.js
             - javascript/view/user_stream.js
             - javascript/view/page.js
