@@ -120,12 +120,13 @@
     };
 
     R.path('home', {
-        loadDeferred: $.Deferred(),
+        loadDeferred: null,
         enter: function() {
             if (!T.checkLogin()) {
                 R.path('public');
             } else {
                 var self = this;
+                self.loadDeferred = $.Deferred();
                 T.current_user().success(function(d) {
                     cur_user = d;
                     U.render('home', d)
