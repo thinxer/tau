@@ -7,7 +7,7 @@
 
     var cur_uid;
     var stream;
-    var loadDeferred = $.Deferred();
+    var loadDeferred;
 
     var handler = {};
 
@@ -66,6 +66,7 @@
             }
 
             if (level <= 1) {
+                loadDeferred = $.Deferred();
                 load_profile();
             }
 
@@ -79,7 +80,7 @@
             if (stream && stream.end) {
                 stream.end();
             }
-            $(window).unbind('scroll');
+            $(window).unbind('scroll', handle_scroll);
         }
     });
 
