@@ -77,7 +77,7 @@
 
             loadDeferred.done(function() {
                 var target = path[2] || 'timeline';
-                handler[target]
+                handler[target]();
                 U.tabs('#profiletabs').change(target);
             });
         },
