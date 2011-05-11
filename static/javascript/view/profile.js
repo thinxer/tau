@@ -70,6 +70,11 @@
                 load_profile();
             }
 
+            // unbind live
+            if (stream && stream.end) {
+                stream.end();
+            }
+
             loadDeferred.done(function() {
                 var target = path[2] || 'timeline';
                 handler[target]
