@@ -4,7 +4,7 @@
     var K=window.K=window.K||{},C=window.C=window.C||{};
     var c=C[name]={},u=U[name]={};
 
-    var cur_user;
+    var cur_user;   // object
     var stream;
 
     var setupClick=function(){
@@ -27,7 +27,6 @@
                 publish();
             }
         });
-        stream.start();
     };
 
     var nextRecSelector = 'div.user_recommendation .next';
@@ -107,16 +106,32 @@
         });
     };
 
+    var handler = {};
+
+    handler.timeline = function() {
+        stream = new U.PostStream('div.timeline_wrapper');
+        stream.start();
+    };
+
+    handler.mentions = function() {
+        stream = new U.PostStream('div.mentions_wrapper', {
+            type: 'mentions',
+            uid: cur_user.uid
+        });
+        stream.start();
+    };
+
     start = function(curuser){
         U.PAGE.header.show();
-        stream = new U.PostStream('div.timeline_wrapper');
         setupClick();
         showRecommendation();
     };
 
     end = function(){
         $('.recommendation_list a').die('click');
-        stream.end();
+        if (stream && stream.end) {
+            stream.end();
+        }
     };
 
     R.path('home', {
@@ -138,8 +153,12 @@
         },
         change: function(path, oldPath, level) {
             this.loadDeferred.done(function() {
+                if (stream && stream.end) {
+                    stream.end();
+                }
                 var target = path[1] || 'timeline';
                 U.tabs('#streamtabs').change(target);
+                handler[target]();
             });
         },
         leave: end
