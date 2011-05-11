@@ -225,7 +225,8 @@ class api:
                 'web': (spec.untaint, ''),
                 'following': (len, []),
                 'follower': (len, []),
-                'photo': (spec.untaint, conf.default_photo_uri)
+                'photo': (spec.untaint, conf.default_photo_uri),
+                'isfollowing': (bool, False)
                 },
             'current_user': {
                 'name': (spec.untaint, ''),
@@ -335,6 +336,7 @@ class api:
             u = db.find_user(d.uid)
             if not u:
                 return error.user_not_found()
+            u['isfollowing'] = bson.objectid.ObjectId(uuid) in u['follower']
             return jsond(spec.extract(self.EXTRACT_SPECS['userinfo'], u))
 
         elif action == 'get_following':

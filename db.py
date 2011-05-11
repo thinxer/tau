@@ -134,7 +134,7 @@ def remove(uuid, msg_id):
         # XXX more detailed error messages?
         return error.message_not_found(raw=True)
 
-def _process_messages(cursor):
+def _process_messages(uuid, cursor):
     '''
     This helper method will get around conf.stream_item_max items from cursor.
     '''
@@ -165,6 +165,7 @@ def _process_messages(cursor):
     for uuid in user_set:
         u = get_user(uuid)
         if u:
+            u['isfollowing'] = ObjectId(uuid) in u['follower']
             uuid_dict[uuid] = u
             uid_dict[u['uid']] = u
 
@@ -189,7 +190,7 @@ def _process_messages(cursor):
 
 def get_message(uuid, msg_id):
     c = messages.find({'_id': ObjectId(msg_id)})
-    ret = _process_messages(c)
+    ret = _process_messages(uuid, c)
     if len(ret['items']) == 0:
         return error.message_not_found(raw=True)
     return ret
@@ -258,7 +259,7 @@ def stream(uuid, olderThan = None, newerThan = None, uid = None, list_id = None,
             .sort('timestamp', pymongo.DESCENDING) \
             .batch_size(conf.stream_item_max)
 
-    return _process_messages(c)
+    return _process_messages(uuid, c)
 
 def search(uuid, query=None, newerThan=None, olderThan=None):
     if not conf.enable_search:
@@ -280,7 +281,7 @@ def search(uuid, query=None, newerThan=None, olderThan=None):
         query['timestamp']['$gt'] = newerThan
 
     c = messages.find(query)
-    return _process_messages(c)
+    return _process_messages(uuid, c)
 
 def update_profile(uuid, profile):
     u = users.find_one(ObjectId(uuid))
@@ -307,8 +308,10 @@ def get_following(uuid, uid, skip=0):
     max_index = skip + conf.stream_item_max
     ret = {
             'has_more': max_index < len(u['following']),
-            'items': [get_user(uuid) for uuid in u['following'][skip:max_index]]
+            'items': [get_user(x) for x in u['following'][skip:max_index]]
             }
+    for user in ret['items']:
+        user['isfollowing'] = ObjectId(uuid) in user['follower']
     return ret
 
 def get_follower(uuid, uid, skip=0):
@@ -318,8 +321,10 @@ def get_follower(uuid, uid, skip=0):
     max_index = skip + conf.stream_item_max
     ret = {
             'has_more': max_index < len(u['following']),
-            'items': [get_user(uuid) for uuid in u['follower'][skip:max_index]]
+            'items': [get_user(x) for x in u['follower'][skip:max_index]]
             }
+    for user in ret['items']:
+        user['isfollowing'] = ObjectId(uuid) in user['follower']
     return ret
 
 def recommend_user(uuid):
