@@ -39,6 +39,7 @@
 
         this.hasmore = true;    // only for older, not for newer
         this.start();
+        this.updated_before = false;
     };
 
     PostStream.prototype.showBanner = function(who, display) {
@@ -64,6 +65,7 @@
      *                       there are newer post
      */
     PostStream.prototype.update = function(when, imm) {
+        this.updated_before = true;
         if (this.updating) {
             return;
         }
@@ -81,8 +83,14 @@
                 p.olderThan = +this.list.find('li .timestamp').last().data('timestamp');
             }
         }
-        if (this.newer_buffer.length) {
-            if (when == 'newer') {
+        if (this.newer_buffer.length && when == 'newer') {
+            if (p.newerThan) {
+                if (this.newer_buffer[0].timestamp > p.newerThan) {
+                    p.newerThan = this.newer_buffer[0].timestamp;
+                } else {
+                    this.newer_buffer = [];
+                }
+            } else {
                 p.newerThan = this.newer_buffer[0].timestamp;
             }
         }
@@ -175,9 +183,13 @@
     PostStream.prototype.autofresh = function() {
         var that = this;
         if (this.random_mark == $(this.selector).data('mark')) {
-            this.update('newer', false).then(function() {
-                setTimeout($.proxy(that.autofresh, that), 10000);
-            });
+            if (this.updated_before) {
+                this.update('newer', false).then(function() {
+                    setTimeout($.proxy(that.autofresh, that), 10000);
+                });
+            } else {
+                setTimeout($.proxy(this.autofresh, this), 10000);
+            }
         }
     };
 
