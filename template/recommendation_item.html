@@ -1,13 +1,21 @@
 $def with(version="")
-<li data-seq="$${seq}">
-    <div>
+<li data-seq="{{= seq}}">
+    <img src="{{= photo}}">
+    <div class="desc">
         <div>
-            <img src="$${photo}">
+            <span class="uid">{{= uid}}</span>
+            {{if name}}
+            <span class="name">{{= name}}</span>
+            {{/if}}
+            {{if location}}
+            <span class="loc">{{= location}}</span>
+            {{/if}}
         </div>
-        <div class="desc">
-            <div>$${uid}</div>
-            <div class="button follow-button tiny" data-uid="{{= uid}}" data-isfollowing="{{= isfollowing}}"></div>
+        <div>
+            _('following number'): <span>{{= following}}</span>
+            _('followers number'): <span>{{= follower}}</span>
         </div>
+        <div class="button follow-button tiny" data-uid="{{= uid}}" data-isfollowing="{{= isfollowing}}"></div>
     </div>
 </li>
 

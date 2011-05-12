@@ -20,9 +20,12 @@ $def with(version="")
             <div>_('bio'): {{= bio}} </div>
         </div>
         <div class="user_recommendation">
+            <span>_('recommendation')</span>
+            <div class="prevnext">
+                <button class="prev" disabled>_('prev page')</button>
+                <button class="next" disabled>_('next page')</button>
+            </div>
             <ul class="recommendation_list"> </ul>
-            <button class="prev" disabled>_('prev page')</button>
-            <button class="next" disabled>_('next page')</button>
         </div>
     </div>
     <div class="content">
