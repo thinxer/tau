@@ -34,9 +34,12 @@
                 publish();
             }
         });
-        $('#main .search button').click(function() {
-            var p = $('#main .search input').val();
-            R.path('search/search_stream/'+p);
+        $('#main .searchbox').submit(function(e) {
+            e.preventDefault();
+            var q = $.trim($('#main .searchbox input').val());
+            q = encodeURIComponent(q);
+            if (!q.length) return;
+            R.path(['search', q]);
         });
     };
 

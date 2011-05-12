@@ -2,48 +2,55 @@
 
 (function(name, $) {
     
-    var handler = {};
-    var stream;
+    var stream, button, query;
 
-    handler.search_home = function() {
-
+    var attachEvent = function() {
+        $('#search form.searchbox').submit(function(e) {
+            e.preventDefault();
+            var q = $('#search .searchbox input').val();
+            q = encodeURIComponent($.trim(q));
+            if (!q.length) {
+                return;
+            }
+            R.path(['search', q]);
+        });
     };
 
-    handler.search_stream = function(query) {
-        stream = new U.SearchStream('.search_wrapper', {
+    var setupStream = function() {
+        stream = new U.SearchStream('div.stream_wrapper', {
             query: query
         });
-    };
 
-    handler.search_people = function() {
-
-    };
-
-    var start = function() {
-        $('#search .searchbox button').click(function() {
-            var q = $('#search .searchbox input').val();
-            R.path('search/search_stream/'+q);
-        });
+        button = new U.AutoLoadButton(
+            'div.stream_wrapper',
+            function() {
+                return stream.load_more();
+            }
+        );
     };
 
     R.path('search', {
         loadDeferred: null,
         enter: function() {
-            U.PAGE.header.show();
             if (!T.checkLogin()) {
                 R.path('public');
             } else {
+                U.PAGE.header.show();
                 this.loadDeferred = $.Deferred();
                 U.render('search').fillTo('#main')
+                                  .done(attachEvent)
                                   .done(this.loadDeferred.resolve)
-                                  .done(start);
             }
         },
         change: function(path, oldPath, level) {
             this.loadDeferred.done(function() {
-                var p = path[1] || 'search_home';
-                var q = path[2];
-                handler[p](q);
+                query = path[1];
+                if (!query) {
+                    // TODO: show search home
+                } else {
+                    setupStream();
+                    button.active(true);
+                }
             });
         },
         leave: function() {
