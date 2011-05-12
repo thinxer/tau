@@ -38,6 +38,7 @@
         $.extend(this, defaults, class_option);
 
         this.hasmore = true;    // only for older, not for newer
+        this.start();
     };
 
     PostStream.prototype.showBanner = function(who, display) {
