@@ -63,7 +63,7 @@
         _loadmore: function() {
             if (this.loading || !this.hasmore || !this.handler) return false;
 
-            var d = this.handler();
+            var d = this.handler(),
                 self = this,
                 $st = self.button.find('.status'),
                 $loading = self.button.find('.loading');
