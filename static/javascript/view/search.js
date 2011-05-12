@@ -44,7 +44,7 @@
         },
         change: function(path, oldPath, level) {
             this.loadDeferred.done(function() {
-                query = path[1];
+                query = decodeURIComponent(unescape(path[1]));
                 if (!query) {
                     // TODO: show search home
                 } else {
