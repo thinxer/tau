@@ -30,10 +30,47 @@
     display: block;
 }
 
-#home .userinfo, #home .user_recommendation {
+#home .userinfo, #home .user_recommendation, .searchbox {
     border-bottom: 1px solid #cee1ee;
     padding-bottom: 10px;
     margin-bottom: 10px;
+}
+
+.userinfo .photo {
+    margin-bottom: 20px;
+    margin-right: 10px;
+}
+
+.userinfo .basics {
+    float: left;
+}
+
+.userinfo .uid {
+    font-size: 16px;
+}
+
+.userinfo .follow {
+    float: left;
+    position: relative;
+    left: 20px;
+}
+
+.userinfo .location {
+    position: relative;
+    top: 10px;
+}
+
+.userinfo .uid_name {
+    float: left;
+}
+
+.userinfo .photo {
+    float: left;
+}
+
+.userinfo .follow a {
+    display: block;
+    margin-left: 10px;
 }
 
 .recommendation_list {

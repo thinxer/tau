@@ -9,15 +9,30 @@ $def with(version="")
             <a href="#u/{{= uid}}" class="photo">
                 <img src="{{= photo}}"/>
             </a>
-            <div class="uid">{{= uid}}</div>
-            <div class="name">{{= name}}</div>
-            <div>
-                <a href="#u/{{= uid}}/following">_('following number'): <b>{{= following}}</b></a>
+            <div class="basics">
+                <div class="uid_name_follow">
+                    <a class="uid_name" href="#u/{{= uid}}">
+                        <div class="uid">{{= uid}}</div>
+                        {{if name}}
+                        <div class="name">{{= name}}</div>
+                        {{/if}}
+                    </a>
+                    <div class="follow">
+                        <a href="#u/{{= uid}}/following">_('following number'): <b>{{= following}}</b></a>
+                        <a href="#u/{{= uid}}/follower">_('followers number'): <b>{{= follower}}</b></a>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+                {{if location}}
+                    <div class="location">
+                        _('come from') {{= location}}
+                    </div>
+                {{/if}}
             </div>
-            <div>
-                <a href="#u/{{= uid}}/follower">_('followers number'): <b>{{= follower}}</b></a>
-            </div>
+            <div class="clear"></div>
+            {{if bio}}
             <div>_('bio'): {{= bio}} </div>
+            {{/if}}
         </div>
         <div class="user_recommendation">
             <span>_('recommendation')</span>
