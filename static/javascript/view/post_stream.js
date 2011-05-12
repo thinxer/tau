@@ -259,7 +259,7 @@
             $(window).scroll($.proxy(this.handle_scroll, this));
         }
         if (this.auto_fresh) {
-            this.autofresh();
+            setTimeout($.proxy(this.autofresh, this), 10000);
         }
         this.started = true;
     };
