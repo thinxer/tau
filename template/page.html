@@ -43,4 +43,7 @@ $if not debug and version:
     </div>
 $for file in jsfiles:
     <script type='text/javascript' src='$file'></script>
+<!--[if lte IE 6]>
+    <script type="text/javascript" src="/static/javascript/view/ie6.js"> </script>
+<![endif]-->
 </body>
