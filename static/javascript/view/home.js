@@ -95,39 +95,30 @@
                 showBtn();
                 renderRecommendation(r.slice(it, it+3));
             });
-            $('.recommendation_list a').live('click', function(){
-                var curli = $(this).parents('.recommendation_list>li');
-                var uid = ($(this).siblings('div').text());
-                T.follow({uid: uid}).success(function(){
-                    U.success(_('follow succeeded'));
-                    var curseq = +curli.attr('data-seq');
-                    curli.remove();
-                    r = $.merge(r.slice(0, it+curseq),r.slice(it+curseq+1,r.length));
-                    it = it < r.length ? it : (r.length > 3 ? r.length-3 : 0);
-                    d = r.slice(it, it+3);
-                    if (d.length > 0) {
-                        renderRecommendation(d);
-                        showBtn();
-                    } else {
-                        $(nextRecSelector).css('display', 'none');
-                        $(prevRecSelector).css('display', 'none');
-                    }
-                });
-            });
         }).error(function() {
             renderRecommendation();
         });
     };
 
+    var setupStreams = function() {
+        $('timeline mentions'.split(' ')).each(function(i, e) {
+            var opt = e == 'mentions' ? {
+                type: e,
+                uid: cur_user.uid
+            } : null;
+            streams[e] = new U.PostStream('div.' + e + '_wrapper', opt);
+            streams[e].start();
 
-    start = function(curuser){
-        U.PAGE.header.show();
-        setupClick();
-        showRecommendation();
+            buttons[e] = new U.AutoLoadButton(
+                '.' + e + '_wrapper',
+                function() {
+                    return streams[e].update('older');
+                }
+            );
+        });
     };
 
-    end = function(){
-        $('.recommendation_list a').die('click');
+    var end = function(){
         batchAction(streams, 'end');
     };
 
@@ -137,13 +128,18 @@
             if (!T.checkLogin()) {
                 R.path('public');
             } else {
+                U.PAGE.header.show();
                 var self = this;
                 self.loadDeferred = $.Deferred();
                 T.current_user().success(function(d) {
                     cur_user = d;
                     U.render('home', d)
                         .fillTo('#main')
-                        .done(start)
+                        .done(function() {
+                            setupClick();
+                            showRecommendation();
+                            setupStreams();
+                        })
                         .done(self.loadDeferred.resolve);
                 });
             }
@@ -151,27 +147,10 @@
         change: function(path, oldPath, level) {
             this.loadDeferred.done(function() {
                 var target = path[1] || 'timeline';
-                
-                if (level < 1) {
-                    $('timeline mentions'.split(' ')).each(function(i, e) {
-                        buttons[e] = new U.AutoLoadButton(
-                            '.' + e + '_wrapper',
-                            function() {
-                                return streams[e].update('older');
-                            }
-                        );
-                        var opt = e == 'mentions' ? {
-                            type: e,
-                            uid: cur_user.uid
-                        } : null;
-                        streams[e] = new U.PostStream('div.' + e + '_wrapper', opt);
-                        streams[e].start();
-                    });
-                }
+
                 $.each(buttons, function(i, e) {
                     e.active(false);
                 });
-
                 buttons[target].active(true);
 
                 U.tabs('#streamtabs').change(target);
