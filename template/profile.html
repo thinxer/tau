@@ -1,6 +1,6 @@
 $def with(version="")
 <div id="profile" class="general_box light">
-    <img src="{{= photo}}"/><br/>
+    <img src="{{= photo}}"/>
     <div class="basic_info">
         {{= uid}} <br/>
         {{if location}}
@@ -13,12 +13,13 @@ $def with(version="")
             <span class="web">{{= web}}</span>
         </a>
     </div>
-    <br/>
     <div class="social_info">
-        <a href="#u/{{= uid}}/following">_('following number'): {{= following}}<br/></a>
-        <a href="#u/{{= uid}}/follower">_('followers number'): {{= follower}}<br/></a>
+        <a href="#u/{{= uid}}/following">_('following number'): {{= following}}</a>
+        <br/>
+        <a href="#u/{{= uid}}/follower">_('followers number'): {{= follower}}</a>
+        <br/>
+        <div class="button follow-button" data-uid="{{= uid}}" data-isfollowing="{{= isfollowing}}"></div>
     </div>
-    <div class="button follow-button" data-uid="{{= uid}}" data-isfollowing="{{= isfollowing}}"></div>
     <div class="clear"></div>
     <div id="profiletabs">
             <ol class="tabbar">

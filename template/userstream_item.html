@@ -3,9 +3,9 @@ $def with(version="")
     <div class="photo">
         <img src="{{= photo}}">
     </div>
-    <div class="button follow-button" data-uid="{{= uid}}" data-isfollowing="{{= isfollowing}}"></div>
     <a href="#u/{{= uid}}">{{= uid}}</a>
     <span class="name">{{= name}}</span>
+    <br>
     <span class="following_number">
         <a href="#u/{{= uid}}/following">_("following number"): {{= following}}</a>
     </span>
@@ -13,5 +13,6 @@ $def with(version="")
         <a href="#u/{{= uid}}/follower">_("followers number"): {{= follower}}</a>
     </span>
     <div class="bio">{{= bio}}</div>
+    <div class="button follow-button" data-uid="{{= uid}}" data-isfollowing="{{= isfollowing}}"></div>
     <div class="clear"></div>
 </li>
