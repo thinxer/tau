@@ -55,10 +55,13 @@
 
     R.path('u', {
         enter: function(){
-            U.PAGE.header.show();
             if (!T.checkLogin()) {
                 R.path('public');
+                return false;
+            } else {
+                U.PAGE.header.show();
             }
+            return true;
         },
         change: function(path, oldPath, level){
             if (!path[1]) {

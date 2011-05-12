@@ -130,6 +130,7 @@
         enter: function() {
             if (!T.checkLogin()) {
                 R.path('public');
+                return false;
             } else {
                 U.PAGE.header.show();
                 var self = this;

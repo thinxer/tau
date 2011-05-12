@@ -6,7 +6,10 @@
 
     // Helper method.
     var run = function(obj, fn, args) {
-        if (obj[fn]) obj[fn].apply(obj, args);
+        if (obj[fn]) {
+            return obj[fn].apply(obj, args);
+        }
+        return null;
     };
 
     var c = window[name] = {};
@@ -79,16 +82,20 @@
                 path[level] == c.lastPath[level])
             level ++;
 
+        var enter_rs;
+
         // Change handler when level == 0.
         if (level == 0) {
             if (c.lastHandler) {
                 run(c.lastHandler, 'leave', [c.lastPath]);
             }
-            run(handler, 'enter', []);
+            enter_rs = run(handler, 'enter', []);
         }
 
         // Call change handler.
-        run(handler, 'change', [path, c.lastPath, level]);
+        if (enter_rs !== false) {
+            run(handler, 'change', [path, c.lastPath, level]);
+        }
 
         //Save last path and handler.
         c.lastPath = path;
