@@ -159,11 +159,6 @@
         }
         deferred.then(function() {
             this_ref.updating = false;
-            if (this_ref.auto_fresh && this_ref.random_mark == $(this_ref.selector).data('mark')) {
-                setTimeout(function() {
-                    this_ref.update('newer', false);
-                }, 3000);
-            }
         });
         return deferred;
     };
@@ -176,7 +171,16 @@
         }
     };
 
-    PostStream.prototype.start = function(){
+    PostStream.prototype.autofresh = function() {
+        var that = this;
+        if (this.random_mark == $(this.selector).data('mark')) {
+            this.update('newer', false).then(function() {
+                setTimeout($.proxy(that.autofresh, that), 10000);
+            });
+        }
+    };
+
+    PostStream.prototype.start = function() {
         if (this.started) return;
         var this_ref = this;
         $('a.delete', $(this.selector)).live('click', function(e) {
@@ -253,6 +257,9 @@
         });
         if (this.listen_scroll) {
             $(window).scroll($.proxy(this.handle_scroll, this));
+        }
+        if (this.auto_fresh) {
+            this.autofresh();
         }
         this.started = true;
     };
