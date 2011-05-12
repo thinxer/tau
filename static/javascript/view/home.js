@@ -9,7 +9,7 @@
     var buttons = {};
 
     var batchAction = function(array, action, param) {
-        $(array).each(function(i, e) {
+        $.each(array, function(i, e) {
             e[action](param);
         });
     }
