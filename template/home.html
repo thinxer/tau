@@ -6,14 +6,18 @@ $def with(version="")
             <button type="submit">_('search')</button>
         </form>
         <div class="userinfo">
-            <a href="#u/$${uid}" class="photo">
-                <img src="$${photo}"/>
+            <a href="#u/{{= uid}}" class="photo">
+                <img src="{{= photo}}"/>
             </a>
-            <div class="uid">$${uid}</div>
-            <div class="name">$${name}</div>
-            <div>_('following number'): <b>$${following}</b> </div>
-            <div>_('followers number'): <b>$${follower}</b> </div>
-            <div>_('bio'): $${bio} </div>
+            <div class="uid">{{= uid}}</div>
+            <div class="name">{{= name}}</div>
+            <div>
+                <a href="#u/{{= uid}}/following">_('following number'): <b>{{= following}}</b></a>
+            </div>
+            <div>
+                <a href="#u/{{= uid}}/follower">_('followers number'): <b>{{= follower}}</b></a>
+            </div>
+            <div>_('bio'): {{= bio}} </div>
         </div>
         <div class="user_recommendation">
             <ul class="recommendation_list"> </ul>
