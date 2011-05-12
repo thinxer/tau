@@ -257,16 +257,21 @@ body>.flash:hover .close {
     border-radius: 5px;
 }
 
+.tiny-button {
+    display: inline-block;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+}
+
+.tiny-button:hover {
+    text-decoration: underline;
+}
+
 .button.follow-button {
     background-color: grey;
     width: 80px;
     text-align: center;
-}
-
-.button.tiny {
-    display: inline !important;
-    background: transparent !important;
-    color: inherit !important;
 }
 
 .button.follow-button.following {

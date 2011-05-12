@@ -99,10 +99,9 @@
     float: left;
 }
 
-.recommendation_list .button {
+.recommendation_list .follow-button {
     position: absolute;
     bottom: 0px;
-    width: 50px;
 }
 
 .recommendation_list .desc {
