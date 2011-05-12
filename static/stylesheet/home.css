@@ -115,7 +115,6 @@
 #main .recommendation_list a {
     color: #ffffff;
     position:relative;
-    top:10px;
 }
 
 #main .recommendation_list a:hover {
