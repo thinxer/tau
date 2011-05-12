@@ -3,25 +3,30 @@
  *  requires ui.js.
  */
 
-(function(name){
+(function(name, $){
     var u = U[name] = {};
 
     u.header = {
         show: function() {
-            jQuery('#header').animate({opacity: 1})
+            $('#header').animate({opacity: 1})
                 .find('a').removeAttr('tabindex');
+            if (T.checkLogin()) {
+                $('#header').find('a.mypage').attr('href', '#u/' + T.checkLogin());
+            } else {
+                $('#header').find('a.mypage').attr('href', '#public');
+            }
         },
         hide: function() {
-            jQuery('#header').animate({opacity: 0})
+            $('#header').animate({opacity: 0})
                 .find('a').attr('tabindex', -1);
         }
     };
 
     // Prevent hash anchors from scrolling the page.
-    jQuery('a[href^=\\#]').click(function(e) {
+    $('a[href^=\\#]').click(function(e) {
         e.preventDefault();
         // Set path through our router.
-        R.path(jQuery(this).attr('href').substring(1));
+        R.path($(this).attr('href').substring(1));
         // Quirk to blur this.
         $(this).blur();
     });
@@ -29,7 +34,7 @@
     // Automatically update timestamps on page.
     setInterval(function() {
         $('.timestamp').each(function() {
-            var e = jQuery(this);
+            var e = $(this);
             var timestamp = e.data('timestamp');
             if (timestamp) {
                 e.text(_.getReadableDate(timestamp));
@@ -52,5 +57,5 @@
             R.path('');
         });
     });
-})("PAGE");
+})("PAGE", jQuery);
 
