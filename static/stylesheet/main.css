@@ -156,6 +156,7 @@ body>.flash .close {
     position: absolute;
     top: 8px;
     right: 10px;
+    width: 60px;
 }
 
 body>.flash:hover .close {
