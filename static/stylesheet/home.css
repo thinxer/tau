@@ -124,11 +124,12 @@
     float: right;
 }
 
-.user_recommendation .next, .user_recommendation .prev {
+.user_recommendation .prevnext button {
     padding: 0px 4px;
     border: solid 1px #4183C4;
     cursor: pointer;
     background-color: transparent;
+    margin-right: 5px;
 }
 
 .user_recommendation .next[disabled], .user_recommendation .prev[disabled] {
