@@ -89,14 +89,7 @@ a:hover {
     font-size: bold;
     text-shadow: black 1px 1px 2px;
     opacity: 0;
-    -webkit-transition: opacity 0.3s linear;
-    -o-transition: opacity 0.3s linear;
-    -moz-transition: opacity 0.3s linear;
-    transition: opacity 0.3s linear;
-}
-
-#footer:hover {
-    opacity: 1;
+    filter: alpha(opacity=0);
 }
 
 #footer div {

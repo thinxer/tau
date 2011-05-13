@@ -31,6 +31,13 @@
         $(this).blur();
     });
 
+    // Fade footer
+    $('#footer').mouseenter(function() {
+        $(this).fadeTo('normal', 1);
+    }).mouseleave(function() {
+        $(this).fadeTo('normal', 0);
+    });
+
     // Automatically update timestamps on page.
     setInterval(function() {
         $('.timestamp').each(function() {
