@@ -99,11 +99,6 @@
     float: left;
 }
 
-.recommendation_list .follow-button {
-    position: absolute;
-    bottom: 0px;
-}
-
 .recommendation_list .desc {
     float: left;
     height: 60px;
