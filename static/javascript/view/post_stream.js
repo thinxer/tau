@@ -127,7 +127,10 @@
                         timestamp: e.timestamp,
                         photo: e.type == 'normal' || e.type == 'reply' ? 
                                this_ref.users[e.uid].photo : 
-                               this_ref.users[e.parent_message.uid].photo
+                               this_ref.users[e.parent_message.uid].photo,
+                        photo_hue: e.type == 'normal' || e.type == 'reply' ? 
+                               this_ref.users[e.uid].photo_hue : 
+                               this_ref.users[e.parent_message.uid].photo_hue,
                     };
                     data.push(o);
                 });
@@ -186,6 +189,17 @@
     PostStream.prototype.start = function() {
         if (this.started) return;
         var this_ref = this;
+        $('li', $(this.selector)).live('mouseenter', function(e) {
+            var msgid = $(this).data('id');
+            var e = this_ref.data[msgid];
+            var photo_hue = e.type == 'normal' || e.type == 'reply' ?
+                   this_ref.users[e.uid].photo_hue :
+                   this_ref.users[e.parent_message.uid].photo_hue;
+           var grad = _.sprintf('-webkit-linear-gradient(left, %s %s, %s %s, %s %s)', photo_hue, '5%', '#fefefe', '10%', '#fff', '100%');
+            $(this).css('background', grad);
+        }).live('mouseleave', function(e) {
+            $(this).css('background', '');
+        });
         $('a.delete', $(this.selector)).live('click', function(e) {
             e.preventDefault();
             var item = $(this).parents('li.item');

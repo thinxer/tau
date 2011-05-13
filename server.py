@@ -226,6 +226,7 @@ class api:
                 'following': (len, []),
                 'follower': (len, []),
                 'photo': (spec.untaint, conf.default_photo_uri),
+                'photo_hue': (str, conf.default_photo_hue),
                 'isfollowing': (bool, False)
                 },
             'current_user': {
@@ -237,7 +238,8 @@ class api:
                 'web': (spec.untaint, ''),
                 'following': (len, []),
                 'follower': (len, []),
-                'photo': (spec.untaint, conf.default_photo_uri)
+                'photo': (spec.untaint, conf.default_photo_uri),
+                'photo_hue': (str, conf.default_photo_hue)
                 },
             'stream_item': {
                 'id': str,
@@ -468,8 +470,8 @@ class api:
                 d = web.input(photo={})
                 if 'photo' in d:
                     u = db.get_user(uuid)
-                    photo.resize_save(u['uid'], d.photo.file)
-                    if db.update_photo(uuid, True).has_key('success'):
+                    info = photo.process(u['uid'], d.photo.file)
+                    if 'success' in db.update_photo(uuid, True, info['hue']):
                         return jsond({ 'success':1 })
                 return error.photo_upload_failed()
             except Exception, e:

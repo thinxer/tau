@@ -16,10 +16,6 @@
     border-top: none;
 }
 
-.timeline>.item:hover {
-    background-color: #f3f3f3;
-}
-
 .timeline>.item .photo {
     float: left;
     padding-right: 10px;
