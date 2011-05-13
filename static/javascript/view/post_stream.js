@@ -30,8 +30,6 @@
         this.users = {};
 
         var defaults = {
-            scroll_margin: 20,
-            listen_scroll: true,
             auto_fresh: true
         };
 
@@ -172,14 +170,6 @@
         return deferred;
     };
 
-    PostStream.prototype.handle_scroll = function() {
-        if ($(window).scrollTop() > this.list.height() + 
-                                    this.list.position().top - 
-                                    $(window).height() - this.scroll_margin) {
-            this.update('older');
-        }
-    };
-
     PostStream.prototype.autofresh = function() {
         var that = this;
         if (this.random_mark == $(this.selector).data('mark')) {
@@ -268,9 +258,6 @@
         $('.newer-banner', $(this.container_selector)).click(function(r) {
             this_ref.flush('newer');
         });
-        if (this.listen_scroll) {
-            $(window).scroll($.proxy(this.handle_scroll, this));
-        }
         if (this.auto_fresh) {
             setTimeout($.proxy(this.autofresh, this), 10000);
         }
@@ -281,9 +268,6 @@
         $('a.delete', $(this.selector)).die('click');
         $('a.forward', $(this.selector)).die('click');
         $('a.reply', $(this.selector)).die('click');
-        if (this.listen_scroll) {
-            $(window).unbind('scroll', $.proxy(this.handle_scroll, this));
-        }
     };
 
     U[name] = PostStream;

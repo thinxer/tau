@@ -16,7 +16,6 @@
                     uid: cur_uid,
                     type: 'user'
                 }, {
-                    listen_scroll: false,
                     auto_fresh: false
                 });
 
