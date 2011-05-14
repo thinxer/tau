@@ -280,7 +280,11 @@ def search(uuid, query=None, newerThan=None, olderThan=None):
     if newerThan:
         query['timestamp']['$gt'] = newerThan
 
-    c = messages.find(query)
+    # then execute the query
+    c = messages.find(query) \
+            .sort('timestamp', pymongo.DESCENDING) \
+            .batch_size(conf.stream_item_max)
+
     return _process_messages(uuid, c)
 
 def update_profile(uuid, profile):
