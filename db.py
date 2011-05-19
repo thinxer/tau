@@ -52,9 +52,9 @@ def register(uid, email, password):
             'uid': uid }
 
 def unregister(uuid, password):
-    u = users.find_one({'_id': uuid, 'password': passwd_hash(uuid, password)})
+    u = users.find_one({'_id': ObjectId(uuid), 'password': passwd_hash(uuid, password)})
     if u:
-        users.remove(u)
+        users.remove(ObjectId(uuid))
         return {'success': 1}
     else:
         return error.user_not_found(raw=True)
@@ -128,7 +128,7 @@ def publish(uuid, content, parent = None, type = 'normal'):
 def remove(uuid, msg_id):
     m = messages.find_one({'owner': ObjectId(uuid), '_id': ObjectId(msg_id)})
     if m:
-        messages.remove(m)
+        messages.remove(ObjectId(msg_id))
         return { 'success':1 }
     else:
         # XXX more detailed error messages?
@@ -356,7 +356,7 @@ def remove_list(uuid, list_id):
         })
     if not l:
         return error.list_not_found(raw=True)
-    lists.remove(l)
+    lists.remove(ObjectId(list_id))
     return { 'success':1 }
 
 def add_to_list(uuid, list_id, uid):
