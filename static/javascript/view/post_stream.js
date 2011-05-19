@@ -187,7 +187,7 @@
     PostStream.prototype.start = function() {
         if (this.started) return;
         var this_ref = this;
-        $('a.delete', $(this.selector)).live('click', function(e) {
+        $('a.delete', $(this.selector)[0]).live('click', function(e) {
             e.preventDefault();
             var item = $(this).parents('li.item');
             var msgid = $(item).data('id');
@@ -203,7 +203,7 @@
                 });
             });
         });
-        $('a.forward', $(this.selector)).live('click', function(e) {
+        $('a.forward', $(this.selector)[0]).live('click', function(e) {
             e.preventDefault();
             var item = $(this).parents('li.item');
             var msgid = item.data('id');
@@ -231,7 +231,7 @@
                 });
             });
         });
-        $('a.reply', $(this.selector)).live('click', function(e) {
+        $('a.reply', $(this.selector)[0]).live('click', function(e) {
             e.preventDefault();
             var item = $(this).parents('li.item');
             var msgid = item.data('id');
@@ -266,9 +266,9 @@
     };
 
     PostStream.prototype.end = function(){
-        $('a.delete', $(this.selector)).die('click');
-        $('a.forward', $(this.selector)).die('click');
-        $('a.reply', $(this.selector)).die('click');
+        $('a.delete', $(this.selector)[0]).die('click');
+        $('a.forward', $(this.selector)[0]).die('click');
+        $('a.reply', $(this.selector)[0]).die('click');
     };
 
     U[name] = PostStream;
