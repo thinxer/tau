@@ -29,7 +29,6 @@ bundles:
             - javascript/view/profile.js
             - javascript/view/settings.js
             - javascript/view/search.js
-            - javascript/view/tag.js
             - javascript/view/debug.js
     css_all:
         filters: url_version, cssmin

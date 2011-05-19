@@ -48,7 +48,7 @@
                 }
                 text = item.url;
             } else if ('hash' in item) {
-                href = '#tag/' + encodeURIComponent(item.hash.slice(1, item.hash.length-1)).replace('/', '%2f');
+                href = '#search/' + encodeURIComponent(item.hash);
                 text = item.hash;
             } else if ('mention' in item) {
                 href = '#u/' + encodeURIComponent(item.mention.substring(1));
