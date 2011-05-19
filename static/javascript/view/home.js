@@ -37,7 +37,6 @@
         $('#main .searchbox').submit(function(e) {
             e.preventDefault();
             var q = $.trim($('#main .searchbox input').val());
-            q = encodeURIComponent(q);
             if (!q.length) return;
             R.path(['search', q]);
         });

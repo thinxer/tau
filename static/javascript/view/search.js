@@ -1,7 +1,7 @@
 // for search page
 
 (function(name, $) {
-    
+
     var stream, button, query;
 
     var attachEvent = function() {
@@ -46,8 +46,9 @@
             }
         },
         change: function(path, oldPath, level) {
+            console.log(path);
             this.loadDeferred.done(function() {
-                query = decodeURIComponent(unescape(path[1]));
+                query = path[1];
                 if (!query) {
                     // TODO: show search home
                 } else {

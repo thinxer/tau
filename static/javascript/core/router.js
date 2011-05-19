@@ -39,16 +39,22 @@
         if (arguments.length == 0) {
             var hashes = location.hash.length>1 ?
                             location.hash.substring(1).split('/') :
-                            hashes = [];
+                            [];
             var i = hashes.length;
-            while (i--) hashes[i] = unescape(hashes[i]);
+            while (i--) hashes[i] = decodeURIComponent(hashes[i]);
             return hashes;
 
         } else if (arguments.length == 1) {
-            var args = jQuery.isArray(path) ? path : [path];
-            var i = args.length;
-            while (i--) args[i] = escape(args[i]);
-            jQuery.history.load(args.join('/'));
+            if (jQuery.isArray(path)) {
+                // encode each component.
+                var args = path.slice(0);
+                var i = args.length;
+                while (i--) args[i] = encodeURIComponent(args[i]);
+                jQuery.history.load(args.join('/'));
+            } else {
+                // load it directly.
+                jQuery.history.load(path.toString());
+            }
 
         } else if (arguments.length == 2) {
             var _handler = handler;
@@ -115,7 +121,7 @@
     };
 
     jQuery(function() {
-        jQuery.history.init(pathchange_handler, { unescape:'/' })
+        jQuery.history.init(pathchange_handler, { unescape:true })
     });
 
 })('R');
