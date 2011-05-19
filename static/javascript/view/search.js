@@ -8,7 +8,6 @@
         $('#search form.searchbox').submit(function(e) {
             e.preventDefault();
             var q = $('#search .searchbox input').val();
-            q = encodeURIComponent($.trim(q));
             if (!q.length) {
                 return;
             }
@@ -46,12 +45,12 @@
             }
         },
         change: function(path, oldPath, level) {
-            console.log(path);
             this.loadDeferred.done(function() {
                 query = path[1];
                 if (!query) {
                     // TODO: show search home
                 } else {
+                    $('#search .searchbox input').val(query)
                     setupStream();
                     button.active(true);
                 }
