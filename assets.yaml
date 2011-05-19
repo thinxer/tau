@@ -28,7 +28,6 @@ bundles:
             - javascript/view/home.js
             - javascript/view/profile.js
             - javascript/view/settings.js
-            - javascript/view/search_stream.js
             - javascript/view/search.js
             - javascript/view/tag.js
             - javascript/view/debug.js

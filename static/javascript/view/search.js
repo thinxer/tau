@@ -17,14 +17,16 @@
     };
 
     var setupStream = function() {
-        stream = new U.SearchStream('div.stream_wrapper', {
+        stream = new U.PostStream('div.stream_wrapper', {
             query: query
+        }, {
+            api: 'search'
         });
 
         button = new U.AutoLoadButton(
             'div.stream_wrapper',
             function() {
-                return stream.load_more();
+                return stream.update('older');
             }
         );
     };

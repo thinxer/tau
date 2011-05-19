@@ -30,7 +30,8 @@
         this.users = {};
 
         var defaults = {
-            auto_fresh: true
+            auto_fresh: true,
+            api: 'stream'
         };
 
         $.extend(this, defaults, class_option);
@@ -95,7 +96,7 @@
         if (when == 'older' && !this.hasmore) {
             deferred.resolve(false);
         } else {
-            T.stream(p).success(function(r){
+            T[this.api](p).success(function(r){
                 var data = [];
                 $.extend(this_ref.users, r.users);
                 if (when == 'older') {
