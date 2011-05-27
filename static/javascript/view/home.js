@@ -142,6 +142,11 @@
                             setupClick();
                             showRecommendation();
                             setupStreams();
+                            T.get_lists({
+                                uid: cur_user.id
+                            }).success(function(lists) {
+                                $('#home #list-number').text(lists.items.length);
+                            });
                         })
                         .done(self.loadDeferred.resolve);
                 });

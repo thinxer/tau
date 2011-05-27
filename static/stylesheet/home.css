@@ -58,6 +58,10 @@
 .userinfo .location {
     position: relative;
     top: 10px;
+    width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .userinfo .uid_name {
