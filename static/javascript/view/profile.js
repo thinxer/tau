@@ -7,9 +7,40 @@
     var streams = {};
     var buttons = {};
 
+    var user_info;
+
+    var update_list = function() {
+        T.get_lists({uid: user_info.uid}).success(function(r) {
+            $('#profile .social_info #list_number').text(r.items.length);
+            $(r.items).each(function(i, e) {
+                e['photo'] = user_info.photo;
+            });
+            var ul = $('<ul/>').addClass('liststream');
+            U.render('list_item', r.items).fillTo(ul)
+                                          .done(function() {
+                $('.list_wrapper').html(ul);
+                $('.delete', ul).click(function(e) {
+                    var li = $(e.target).parents('.liststream>li');
+                    U.confirm_dialog(_('Are you sure you want to delete?'))
+                     .done(function(button) {
+                        if (button == 'confirm') {
+                            T.remove_list({
+                                id: li.data('id')
+                            }).success(function() {
+                                li.remove();
+                                U.success(_('delete list succeeded'));
+                            });
+                        }
+                    });
+                });
+            });
+        });
+    }
+
     var load_profile = function() {
         var cur_uid = R.path()[1] || T.checkLogin();
         T.userinfo({uid: cur_uid}).success(function(d) {
+            user_info = d;
             U.render('profile', d).fillTo('#main').done(function(t) {
                 if (T.checkLogin() == cur_uid) {
                     t.find('.follow-button').hide();
@@ -33,28 +64,7 @@
                     type: 'follower'
                 });
 
-                T.get_lists({uid: cur_uid}).success(function(r) {
-                    $(r.items).each(function(i, e) {
-                        e['photo'] = d.photo;
-                    });
-                    var ul = $('<ul/>').addClass('liststream');
-                    U.render('list_item', r.items).fillTo(ul).done(function() {
-                        $('.list_wrapper').html(ul);
-                        $('.delete', ul).click(function(e) {
-                            var li = $(e.target).parents('.liststream>li');
-                            U.confirm_dialog(_('Are you sure you want to delete?')).done(function(button) {
-                                if (button == 'confirm') {
-                                    T.remove_list({
-                                        id: li.data('id')
-                                    }).success(function() {
-                                        li.remove();
-                                        U.success(_('delete list succeeded'));
-                                    });
-                                }
-                            });
-                        });
-                    });
-                });
+                update_list();
 
                 buttons['timeline'] = new U.AutoLoadButton(
                     '.timeline_wrapper',
@@ -82,6 +92,20 @@
                         return $.Deferred().resolve(false);
                     }
                 );
+
+                $('#profile .button.create_list').click(function() {
+                    var dialog = U.prompt_dialog(_('input list name'));
+                    dialog.done(function(button) {
+                        if (button == 'confirm' && dialog.val()) {
+                            T.create_list({
+                                name: dialog.val()
+                            }).success(function() {
+                                update_list();
+                                U.success(_('create list succeeded'));
+                            });
+                        }
+                    });
+                });
 
             }).done(loadDeferred.resolve);
         });

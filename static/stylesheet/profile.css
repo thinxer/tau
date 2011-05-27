@@ -43,3 +43,24 @@
 #profile #profiletabs {
     margin-top: 20px;
 }
+
+#profile .function-buttons {
+    position: relative;
+    left: 80px;
+}
+
+#profile .create_list {
+    background-color: green;
+    color: white;
+    width: 80px;
+    margin-top: 16px;
+    text-align: center;
+}
+
+#profile .follow-button {
+    position: relative;
+}
+
+#profile .create_list:hover {
+    background-color: #698565;
+}

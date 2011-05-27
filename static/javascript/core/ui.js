@@ -309,6 +309,19 @@
         return dialog;
     }
 
+    ui.prompt_dialog = function(title, content) {
+        var text = $('<input/>').attr('type', 'text');
+        text.val(content);
+        text.css('width', '100%');
+        var dialog = new ui.Dialog({
+            title: title || _('No title'),
+            content: text,
+            buttons: ['confirm', 'cancel']
+        });
+        dialog.val = $.proxy(text.val, text);
+        return dialog;
+    }
+
 })('U', jQuery);
 
 /**

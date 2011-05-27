@@ -18,7 +18,14 @@ $def with(version="")
         <br/>
         <a href="#u/{{= uid}}/follower">_('followers number'): {{= follower}}</a>
         <br/>
+        <br/>
+        <a href="#u/{{= uid}}/list">_('list number'): <span id="list_number"></span></a>
+    </div>
+    <div class="function-buttons">
         <div class="button follow-button" data-uid="{{= uid}}" data-isfollowing="{{= isfollowing}}"></div>
+        <br />
+        <br />
+        <div class="button create_list">_('create list')</div>
     </div>
     <div class="clear"></div>
     <div id="profiletabs">
