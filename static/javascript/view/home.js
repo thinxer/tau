@@ -14,14 +14,14 @@
         });
     }
 
-    var setupClick=function(){
-        var publish=function(){
-            var o=$('textarea#publisher'),v = $.trim(o.val());
-            if(!v.length){
+    var setupClick = function() {
+        var publish = function() {
+            var o = $('textarea#publisher'), v = $.trim(o.val());
+            if(!v.length) {
                 // TODO: show error ?
                 return;
             }
-            T.publish({content: v}).success(function(){
+            T.publish({content: v}).success(function() {
                 o.val('');
                 U.success(_('post succeeded') + _('!'), 1000);
                 batchAction(streams, 'update', 'newer');
@@ -29,8 +29,8 @@
             });
         };
         $('.pub_btn').click(publish);
-        $('#publisher').keypress(function(e){
-            if(e.ctrlKey && (e.keyCode==13 || e.keyCode==10)){
+        $('#publisher').keypress(function(e) {
+            if(e.ctrlKey && (e.keyCode==13 || e.keyCode==10)) {
                 publish();
             }
         });

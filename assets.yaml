@@ -43,5 +43,6 @@ bundles:
             - stylesheet/search.css
             - stylesheet/userstream.css
             - stylesheet/poststream.css
+            - stylesheet/liststream.css
             - stylesheet/autoloadbutton.css
 

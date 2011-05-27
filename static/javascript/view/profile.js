@@ -33,6 +33,29 @@
                     type: 'follower'
                 });
 
+                T.get_lists({uid: cur_uid}).success(function(r) {
+                    $(r.items).each(function(i, e) {
+                        e['photo'] = d.photo;
+                    });
+                    var ul = $('<ul/>').addClass('liststream');
+                    U.render('list_item', r.items).fillTo(ul).done(function() {
+                        $('.list_wrapper').html(ul);
+                        $('.delete', ul).click(function(e) {
+                            var li = $(e.target).parents('.liststream>li');
+                            U.confirm_dialog(_('Are you sure you want to delete?')).done(function(button) {
+                                if (button == 'confirm') {
+                                    T.remove_list({
+                                        id: li.data('id')
+                                    }).success(function() {
+                                        li.remove();
+                                        U.success(_('delete list succeeded'));
+                                    });
+                                }
+                            });
+                        });
+                    });
+                });
+
                 buttons['timeline'] = new U.AutoLoadButton(
                     '.timeline_wrapper',
                     function() {
@@ -49,6 +72,14 @@
                     '.follower_wrapper',
                     function() {
                         return streams['follower'].load_more();
+                    }
+                );
+                
+                // prevent undefined reference for button.active 
+                buttons['list'] = new U.AutoLoadButton(
+                    '.list_wrapper',
+                    function() {
+                        return $.Deferred().resolve(false);
                     }
                 );
 
