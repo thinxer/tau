@@ -49,6 +49,10 @@ a:hover {
     float: right;
 }
 
+#header>.nav a {
+    margin-right: 8px;
+}
+
 #main {
     -webkit-border-radius: 15px;
     -moz-border-radius: 15px;
