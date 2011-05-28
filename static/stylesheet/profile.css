@@ -50,7 +50,7 @@
     left: 80px;
 }
 
-#profile .create_list {
+#profile .create_list, #profile .addto_list {
     background-color: green;
     color: white;
     width: 80px;
@@ -62,6 +62,6 @@
     position: relative;
 }
 
-#profile .create_list:hover {
+#profile .create_list:hover, #profile .addto_list:hover {
     background-color: #698565;
 }

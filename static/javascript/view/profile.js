@@ -7,10 +7,14 @@
     var streams = {};
     var buttons = {};
 
-    var user_info;
+    var user_info;      // the user whose profile being viewed
+    var login_user_list;    // current login user list
 
     var update_list = function() {
         T.get_lists({uid: user_info.uid}).success(function(r) {
+            if (user_info.is_login_user) {
+                login_user_list = r;
+            }
             $('#profile .social_info #list_number').text(r.items.length);
             $(r.items).each(function(i, e) {
                 e['photo'] = user_info.photo;
@@ -41,6 +45,7 @@
         var cur_uid = R.path()[1] || T.checkLogin();
         T.userinfo({uid: cur_uid}).success(function(d) {
             user_info = d;
+            d['is_login_user'] = d.uid == T.checkLogin();
             U.render('profile', d).fillTo('#main').done(function(t) {
                 if (T.checkLogin() == cur_uid) {
                     t.find('.follow-button').hide();
@@ -92,16 +97,56 @@
                         return $.Deferred().resolve(false);
                     }
                 );
-
+                
+                if (!user_info.is_login_user) {
+                    // load login user's list
+                    T.get_lists({
+                        uid: T.checkLogin()
+                    }).success(function(list) {
+                        login_user_list = list;
+                    });
+                }
+            
+                // attach event
                 $('#profile .button.create_list').click(function() {
                     var dialog = U.prompt_dialog(_('input list name'));
                     dialog.done(function(button) {
                         if (button == 'confirm' && dialog.val()) {
                             T.create_list({
                                 name: dialog.val()
-                            }).success(function() {
-                                update_list();
-                                U.success(_('create list succeeded'));
+                            }).success(function(rs) {
+                                if (rs.list_id) {
+                                    update_list();
+                                    U.success(_('create list succeeded'));
+                                }
+                            });
+                        }
+                    });
+                });
+
+                $('#profile .button.addto_list').click(function() {
+                    var list = [];
+                    $(login_user_list.items).each(function(i, e) {
+                        list.push(e.name);
+                    });
+                    var dialog = U.select_dialog(_('add to list'), list);
+                    dialog.done(function(button) {
+                        if (button == 'confirm') {
+                            var count = 0;
+                            var val = dialog.val();
+                            $.each(val, function(i, e) {
+                                T.add_to_list({
+                                    uid: user_info.uid,
+                                    id: login_user_list.items[e].id
+                                }).success(function(rs) {
+                                    if (rs.success) {
+                                        count++;
+                                    }
+                                    if (i == val.length - 1 && count) {
+                                        U.success(_('friends added to your %d list', count));
+                                        update_list();
+                                    }
+                                });
                             });
                         }
                     });

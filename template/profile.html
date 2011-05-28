@@ -25,7 +25,11 @@ $def with(version="")
         <div class="button follow-button" data-uid="{{= uid}}" data-isfollowing="{{= isfollowing}}"></div>
         <br />
         <br />
+        {{if is_login_user}}
         <div class="button create_list">_('create list')</div>
+        {{else}}
+        <div class="button addto_list">_('add to list')</div>
+        {{/if}}
     </div>
     <div class="clear"></div>
     <div id="profiletabs">

@@ -322,6 +322,30 @@
         return dialog;
     }
 
+    ui.select_dialog = function(title, list) {
+        var ol = $('<ol/>');
+        $.each(list, function(i, e) {
+            var li = $('<li/>').text(e);
+            var input = $('<input/>').attr('type', 'checkbox');
+            input.data('seq', i);
+            input.prependTo(li);
+            li.appendTo(ol);
+        });
+        var dialog = new ui.Dialog({
+            title: title || _('No title'),
+            content: ol,
+            buttons: ['confirm', 'cancel']
+        });
+        dialog.val = function() {
+            var ret = [];
+            ol.find('input[type=checkbox]:checked').each(function(i, e) {
+                ret.push($(e).data('seq'));
+            });
+            return ret;
+        }
+        return dialog;
+    }
+
 })('U', jQuery);
 
 /**
