@@ -187,7 +187,7 @@ class api:
                 'skip': (FILTERS['positive_integer'], False)
                 },
             'create_list': {
-                'name': str
+                'name': spec.untaint
                 },
             'remove_list': {
                 'id': FILTERS['objectid']
